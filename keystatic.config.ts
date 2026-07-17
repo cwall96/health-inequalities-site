@@ -13,10 +13,11 @@ import { config, fields, collection, singleton } from "@keystatic/core";
  */
 export default config({
   storage: {
-  kind: "github",
-  repo: { owner: "cwall96", name: "health-inequalities-site" },
+  kind: "cloud",
 },
-
+cloud: {
+  project: "hit-nlc/health-inequalities",
+},
   ui: {
     brand: { name: "Health Inequalities Team" },
   },
