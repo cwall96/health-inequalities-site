@@ -1,0 +1,82 @@
+---
+import { createReader } from "@keystatic/core/reader";
+import keystaticConfig from "../../keystatic.config";
+import Layout from "../layouts/Layout.astro";
+import PersonCard from "../components/PersonCard.astro";
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const team = (await reader.collections.team.all()).sort(
+  (a, b) => (a.entry.order ?? 0) - (b.entry.order ?? 0)
+);
+
+const filters = [
+  { value: "all", label: "All" },
+  { value: "staff", label: "Staff" },
+  { value: "phd", label: "PhD students" },
+  { value: "services", label: "Professional services" },
+];
+
+export const prerender = true;
+---
+
+<Layout title="People — Health Inequalities Team">
+  <section class="section">
+    <div class="container-page">
+      <p class="eyebrow">The team</p>
+      <h1 class="mt-3">People</h1>
+
+      <div class="mt-8 flex flex-wrap gap-2" id="filters">
+        {
+          filters.map((f, i) => (
+            <button
+              class={i === 0 ? "chip-active" : "chip"}
+              data-filter={f.value}
+              type="button"
+            >
+              {f.label}
+            </button>
+          ))
+        }
+      </div>
+
+      {
+        team.length === 0 ? (
+          <p class="mt-10 text-muted">
+            No people yet. Add team members in the editor at <code>/keystatic</code>.
+          </p>
+        ) : (
+          <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" id="grid">
+            {team.map((p) => (
+              <PersonCard
+                slug={p.slug}
+                name={p.entry.name}
+                role={p.entry.role}
+                category={p.entry.category}
+                photo={p.entry.photo}
+              />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const filterBar = document.getElementById("filters");
+  const cards = Array.from(document.querySelectorAll<HTMLElement>("#grid [data-category]"));
+
+  filterBar?.addEventListener("click", (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>("[data-filter]");
+    if (!btn) return;
+    const value = btn.dataset.filter;
+
+    filterBar.querySelectorAll("[data-filter]").forEach((b) => (b.className = "chip"));
+    btn.className = "chip-active";
+
+    cards.forEach((card) => {
+      const show = value === "all" || card.dataset.category === value;
+      card.style.display = show ? "" : "none";
+    });
+  });
+</script>

@@ -1,0 +1,37 @@
+---
+const path = Astro.url.pathname;
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/people", label: "People" },
+  { href: "/presentations", label: "Presentations" },
+  { href: "/publications", label: "Publications" },
+];
+const isActive = (href: string) =>
+  href === "/" ? path === "/" : path.startsWith(href);
+---
+
+<header class="band-dark">
+  <div class="container-page flex items-center justify-between gap-4 py-4">
+    <a href="/" class="flex items-center gap-3 no-underline">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+        <circle cx="15" cy="15" r="13" fill="none" stroke="#e0384e" stroke-width="2"></circle>
+        <circle cx="15" cy="15" r="6.5" fill="none" stroke="#e0384e" stroke-width="2"></circle>
+        <circle cx="15" cy="15" r="1.8" fill="#e0384e"></circle>
+        <line x1="15" y1="0" x2="15" y2="30" stroke="#e0384e" stroke-width="2"></line>
+        <line x1="0" y1="15" x2="30" y2="15" stroke="#e0384e" stroke-width="2"></line>
+      </svg>
+      <span class="font-display text-[17px] font-medium tracking-tight text-white">
+        <span class="text-red-500">H</span>ealth <span class="text-red-500">I</span>nequalities <span class="text-red-500">T</span>eam
+      </span>
+    </a>
+    <nav class="hidden gap-6 sm:flex">
+      {
+        links.map((l) => (
+          <a href={l.href} class={isActive(l.href) ? "nav-link-active" : "nav-link"}>
+            {l.label}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>

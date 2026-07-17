@@ -1,0 +1,185 @@
+/* ============================================================
+   Health Inequalities Team — Design System
+   Tailwind CSS v4 (CSS-first). Import this once as your main stylesheet.
+   ============================================================ */
+
+/* Fonts first (or load via <link> in <head> for better performance) */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@400;500;600&family=Fraunces:opsz,wght@9..144,400;9..144,500&display=swap");
+
+@import "tailwindcss";
+
+/* ------------------------------------------------------------
+   1. DESIGN TOKENS
+   Each token auto-generates matching utilities, e.g.
+   --color-navy-700 -> bg-navy-700 / text-navy-700 / border-navy-700
+   ------------------------------------------------------------ */
+@theme {
+  /* ---- Brand navy (primary / dark surfaces) ---- */
+  --color-navy-50:  #eef1f8;
+  --color-navy-100: #d4dcec;
+  --color-navy-200: #a9b7d4;
+  --color-navy-300: #7688b4;
+  --color-navy-400: #47598e;
+  --color-navy-500: #2e4173;
+  --color-navy-600: #23355c;
+  --color-navy-700: #1b2b52; /* core brand navy — hero + dark sections */
+  --color-navy-800: #14213f;
+  --color-navy-900: #0d1729;
+
+  /* ---- Brand red (accent) ---- */
+  --color-red-50:  #fdecef;
+  --color-red-100: #fad1d9;
+  --color-red-200: #f4a8b6;
+  --color-red-300: #f26b80; /* highlight / tint */
+  --color-red-400: #ea5066;
+  --color-red-500: #e0384e; /* core brand accent */
+  --color-red-600: #c42a3e;
+  --color-red-700: #a82740; /* deep / shadow */
+  --color-red-800: #7e1c2e;
+  --color-red-900: #55131f;
+
+  /* ---- Neutrals (light surfaces, borders, muted text) ---- */
+  --color-cloud-50:  #fafaf9;
+  --color-cloud-100: #f1f0ec;
+  --color-cloud-200: #e4e3dd;
+  --color-cloud-300: #cdccc4;
+  --color-cloud-400: #9c9b93;
+  --color-cloud-500: #6e6d66;
+
+  /* ---- Semantic aliases ---- */
+  --color-surface:      #fbfaf7; /* warm off-white page background */
+  --color-surface-dark: var(--color-navy-700);
+  --color-ink:          var(--color-navy-800); /* body text on light */
+  --color-muted:        var(--color-cloud-500); /* secondary text on light */
+  --color-line:         var(--color-cloud-200); /* hairline borders */
+  --color-accent:       var(--color-red-500);
+
+  /* ---- Typography ---- */
+  --font-sans:    "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sora", "Inter", ui-sans-serif, sans-serif;   /* headings / hero */
+  --font-serif:   "Fraunces", ui-serif, Georgia, serif;          /* optional academic voice */
+
+  /* Custom display sizes (line-height baked in) */
+  --text-hero: 3.25rem;
+  --text-hero--line-height: 1.06;
+  --text-hero--letter-spacing: -0.02em;
+  --text-display: 2.25rem;
+  --text-display--line-height: 1.12;
+  --text-display--letter-spacing: -0.01em;
+
+  /* ---- Radius ---- */
+  --radius-sm:   0.375rem; /* 6px  */
+  --radius-md:   0.5rem;   /* 8px  — controls */
+  --radius-lg:   0.75rem;  /* 12px — cards */
+  --radius-xl:   1rem;     /* 16px */
+  --radius-pill: 9999px;
+
+  /* ---- Shadows (subtle, light surfaces only) ---- */
+  --shadow-card: 0 1px 2px rgb(20 33 63 / 0.06), 0 4px 12px rgb(20 33 63 / 0.05);
+  --shadow-pop:  0 8px 24px rgb(20 33 63 / 0.12);
+
+  /* ---- Motion ---- */
+  --ease-brand: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+
+  /* ---- Extra spacing step (section rhythm) ---- */
+  --spacing-section: 5rem;
+}
+
+/* ------------------------------------------------------------
+   2. BASE
+   ------------------------------------------------------------ */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-surface text-ink font-sans antialiased;
+    line-height: 1.7;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display font-medium text-ink;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  h1 { @apply text-4xl md:text-hero; }
+  h2 { @apply text-2xl md:text-display; }
+  h3 { @apply text-xl; }
+  a  { @apply text-red-600 underline-offset-2 hover:underline; }
+
+  :focus-visible {
+    outline: 2px solid var(--color-red-500);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Dark sections invert text defaults */
+  .on-dark, .on-dark h1, .on-dark h2, .on-dark h3, .on-dark h4 { @apply text-white; }
+  .on-dark a { @apply text-red-300; }
+}
+
+/* ------------------------------------------------------------
+   3. BASE UTILITIES
+   Defined as @utility so they can be re-used via @apply below.
+   (Tailwind v4: @apply only works with real utilities, not
+    classes defined in @layer components.)
+   ------------------------------------------------------------ */
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-md px-5 py-2.5 text-sm font-medium transition-colors;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-brand);
+}
+@utility chip {
+  @apply inline-flex items-center rounded-pill border border-line px-3 py-1.5 text-sm text-muted transition-colors hover:border-navy-300;
+}
+@utility nav-link {
+  @apply text-sm text-white/80 transition-colors hover:text-white;
+}
+
+/* ------------------------------------------------------------
+   4. COMPONENTS
+   ------------------------------------------------------------ */
+@layer components {
+
+  /* Layout */
+  .container-page { @apply mx-auto w-full max-w-6xl px-6; }
+  .section        { @apply py-section; }
+
+  /* Buttons */
+  .btn-primary   { @apply btn bg-red-500 text-white hover:bg-red-600; }
+  .btn-secondary { @apply btn border border-navy-700 text-navy-700 hover:bg-navy-50; }
+  .btn-ghost     { @apply btn text-navy-700 hover:bg-navy-50; }
+  .btn-on-dark   { @apply btn border border-white/25 text-white hover:bg-white/10; }
+
+  /* Filter chips */
+  .chip-active   { @apply chip border-red-500 bg-red-50 text-red-700; }
+
+  /* Cards */
+  .card {
+    @apply rounded-lg border border-line bg-white p-5;
+    box-shadow: var(--shadow-card);
+  }
+  .card-flat { @apply rounded-lg border border-line bg-white p-5; }
+
+  /* Navigation */
+  .nav-link-active { @apply nav-link text-white; }
+
+  /* Circular icon badge */
+  .icon-badge {
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-full bg-red-500 text-white;
+    border: 2px solid var(--color-red-700);
+  }
+
+  /* Dark hero / section band */
+  .band-dark { @apply bg-navy-700 text-white; }
+
+  /* Accent rule under headings */
+  .rule-accent { @apply h-1 w-16 rounded-sm bg-red-500; }
+
+  /* Eyebrow / kicker label */
+  .eyebrow {
+    @apply text-xs font-medium tracking-wide text-red-600 uppercase;
+    letter-spacing: 0.06em;
+  }
+}

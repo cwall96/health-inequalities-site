@@ -1,0 +1,81 @@
+---
+import { createReader } from "@keystatic/core/reader";
+import keystaticConfig from "../../keystatic.config";
+import Layout from "../layouts/Layout.astro";
+import { teamPublications, type Pub } from "../lib/publications";
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const team = await reader.collections.team.all();
+const settings = await reader.singletons.home.read();
+const manualEntries = await reader.collections.publications.all();
+
+const ids = team.map((t) => t.entry.identifier).filter(Boolean) as string[];
+
+const manual: Pub[] = manualEntries.map((m) => ({
+  title: m.entry.title,
+  year: m.entry.year ?? null,
+  doi: null,
+  venue: m.entry.venue ?? "",
+  citations: 0,
+  authors: m.entry.authors ?? "",
+  url: m.entry.url ?? null,
+}));
+
+const pubs = await teamPublications(ids, {
+  hidden: (settings?.hiddenDois ?? []) as string[],
+  manual,
+});
+
+const byYear = new Map<number, Pub[]>();
+for (const p of pubs) {
+  const y = p.year ?? 0;
+  if (!byYear.has(y)) byYear.set(y, []);
+  byYear.get(y)!.push(p);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+
+export const prerender = true;
+---
+
+<Layout title="Publications — Health Inequalities Team">
+  <section class="section">
+    <div class="container-page">
+      <p class="eyebrow">Research outputs</p>
+      <h1 class="mt-3">Publications</h1>
+      <p class="mt-3 text-sm text-muted">Updated automatically from OpenAlex.</p>
+
+      {
+        pubs.length === 0 ? (
+          <p class="mt-10 text-muted">
+            No publications found yet. Add an ORCID (or OpenAlex ID) to each person in
+            <code>/keystatic</code>, then rebuild.
+          </p>
+        ) : (
+          <div class="mt-10 max-w-3xl">
+            {years.map((year) => (
+              <div class="mb-8">
+                <p class="mb-2 text-xs tracking-wide text-cloud-400">{year || "Undated"}</p>
+                {byYear.get(year)!.map((p) => (
+                  <div class="flex items-start justify-between gap-4 border-t border-line py-3">
+                    <div>
+                      <p class="leading-6 text-ink">{p.title}</p>
+                      <p class="text-sm text-muted">
+                        {[p.authors, p.venue].filter(Boolean).join(" · ")}
+                        {p.citations > 0 && <span> · {p.citations} citations</span>}
+                      </p>
+                    </div>
+                    {p.url && (
+                      <a href={p.url} aria-label="Open publication">
+                        <i class="ti ti-external-link text-lg text-muted" aria-hidden="true"></i>
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Layout>

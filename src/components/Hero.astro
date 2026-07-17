@@ -1,0 +1,28 @@
+---
+interface Props {
+  eyebrow: string;
+  heading: string;
+  intro: string;
+}
+const { eyebrow, heading, intro } = Astro.props;
+---
+
+<section class="band-dark on-dark overflow-hidden">
+  <div class="container-page grid items-center gap-8 py-14 md:grid-cols-[1fr_1.1fr]">
+    <div>
+      <p class="eyebrow text-red-300">{eyebrow}</p>
+      <h1 class="mt-4">{heading}</h1>
+      <div class="rule-accent mt-6"></div>
+      {intro && <p class="mt-6 max-w-[46ch] leading-7 text-white/75">{intro}</p>}
+    </div>
+    <div class="max-md:-mx-6">
+      <img
+        src="/images/hero.png"
+        alt="A balance scale weighing groups of people against a globe, ringed by icons for the social determinants of health"
+        class="mx-auto w-full max-w-[560px]"
+        width="2000"
+        height="1400"
+      />
+    </div>
+  </div>
+</section>

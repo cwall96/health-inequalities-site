@@ -1,0 +1,35 @@
+---
+interface Props {
+  slug: string;
+  name: string;
+  role: string;
+  category: string;
+  photo?: string | null;
+}
+const { slug, name, role, category, photo } = Astro.props;
+const initials = name
+  .split(" ")
+  .map((n) => n[0])
+  .slice(0, 2)
+  .join("");
+---
+
+<a
+  href={`/people/${slug}`}
+  data-category={category}
+  class="card flex items-start gap-4 no-underline transition-shadow hover:shadow-pop"
+>
+  {
+    photo ? (
+      <img src={photo} alt={name} class="h-14 w-14 shrink-0 rounded-full object-cover" />
+    ) : (
+      <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-700">
+        {initials}
+      </span>
+    )
+  }
+  <div>
+    <p class="font-medium text-ink">{name}</p>
+    <p class="text-sm text-muted">{role}</p>
+  </div>
+</a>

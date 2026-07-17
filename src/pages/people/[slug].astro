@@ -1,0 +1,101 @@
+---
+import { createReader } from "@keystatic/core/reader";
+import keystaticConfig from "../../../keystatic.config";
+import Layout from "../../layouts/Layout.astro";
+import { teamPublications, type Pub } from "../../lib/publications";
+
+export async function getStaticPaths() {
+  const reader = createReader(process.cwd(), keystaticConfig);
+  const team = await reader.collections.team.all();
+  return team.map((p) => ({
+    params: { slug: p.slug },
+    props: { person: { slug: p.slug, ...p.entry } },
+  }));
+}
+
+const { person } = Astro.props;
+
+const pubs: Pub[] = person.identifier
+  ? await teamPublications([person.identifier as string])
+  : [];
+
+const byYear = new Map<number, Pub[]>();
+for (const p of pubs) {
+  const y = p.year ?? 0;
+  if (!byYear.has(y)) byYear.set(y, []);
+  byYear.get(y)!.push(p);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+
+const initials = person.name
+  .split(" ")
+  .map((n: string) => n[0])
+  .slice(0, 2)
+  .join("");
+
+export const prerender = true;
+---
+
+<Layout title={`${person.name} — Health Inequalities Team`}>
+  <section class="section">
+    <div class="container-page max-w-3xl">
+      <a href="/people" class="text-sm text-red-600">← Back to people</a>
+
+      <div class="mt-6 flex items-start gap-5">
+        {
+          person.photo ? (
+            <img src={person.photo} alt={person.name} class="h-20 w-20 shrink-0 rounded-full object-cover" />
+          ) : (
+            <span class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-red-50 text-lg text-red-700">
+              {initials}
+            </span>
+          )
+        }
+        <div>
+          <h1 class="text-2xl md:text-3xl">{person.name}</h1>
+          <p class="mt-1 text-muted">{person.role}</p>
+          {
+            person.email && (
+              <a href={`mailto:${person.email}`} class="mt-1 inline-block text-sm text-red-600">
+                {person.email}
+              </a>
+            )
+          }
+        </div>
+      </div>
+
+      {person.bio && <p class="mt-6 leading-7 text-ink">{person.bio}</p>}
+
+      <h2 class="mt-12 text-xl">Publications</h2>
+      {
+        pubs.length === 0 ? (
+          <p class="mt-3 text-muted">No publications found for this person yet.</p>
+        ) : (
+          <div class="mt-6">
+            {years.map((year) => (
+              <div class="mb-6">
+                <p class="mb-2 text-xs tracking-wide text-cloud-400">{year || "Undated"}</p>
+                {byYear.get(year)!.map((p) => (
+                  <div class="flex items-start justify-between gap-4 border-t border-line py-3">
+                    <div>
+                      <p class="leading-6 text-ink">{p.title}</p>
+                      <p class="text-sm text-muted">
+                        {[p.venue].filter(Boolean).join(" · ")}
+                        {p.citations > 0 && <span> · {p.citations} citations</span>}
+                      </p>
+                    </div>
+                    {p.url && (
+                      <a href={p.url} aria-label="Open publication">
+                        <i class="ti ti-external-link text-lg text-muted" aria-hidden="true"></i>
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Layout>
