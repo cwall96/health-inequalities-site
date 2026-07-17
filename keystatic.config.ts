@@ -12,7 +12,10 @@ import { config, fields, collection, singleton } from "@keystatic/core";
  * For live team editing after deploy, switch to GitHub storage — see MOVING.md.
  */
 export default config({
-  storage: { kind: "local" },
+  storage: {
+  kind: "github",
+  repo: { owner: "cwall96", name: "health-inequalities-site" },
+},
 
   ui: {
     brand: { name: "Health Inequalities Team" },
