@@ -182,4 +182,16 @@
     @apply text-xs font-medium tracking-wide text-red-600 uppercase;
     letter-spacing: 0.06em;
   }
+
+.article h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 500; margin: 2rem 0 .75rem; color: var(--color-ink); line-height: 1.25; }
+.article h3 { font-family: var(--font-display); font-size: 1.25rem; font-weight: 500; margin: 1.5rem 0 .5rem; color: var(--color-ink); }
+.article p { line-height: 1.75; margin: 1rem 0; color: var(--color-ink); }
+.article a { color: var(--color-red-600); text-decoration: underline; text-underline-offset: 2px; }
+.article ul, .article ol { margin: 1rem 0; padding-left: 1.5rem; }
+.article ul { list-style: disc; }
+.article ol { list-style: decimal; }
+.article li { margin: .35rem 0; line-height: 1.75; }
+.article blockquote { border-left: 3px solid var(--color-red-200); padding-left: 1rem; margin: 1.5rem 0; color: var(--color-muted); font-style: italic; }
+.article img { border-radius: var(--radius-lg); margin: 1.5rem 0; max-width: 100%; height: auto; }
+.article hr { border: 0; border-top: 1px solid var(--color-line); margin: 2rem 0; }
 }

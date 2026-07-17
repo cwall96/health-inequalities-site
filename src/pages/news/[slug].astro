@@ -1,0 +1,46 @@
+---
+import { createReader } from "@keystatic/core/reader";
+import keystaticConfig from "../../../keystatic.config";
+import Layout from "../../layouts/Layout.astro";
+import { DocumentRenderer } from "@keystatic/core/renderer";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const reader = createReader(process.cwd(), keystaticConfig);
+  const posts = await reader.collections.news.all();
+  return posts.map((p) => ({ params: { slug: p.slug }, props: { slug: p.slug } }));
+}
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const post = await reader.collections.news.read(Astro.props.slug);
+const document = post ? await post.content() : [];
+
+const fmt = (d: string | null) =>
+  d ? new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : "";
+---
+
+<Layout title={post ? `${post.title} — Health Inequalities Team` : "News"}>
+  <section class="section">
+    <div class="container-page max-w-2xl">
+      <a href="/news" class="text-sm text-red-600">← Back to news</a>
+
+      {
+        post && (
+          <>
+            <p class="mt-6 text-xs tracking-wide text-cloud-400">
+              {[fmt(post.publishedDate), post.author].filter(Boolean).join("  ·  ")}
+            </p>
+            <h1 class="mt-2">{post.title}</h1>
+            {post.coverImage && (
+              <img src={post.coverImage} alt={post.title} class="mt-6 w-full rounded-lg object-cover" />
+            )}
+            <article class="article mt-8">
+              <DocumentRenderer document={document} />
+            </article>
+          </>
+        )
+      }
+    </div>
+  </section>
+</Layout>

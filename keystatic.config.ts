@@ -134,5 +134,43 @@ cloud: {
         link: fields.url({ label: "Link", validation: { isRequired: false } }),
       },
     }),
+    // Add this inside the `collections: { ... }` object in keystatic.config.ts
+
+    news: collection({
+      label: "News",
+      slugField: "title",
+      path: "src/content/news/*",
+      format: { contentField: "content" },
+      columns: ["title", "publishedDate"],
+      schema: {
+        title: fields.slug({ name: { label: "Title" } }),
+        publishedDate: fields.date({
+          label: "Published date",
+          defaultValue: { kind: "today" },
+        }),
+        author: fields.text({ label: "Author" }),
+        summary: fields.text({
+          label: "Summary",
+          multiline: true,
+          description: "One or two sentences shown in the news list.",
+        }),
+        coverImage: fields.image({
+          label: "Cover image",
+          directory: "public/images/news",
+          publicPath: "/images/news/",
+          validation: { isRequired: false },
+        }),
+        content: fields.document({
+          label: "Body",
+          formatting: true,
+          dividers: true,
+          links: true,
+          images: {
+            directory: "public/images/news",
+            publicPath: "/images/news/",
+          },
+        }),
+      },
+    }),
   },
 });
