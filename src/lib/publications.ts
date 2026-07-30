@@ -1,21 +1,21 @@
 /**
- * Fetches team publications from OpenAlex (free, no key).
- * Each person is looked up by ORCID (preferred), OpenAlex author ID, or name (fallback).
- * The `mailto` comes from the OPENALEX_MAILTO env var — change it in one place.
+ * Team publications.
+ *
+ * Identifier handling:
+ *  - ORCID  -> read the authoritative list straight from the ORCID API (clean,
+ *              no namesake pollution), then enrich each paper with citation
+ *              counts + authors via EXACT DOI lookups on OpenAlex.
+ *  - OpenAlex ID / name -> fall back to OpenAlex author filter.
+ *
+ * OpenAlex's own author records are name-clustered and over-merge common names,
+ * which is why we prefer ORCID-direct whenever an ORCID is given.
  */
-const BASE = "https://api.openalex.org/works";
+const OA = "https://api.openalex.org/works";
+const ORCID = "https://pub.orcid.org/v3.0";
 const MAILTO = import.meta.env.OPENALEX_MAILTO ?? "";
 
-// Only keep real research outputs. This drops OpenAlex noise like
-// "supplementary-materials" ("Additional file 1/2"), datasets, and paratext.
 const KEEP_TYPES = new Set([
-  "article",
-  "review",
-  "book-chapter",
-  "book",
-  "report",
-  "preprint",
-  "dissertation",
+  "article", "review", "book-chapter", "book", "report", "preprint", "dissertation",
 ]);
 
 export type Pub = {
@@ -28,47 +28,128 @@ export type Pub = {
   url: string | null;
 };
 
-/** Reduce any DOI form to a bare, lowercase key: "10.1234/abc". */
 export function normDoi(doi?: string | null): string | null {
   if (!doi) return null;
   const bare = doi.replace(/^https?:\/\/(dx\.)?doi\.org\//i, "").trim().toLowerCase();
   return bare || null;
 }
 
-/** Normalise a title into a dedupe key. */
 function titleKey(title: string): string {
   return title.trim().toLowerCase().replace(/\s+/g, " ");
 }
 
-/** Repository "Additional file 1 of…", supplementary material, appendices, datasets. */
 function isSupplementary(title = ""): boolean {
   return /^\s*(additional file|supplementary|supporting information|appendix|data (from|for)\b|figure s?\d)/i.test(
     title
   );
 }
 
-
-/** Decide which OpenAlex filter to use from whatever identifier the editor entered. */
-function filterFor(id: string): string {
-  const v = id.trim();
-  if (/^(https?:\/\/orcid\.org\/)?\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/i.test(v)) {
-    const orcid = v.replace(/^https?:\/\/orcid\.org\//i, "");
-    return `author.orcid:${orcid}`;
-  }
-  if (/^A\d+$/i.test(v)) return `author.id:${v}`;
-  return `raw_author_name.search:${v}`; // fallback — least reliable
+function isOrcid(id: string): boolean {
+  return /^(https?:\/\/orcid\.org\/)?\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/i.test(id.trim());
+}
+function bareOrcid(id: string): string {
+  return id.trim().replace(/^https?:\/\/orcid\.org\//i, "");
 }
 
-async function worksFor(id: string): Promise<Pub[]> {
+/* ---------- OpenAlex: exact citation/author lookup by DOI ---------- */
+type Enrichment = { citations: number; venue: string; authors: string; url: string | null };
+
+async function openAlexByDois(dois: string[]): Promise<Map<string, Enrichment>> {
+  const map = new Map<string, Enrichment>();
+  const clean = [...new Set(dois.filter(Boolean))];
+  for (let i = 0; i < clean.length; i += 50) {
+    const chunk = clean.slice(i, i + 50);
+    const params = new URLSearchParams({
+      filter: `doi:${chunk.map((d) => `https://doi.org/${d}`).join("|")}`,
+      "per-page": "50",
+    });
+    if (MAILTO) params.set("mailto", MAILTO);
+    try {
+      const res = await fetch(`${OA}?${params.toString()}`);
+      if (!res.ok) continue;
+      const data = await res.json();
+      for (const w of data.results ?? []) {
+        const key = normDoi(w.doi);
+        if (!key) continue;
+        map.set(key, {
+          citations: w.cited_by_count ?? 0,
+          venue: w.primary_location?.source?.display_name ?? "",
+          authors: (w.authorships ?? [])
+            .map((a: any) => a.author?.display_name)
+            .filter(Boolean)
+            .join(", "),
+          url: w.doi ?? null,
+        });
+      }
+    } catch {}
+  }
+  return map;
+}
+
+/* ---------- ORCID: the authoritative list for a person ---------- */
+async function worksForOrcid(orcid: string): Promise<Pub[]> {
+  let groups: any[] = [];
+  try {
+    const res = await fetch(`${ORCID}/${orcid}/works`, {
+      headers: { Accept: "application/json" },
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    groups = data.group ?? [];
+  } catch {
+    return [];
+  }
+
+  const list = groups
+    .map((g) => (g["work-summary"] ?? [])[0])
+    .filter(Boolean)
+    .map((s: any) => {
+      const title = s.title?.title?.value ?? "Untitled";
+      const yearStr = s["publication-date"]?.year?.value;
+      const doiRaw = ((s["external-ids"]?.["external-id"] ?? []).find(
+        (e: any) => (e["external-id-type"] || "").toLowerCase() === "doi"
+      ) || {})["external-id-value"];
+      return {
+        title,
+        year: yearStr ? Number(yearStr) : null,
+        journal: s["journal-title"]?.value ?? "",
+        doi: normDoi(doiRaw),
+      };
+    })
+    .filter((w) => !isSupplementary(w.title));
+
+  const enrich = await openAlexByDois(list.map((w) => w.doi).filter(Boolean) as string[]);
+
+  return list.map((w): Pub => {
+    const e = w.doi ? enrich.get(w.doi) : undefined;
+    return {
+      title: w.title,
+      year: w.year,
+      doi: w.doi,
+      venue: e?.venue || w.journal || "",
+      citations: e?.citations ?? 0,
+      authors: e?.authors ?? "",
+      url: e?.url ?? (w.doi ? `https://doi.org/${w.doi}` : null),
+    };
+  });
+}
+
+/* ---------- OpenAlex author filter (fallback for OpenAlex ID / name) ---------- */
+function authorFilter(id: string): string {
+  const v = id.trim();
+  if (/^A\d+$/i.test(v)) return `author.id:${v}`;
+  return `raw_author_name.search:${v}`;
+}
+
+async function worksForOpenAlexAuthor(id: string): Promise<Pub[]> {
   const params = new URLSearchParams({
-    filter: filterFor(id),
+    filter: authorFilter(id),
     "per-page": "200",
     sort: "publication_year:desc",
   });
   if (MAILTO) params.set("mailto", MAILTO);
-
   try {
-    const res = await fetch(`${BASE}?${params.toString()}`);
+    const res = await fetch(`${OA}?${params.toString()}`);
     if (!res.ok) return [];
     const data = await res.json();
     return (data.results ?? [])
@@ -88,15 +169,15 @@ async function worksFor(id: string): Promise<Pub[]> {
         })
       );
   } catch {
-    return []; // never let a fetch hiccup break the build
+    return [];
   }
 }
 
-/**
- * Aggregate everyone's works, merge in manual entries, drop hidden DOIs,
- * collapse duplicates of the same title (repository copies, abstracts) to one,
- * preferring the version that has a DOI and/or more citations, then sort newest-first.
- */
+async function worksFor(id: string): Promise<Pub[]> {
+  return isOrcid(id) ? worksForOrcid(bareOrcid(id)) : worksForOpenAlexAuthor(id);
+}
+
+/* ---------- aggregate the whole team ---------- */
 export async function teamPublications(
   ids: string[],
   opts: { hidden?: string[]; manual?: Pub[] } = {}
@@ -113,7 +194,6 @@ export async function teamPublications(
     if (!existing) {
       byKey.set(key, p);
     } else {
-      // prefer the copy with a DOI, then the one with more citations
       const better = (!existing.doi && p.doi) || p.citations > existing.citations;
       if (better) byKey.set(key, p);
     }
