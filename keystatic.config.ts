@@ -135,6 +135,74 @@ cloud: {
       },
     }),
     // Add this inside the `collections: { ... }` object in keystatic.config.ts
+    projects: collection({
+      label: "Projects",
+      slugField: "title",
+      path: "src/content/projects/*",
+      format: { contentField: "content" },
+      columns: ["title", "status", "order"],
+
+      schema: {
+        title: fields.slug({
+          name: { label: "Project title" },
+        }),
+
+        summary: fields.text({
+          label: "Short summary",
+          multiline: true,
+          description: "Shown on the main Projects page.",
+        }),
+
+        status: fields.select({
+          label: "Status",
+          options: [
+            { label: "Ongoing", value: "ongoing" },
+            { label: "Completed", value: "completed" },
+          ],
+          defaultValue: "ongoing",
+        }),
+
+        lead: fields.text({
+          label: "Project lead",
+          validation: { isRequired: false },
+        }),
+
+        funder: fields.text({
+          label: "Funder",
+          validation: { isRequired: false },
+        }),
+
+        timeframe: fields.text({
+          label: "Project dates",
+          description: "For example, 2025–2028.",
+          validation: { isRequired: false },
+        }),
+
+        coverImage: fields.image({
+          label: "Cover image",
+          directory: "public/images/projects",
+          publicPath: "/images/projects/",
+          validation: { isRequired: false },
+        }),
+
+        order: fields.integer({
+          label: "Sort order",
+          description: "Lower numbers appear first.",
+          defaultValue: 0,
+        }),
+
+        content: fields.document({
+          label: "Full project information",
+          formatting: true,
+          dividers: true,
+          links: true,
+          images: {
+            directory: "public/images/projects",
+            publicPath: "/images/projects/",
+          },
+        }),
+      },
+    }),
 
     news: collection({
       label: "News",
