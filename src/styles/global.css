@@ -194,4 +194,15 @@
 .article blockquote { border-left: 3px solid var(--color-red-200); padding-left: 1rem; margin: 1.5rem 0; color: var(--color-muted); font-style: italic; }
 .article img { border-radius: var(--radius-lg); margin: 1.5rem 0; max-width: 100%; height: auto; }
 .article hr { border: 0; border-top: 1px solid var(--color-line); margin: 2rem 0; }
+  .project-status {
+    @apply inline-flex rounded-pill px-3 py-1 text-xs font-medium;
+  }
+
+  .project-status-ongoing {
+    @apply bg-red-50 text-red-700;
+  }
+
+  .project-status-completed {
+    @apply bg-navy-50 text-navy-600;
+  }
 }
