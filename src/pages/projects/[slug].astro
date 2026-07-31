@@ -1,0 +1,96 @@
+---
+import { createReader } from "@keystatic/core/reader";
+import { DocumentRenderer } from "@keystatic/core/renderer";
+import keystaticConfig from "../../../keystatic.config";
+import Layout from "../../layouts/Layout.astro";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const reader = createReader(process.cwd(), keystaticConfig);
+  const projects = await reader.collections.projects.all();
+
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { slug: project.slug },
+  }));
+}
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const project = await reader.collections.projects.read(Astro.props.slug);
+const document = project ? await project.content() : [];
+
+const statusLabel = {
+  ongoing: "Ongoing",
+  completed: "Completed",
+};
+---
+
+<Layout
+  title={project ? `${project.title} — Health Inequalities Team` : "Project"}
+  description={project?.summary}
+>
+  <section class="section">
+    <div class="container-page max-w-3xl">
+      <a href="/projects" class="text-sm text-red-600">
+        ← Back to projects
+      </a>
+
+      {
+        project && (
+          <>
+            <div class="mt-7 flex flex-wrap items-center gap-3 text-sm">
+              <span class={`project-status project-status-${project.status}`}>
+                {statusLabel[project.status]}
+              </span>
+
+              {project.timeframe && (
+                <span class="text-muted">{project.timeframe}</span>
+              )}
+            </div>
+
+            <h1 class="mt-4">{project.title}</h1>
+
+            <p class="mt-5 text-lg leading-8 text-muted">
+              {project.summary}
+            </p>
+
+            {(project.lead || project.funder) && (
+              <dl class="mt-7 grid gap-4 rounded-lg border border-line bg-white p-5 sm:grid-cols-2">
+                {project.lead && (
+                  <div>
+                    <dt class="text-xs uppercase tracking-wide text-cloud-500">
+                      Project lead
+                    </dt>
+                    <dd class="mt-1">{project.lead}</dd>
+                  </div>
+                )}
+
+                {project.funder && (
+                  <div>
+                    <dt class="text-xs uppercase tracking-wide text-cloud-500">
+                      Funder
+                    </dt>
+                    <dd class="mt-1">{project.funder}</dd>
+                  </div>
+                )}
+              </dl>
+            )}
+
+            {project.coverImage && (
+              <img
+                src={project.coverImage}
+                alt=""
+                class="mt-8 w-full rounded-lg object-cover"
+              />
+            )}
+
+            <article class="article mt-10">
+              <DocumentRenderer document={document} />
+            </article>
+          </>
+        )
+      }
+    </div>
+  </section>
+</Layout>
