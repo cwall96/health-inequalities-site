@@ -75,19 +75,26 @@ cloud: {
         category: fields.select({
           label: "Category",
           options: [
-          { label: "Staff", value: "staff" },
+          { label: "Team lead", value: "lead" },
+          { label: "Senior team member", value: "senior" },
+          { label: "Early career researcher", value: "ecr" },
           { label: "PhD student", value: "phd" },
-          { label: "Professional services", value: "services" },
+          { label: "Team administration", value: "services" },
+          { label: "Staff (choose a new group)", value: "staff" },
         ],
-        defaultValue: "staff",
+        defaultValue: "ecr",
         }),
         photo: fields.image({
           label: "Photo",
           directory: "public/images/team",
           publicPath: "/images/team/",
         }),
-        email: fields.text({ label: "Email", validation: { isRequired: false } }),
-        bio: fields.text({ label: "Short bio", multiline: true }),
+        email: fields.text({ label: "Email", description: "A short comma-separated list shown on the People page.", validation: { isRequired: false } }),
+        researchKeywords: fields.text({
+  label: "Research keywords",
+  description: "A short comma-separated list shown on the People page.",
+  validation: { isRequired: false },
+}),bio: fields.text({ label: "Short bio", multiline: true }),
         identifier: fields.text({
           label: "Publication identifier",
           description:
