@@ -3,27 +3,32 @@ const path = Astro.url.pathname;
 const links = [
   { href: "/", label: "Home" },
   { href: "/people", label: "People" },
-  { href: "/projects", label: "Projects" },
+  { href: "/research", label: "Research" },
   { href: "/presentations", label: "Presentations" },
   { href: "/publications", label: "Publications" },
   { href: "/news", label: "News" },
 ];
-const isActive = (href: string) =>
-  href === "/" ? path === "/" : path.startsWith(href);
+const isActive = (href: string) => {
+  if (href === "/") return path === "/";
+  if (href === "/research") {
+    return ["/research", "/projects", "/studies"].some((route) => path.startsWith(route));
+  }
+  return path.startsWith(href);
+};
 ---
 
 <header class="band-dark">
   <div class="container-page flex items-center justify-between gap-4 py-4">
     <a href="/" class="flex items-center gap-3 no-underline">
       <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
-        <circle cx="15" cy="15" r="13" fill="none" stroke="#e0384e" stroke-width="2"></circle>
-        <circle cx="15" cy="15" r="6.5" fill="none" stroke="#e0384e" stroke-width="2"></circle>
-        <circle cx="15" cy="15" r="1.8" fill="#e0384e"></circle>
-        <line x1="15" y1="0" x2="15" y2="30" stroke="#e0384e" stroke-width="2"></line>
-        <line x1="0" y1="15" x2="30" y2="15" stroke="#e0384e" stroke-width="2"></line>
+        <circle cx="15" cy="15" r="13" fill="none" stroke="#dfb0c0" stroke-width="2"></circle>
+        <circle cx="15" cy="15" r="6.5" fill="none" stroke="#dfb0c0" stroke-width="2"></circle>
+        <circle cx="15" cy="15" r="1.8" fill="#dfb0c0"></circle>
+        <line x1="15" y1="0" x2="15" y2="30" stroke="#dfb0c0" stroke-width="2"></line>
+        <line x1="0" y1="15" x2="30" y2="15" stroke="#dfb0c0" stroke-width="2"></line>
       </svg>
       <span class="font-display text-[17px] font-medium tracking-tight text-white">
-        <span class="text-red-500">H</span>ealth <span class="text-red-500">I</span>nequalities <span class="text-red-500">T</span>eam
+        <span class="text-red-200">H</span>ealth <span class="text-red-200">I</span>nequalities <span class="text-red-200">T</span>eam
       </span>
     </a>
     <nav class="hidden gap-6 sm:flex">

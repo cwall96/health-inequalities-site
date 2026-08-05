@@ -12,9 +12,9 @@ src/
   styles/global.css     Design system (Tailwind v4 @theme tokens + components)
   lib/publications.ts   OpenAlex fetch: by ORCID / OpenAlex ID / name, dedupe by DOI
   layouts/Layout.astro  Page shell: fonts, icons, header, footer
-  components/           Header, Footer, Hero (signature illustration), PersonCard
-  pages/                index (Home), people, presentations, publications
-  content/              Keystatic entries (People / Presentations / Manual publications)
+  components/           Header, Footer, Hero, page controls, PersonCard
+  pages/                Home, people, research, studies, presentations, publications, news
+  content/              Keystatic entries, including projects and studies
 keystatic.config.ts     Content model
 astro.config.mjs        Integrations + adapter
 .github/workflows/      Weekly rebuild (refreshes publications)
@@ -68,10 +68,11 @@ locally and in the host's environment settings. If unset, the site still works.
 
 ## Adding content (for non-developers)
 
-Go to `/keystatic`, pick People / Presentations / Manual publications, add an
-entry, upload a photo where relevant, save. Adding or removing a person is just
-adding or deleting an entry — the grid, filters, and homepage counts all update
-from the data. No layout or code is touched.
+Go to `/keystatic`, choose the relevant collection, add or update an entry, and
+save. The **Studies** collection controls the clickable cards in the coloured
+Studies section on the Research page. The homepage highlight is edited under
+**Homepage & settings** using **Highlight heading** and **Highlight text**.
+No layout or code changes are needed for routine content updates.
 
 ## Deploy (free)
 
@@ -89,6 +90,5 @@ which also covers handing the repo to the HIT account later.
   `@tabler/icons-webfont` and import it instead.
 - **Fonts** (Inter, Sora, Fraunces) load from Google Fonts in `global.css`.
   Swap headings to `font-serif` (Fraunces) for a more academic register.
-- **The hero illustration** in `components/Hero.astro` is hand-built SVG — a
-  faithful placeholder of the hands/scales/globe concept. Drop in a
-  professionally produced vector later without touching anything else.
+- **The hero illustration** is stored at `public/images/hero.png` and is used by
+  `components/Hero.astro`.

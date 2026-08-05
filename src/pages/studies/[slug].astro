@@ -1,0 +1,81 @@
+---
+import { createReader } from "@keystatic/core/reader";
+import { DocumentRenderer } from "@keystatic/core/renderer";
+import keystaticConfig from "../../../keystatic.config";
+import Layout from "../../layouts/Layout.astro";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const reader = createReader(process.cwd(), keystaticConfig);
+  const studies = await reader.collections.studies.all();
+
+  return studies.map((study) => ({
+    params: { slug: study.slug },
+    props: { slug: study.slug },
+  }));
+}
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const study = await reader.collections.studies.read(Astro.props.slug);
+const document = study ? await study.content() : [];
+
+const statusLabel = {
+  ongoing: "Ongoing",
+  completed: "Completed",
+};
+---
+
+<Layout
+  title={study ? `${study.title} — Health Inequalities Team` : "Study"}
+  description={study?.summary}
+>
+  <section class="section">
+    <div class="container-page max-w-3xl">
+      <a href="/research#studies-heading" class="text-sm text-red-600">
+        ← Back to studies
+      </a>
+
+      {
+        study && (
+          <>
+            <div class="mt-7 flex flex-wrap items-center gap-3 text-sm">
+              <span class={`project-status project-status-${study.status}`}>
+                {statusLabel[study.status]}
+              </span>
+              {study.timeframe && <span class="text-muted">{study.timeframe}</span>}
+            </div>
+
+            <h1 class="mt-4">{study.title}</h1>
+            <p class="mt-5 text-lg leading-8 text-muted">{study.summary}</p>
+
+            {(study.lead || study.funder) && (
+              <dl class="mt-7 grid gap-4 rounded-lg border border-line bg-white p-5 sm:grid-cols-2">
+                {study.lead && (
+                  <div>
+                    <dt class="text-xs uppercase tracking-wide text-cloud-500">Study lead</dt>
+                    <dd class="mt-1">{study.lead}</dd>
+                  </div>
+                )}
+                {study.funder && (
+                  <div>
+                    <dt class="text-xs uppercase tracking-wide text-cloud-500">Funder</dt>
+                    <dd class="mt-1">{study.funder}</dd>
+                  </div>
+                )}
+              </dl>
+            )}
+
+            {study.coverImage && (
+              <img src={study.coverImage} alt="" class="mt-8 w-full rounded-lg object-cover" />
+            )}
+
+            <article class="article mt-10">
+              <DocumentRenderer document={document} />
+            </article>
+          </>
+        )
+      }
+    </div>
+  </section>
+</Layout>

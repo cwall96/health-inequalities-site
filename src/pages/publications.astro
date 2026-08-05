@@ -34,6 +34,25 @@ for (const p of pubs) {
 }
 const years = [...byYear.keys()].sort((a, b) => b - a);
 
+const firstAuthorSurname = (authors: string) => {
+  const clean = authors.trim();
+  if (!clean) return "";
+
+  if (clean.includes(";")) {
+    const firstAuthor = clean.split(";")[0].trim();
+    if (firstAuthor.includes(",")) return firstAuthor.split(",")[0].trim();
+    return firstAuthor.split(/\s+/).at(-1) ?? "";
+  }
+
+  const firstAuthor = clean.split(",")[0].trim();
+  return firstAuthor.split(/\s+/).at(-1) ?? "";
+};
+
+const firstAuthors = [...new Set(pubs.map((p) => firstAuthorSurname(p.authors)).filter(Boolean))]
+  .sort((a, b) => a.localeCompare(b));
+const journals = [...new Set(pubs.map((p) => p.venue.trim()).filter(Boolean))]
+  .sort((a, b) => a.localeCompare(b));
+
 export const prerender = true;
 ---
 
@@ -51,12 +70,65 @@ export const prerender = true;
             <code>/keystatic</code>, then rebuild.
           </p>
         ) : (
-          <div class="mt-10 max-w-3xl">
+          <div class="mt-10" data-publication-filters>
+            <form class="publication-filters" aria-label="Filter publications" onsubmit="return false">
+              <div>
+                <label for="publication-year">Publication year</label>
+                <select id="publication-year" data-filter="year">
+                  <option value="">All years</option>
+                  {years.map((year) => <option value={String(year)}>{year || "Undated"}</option>)}
+                </select>
+              </div>
+
+              <div>
+                <label for="first-author">First author surname</label>
+                <input
+                  id="first-author"
+                  type="search"
+                  list="first-author-options"
+                  placeholder="Type a surname"
+                  autocomplete="off"
+                  data-filter="author"
+                />
+                <datalist id="first-author-options">
+                  {firstAuthors.map((author) => <option value={author} />)}
+                </datalist>
+              </div>
+
+              <div>
+                <label for="publication-journal">Journal</label>
+                <input
+                  id="publication-journal"
+                  type="search"
+                  list="journal-options"
+                  placeholder="Type a journal"
+                  autocomplete="off"
+                  data-filter="journal"
+                />
+                <datalist id="journal-options">
+                  {journals.map((journal) => <option value={journal} />)}
+                </datalist>
+              </div>
+
+              <button type="button" class="filter-reset" data-filter-reset>Clear filters</button>
+            </form>
+
+            <p class="mt-5 text-sm text-muted" aria-live="polite" data-publication-count>
+              Showing {pubs.length} publication{pubs.length === 1 ? "" : "s"}
+            </p>
+
+            <div class="mt-8 max-w-4xl">
             {years.map((year) => (
-              <div class="mb-8">
+              <div class="mb-8" data-year-group>
                 <p class="mb-2 text-xs tracking-wide text-cloud-400">{year || "Undated"}</p>
                 {byYear.get(year)!.map((p) => (
-                  <div class="flex items-start justify-between gap-4 border-t border-line py-3">
+                  <article
+                    class="flex items-start justify-between gap-4 border-t border-line py-4"
+                    data-publication
+                    data-year={String(p.year ?? 0)}
+                    data-first-author={firstAuthorSurname(p.authors).toLowerCase()}
+                    data-journal={p.venue.trim().toLowerCase()}
+                  >
                     <div>
                       <p class="leading-6 text-ink">{p.title}</p>
                       <p class="text-sm text-muted">
@@ -69,13 +141,62 @@ export const prerender = true;
                         <i class="ti ti-external-link text-lg text-muted" aria-hidden="true"></i>
                       </a>
                     )}
-                  </div>
+                  </article>
                 ))}
               </div>
             ))}
+            </div>
+
+            <p class="filter-empty" data-filter-empty hidden>
+              No publications match those filters. Try clearing one or more selections.
+            </p>
           </div>
         )
       }
     </div>
   </section>
+
+  <script>
+    const filterPanel = document.querySelector<HTMLElement>("[data-publication-filters]");
+
+    if (filterPanel) {
+      const controls = [...filterPanel.querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-filter]")];
+      const publications = [...filterPanel.querySelectorAll<HTMLElement>("[data-publication]")];
+      const yearGroups = [...filterPanel.querySelectorAll<HTMLElement>("[data-year-group]")];
+      const count = filterPanel.querySelector<HTMLElement>("[data-publication-count]");
+      const empty = filterPanel.querySelector<HTMLElement>("[data-filter-empty]");
+      const reset = filterPanel.querySelector<HTMLButtonElement>("[data-filter-reset]");
+
+      const applyFilters = () => {
+        const year = filterPanel.querySelector<HTMLSelectElement>("[data-filter='year']")?.value ?? "";
+        const author = filterPanel.querySelector<HTMLInputElement>("[data-filter='author']")?.value.trim().toLowerCase() ?? "";
+        const journal = filterPanel.querySelector<HTMLInputElement>("[data-filter='journal']")?.value.trim().toLowerCase() ?? "";
+        let visible = 0;
+
+        publications.forEach((publication) => {
+          const matches =
+            (!year || publication.dataset.year === year) &&
+            (!author || publication.dataset.firstAuthor?.includes(author)) &&
+            (!journal || publication.dataset.journal?.includes(journal));
+
+          publication.hidden = !matches;
+          if (matches) visible += 1;
+        });
+
+        yearGroups.forEach((group) => {
+          group.hidden = !group.querySelector("[data-publication]:not([hidden])");
+        });
+
+        if (count) count.textContent = `Showing ${visible} publication${visible === 1 ? "" : "s"}`;
+        if (empty) empty.hidden = visible !== 0;
+      };
+
+      controls.forEach((control) => control.addEventListener("input", applyFilters));
+      reset?.addEventListener("click", () => {
+        controls.forEach((control) => (control.value = ""));
+        applyFilters();
+        controls[0]?.focus();
+      });
+    }
+  </script>
 </Layout>

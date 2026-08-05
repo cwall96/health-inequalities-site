@@ -49,6 +49,16 @@ cloud: {
         defaultValue:
           "The Health Inequalities Team is based in the Population Health Sciences Institute at Newcastle University. We research why health outcomes differ so sharply between places and social groups, and what policy can do to close those gaps, across the social, economic and political determinants of health.\n\nThe team is led by Clare Bambra, Professor of Public Health. Clare is a Fellow of the Academy of Medical Sciences, a member of the German National Academy of Sciences (Leopoldina), an NIHR Senior Investigator, and a founding co-Director of Health Equity North. Much of her work centres on England's north and south health divide and the ways place shapes how long and how well people live.\n\nWe lead and contribute to major national and international collaborations, including a Wellcome Trust funded programme on regional health inequalities and CHAIN, the Centre for Global Health Inequalities Research in Norway. The team also advises WHO Europe on health equity, and supervises master's and doctoral researchers working across health inequalities.",
       }),
+      highlightHeading: fields.text({
+        label: "Highlight heading",
+        defaultValue: "Highlights",
+      }),
+      highlightBody: fields.text({
+        label: "Highlight text",
+        multiline: true,
+        description: "Shown in the coloured highlight box on the homepage.",
+        defaultValue: "This is where the team highlight can go",
+      }),
       featuredDoi: fields.text({
         label: "Featured publication DOI (homepage)",
         description: "Paste a DOI to pin one paper. Leave blank to show the newest.",
@@ -141,7 +151,6 @@ cloud: {
         link: fields.url({ label: "Link", validation: { isRequired: false } }),
       },
     }),
-    // Add this inside the `collections: { ... }` object in keystatic.config.ts
     projects: collection({
       label: "Projects",
       slugField: "title",
@@ -157,7 +166,7 @@ cloud: {
         summary: fields.text({
           label: "Short summary",
           multiline: true,
-          description: "Shown on the main Projects page.",
+          description: "Shown on the Research page.",
         }),
 
         status: fields.select({
@@ -206,6 +215,81 @@ cloud: {
           images: {
             directory: "public/images/projects",
             publicPath: "/images/projects/",
+          },
+        }),
+      },
+    }),
+
+    studies: collection({
+      label: "Studies",
+      slugField: "title",
+      path: "src/content/studies/*",
+      format: { contentField: "content" },
+      columns: ["title", "status", "order"],
+
+      schema: {
+        title: fields.slug({
+          name: { label: "Study title" },
+        }),
+
+        summary: fields.text({
+          label: "Short summary",
+          multiline: true,
+          description: "Shown on the Research page study card.",
+        }),
+
+        status: fields.select({
+          label: "Status",
+          options: [
+            { label: "Ongoing", value: "ongoing" },
+            { label: "Completed", value: "completed" },
+          ],
+          defaultValue: "ongoing",
+        }),
+
+        lead: fields.text({
+          label: "Study lead",
+          validation: { isRequired: false },
+        }),
+
+        funder: fields.text({
+          label: "Funder",
+          validation: { isRequired: false },
+        }),
+
+        timeframe: fields.text({
+          label: "Study dates",
+          description: "For example, 2026–2028.",
+          validation: { isRequired: false },
+        }),
+
+        coverImage: fields.image({
+          label: "Card image",
+          directory: "public/images/studies",
+          publicPath: "/images/studies/",
+          validation: { isRequired: false },
+        }),
+
+        externalLink: fields.url({
+          label: "External study page",
+          description: "Optional. If added, the card links here instead of to the study page on this website.",
+          validation: { isRequired: false },
+        }),
+
+        order: fields.integer({
+          label: "Sort order",
+          description: "Lower numbers appear first.",
+          defaultValue: 0,
+        }),
+
+        content: fields.document({
+          label: "Full study information",
+          formatting: true,
+          dividers: true,
+          links: true,
+          images: {
+            directory: "public/images/studies",
+            publicPath: "/images/studies/",
           },
         }),
       },
