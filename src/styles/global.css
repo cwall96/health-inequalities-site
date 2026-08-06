@@ -14,29 +14,29 @@
    --color-navy-700 -> bg-navy-700 / text-navy-700 / border-navy-700
    ------------------------------------------------------------ */
 @theme {
-  /* ---- Brand navy (primary / dark surfaces) ---- */
-  --color-navy-50:  #eef1f8;
-  --color-navy-100: #d4dcec;
-  --color-navy-200: #a9b7d4;
-  --color-navy-300: #7688b4;
-  --color-navy-400: #47598e;
-  --color-navy-500: #2e4173;
-  --color-navy-600: #23355c;
-  --color-navy-700: #1b2b52; /* core brand navy — hero + dark sections */
-  --color-navy-800: #14213f;
-  --color-navy-900: #0d1729;
+    /* Secondary brand blue */
+  --color-navy-50:  #eef3f8;
+  --color-navy-100: #d8e2ec;
+  --color-navy-200: #b7c9dc;
+  --color-navy-300: #8ca8c3;
+  --color-navy-400: #5d80a4;
+  --color-navy-500: #3a6188;
+  --color-navy-600: #294f78;
+  --color-navy-700: #1e3f6d; /* logo blue */
+  --color-navy-800: #18345a;
+  --color-navy-900: #122744;
 
-  /* ---- Brand burgundy (accent; utility names retained for compatibility) ---- */
-  --color-red-50:  #f8eef2;
-  --color-red-100: #f0d9e1;
-  --color-red-200: #dfb0c0;
-  --color-red-300: #c97a95; /* highlight / tint */
-  --color-red-400: #a94466;
-  --color-red-500: #7a1832; /* core brand accent */
-  --color-red-600: #681329;
-  --color-red-700: #561023; /* deep / shadow */
-  --color-red-800: #3f0c1a;
-  --color-red-900: #2a0812;
+  /* Primary brand red */
+  --color-red-50:  #fbf0f1;
+  --color-red-100: #f5dadd;
+  --color-red-200: #eab5bc;
+  --color-red-300: #dd8792;
+  --color-red-400: #cc5362;
+  --color-red-500: #b72d38; /* logo red */
+  --color-red-600: #a32632;
+  --color-red-700: #861f29;
+  --color-red-800: #681922;
+  --color-red-900: #491219;
 
   /* ---- Neutrals (light surfaces, borders, muted text) ---- */
   --color-cloud-50:  #fafaf9;
@@ -175,11 +175,11 @@
   }
 
   /* Dark hero / section band */
-  .band-dark { @apply bg-navy-700 text-white; }
+  .band-dark { @apply bg-red-700 text-white; }
 
   /* Accent rule under headings */
   .rule-accent { @apply h-1 w-16 rounded-sm bg-red-500; }
-  .on-dark .rule-accent { @apply bg-red-300; }
+  .on-dark .rule-accent { @apply bg-navy-200; }
 
   /* Eyebrow / kicker label */
   .eyebrow {
@@ -251,7 +251,7 @@
 
   /* Homepage highlight */
   .highlight-box {
-    @apply rounded-xl bg-red-700 p-7 text-white shadow-pop;
+    @apply rounded-xl bg-navy-700 p-7 text-white shadow-pop;
   }
 
   .highlight-label {
@@ -281,7 +281,7 @@
   }
 
   .studies-section {
-    @apply bg-red-700 py-section;
+    @apply bg-navy-700 py-section;
   }
 
   .studies-eyebrow {

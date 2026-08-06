@@ -1,23 +1,58 @@
-<div class="scroll-prompt" role="note">
-  <span>Scroll down for more information</span>
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M12 5v13m0 0 5-5m-5 5-5-5" />
-  </svg>
-</div>
+---
+const currentPath = Astro.url.pathname.replace(/\/$/, "");
+const showScrollPrompt = currentPath === "/research";
+---
 
-<a class="back-to-top" href="#top" aria-label="Return to the top of the page" data-back-to-top>
+{
+  showScrollPrompt && (
+    <div class="scroll-prompt" role="note">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 5v13m0 0 5-5m-5 5-5-5" />
+      </svg>
+
+      <span>Scroll down for individual study information</span>
+
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 5v13m0 0 5-5m-5 5-5-5" />
+      </svg>
+    </div>
+  )
+}
+
+<a
+  class="back-to-top"
+  href="#top"
+  aria-label="Return to the top of the page"
+  data-back-to-top
+>
   <svg viewBox="0 0 24 24" aria-hidden="true">
     <path d="M12 19V6m0 0-5 5m5-5 5 5" />
   </svg>
 </a>
 
 <script>
-  const backToTop = document.querySelector<HTMLElement>("[data-back-to-top]");
+  // Move the research-page prompt directly above the blue Studies section
+  const scrollPrompt =
+    document.querySelector<HTMLElement>(".scroll-prompt");
+
+  const studiesSection =
+    document.querySelector<HTMLElement>(".studies-section");
+
+  if (scrollPrompt && studiesSection) {
+    studiesSection.insertAdjacentElement("beforebegin", scrollPrompt);
+  }
+
+  // Show the return-to-top arrow after scrolling
+  const backToTop =
+    document.querySelector<HTMLElement>("[data-back-to-top]");
 
   const updateBackToTop = () => {
     backToTop?.classList.toggle("is-visible", window.scrollY > 360);
   };
 
   updateBackToTop();
-  window.addEventListener("scroll", updateBackToTop, { passive: true });
+
+  window.addEventListener("scroll", updateBackToTop, {
+    passive: true,
+  });
 </script>
