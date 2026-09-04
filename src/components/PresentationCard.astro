@@ -1,0 +1,120 @@
+---
+interface Props {
+  title: string;
+  section: string;
+  date?: string | null;
+  venue?: string | null;
+  link?: string | null;
+  coverImage?: string | null;
+}
+
+const {
+  title,
+  section,
+  date,
+  venue,
+  link,
+  coverImage,
+} = Astro.props;
+
+const isMedia = section === "media";
+const isPoster = section === "poster";
+
+const typeLabel = isMedia
+  ? "Media coverage"
+  : isPoster
+    ? "Poster"
+    : "Presentation";
+
+const actionLabel = isMedia
+  ? "View coverage"
+  : isPoster
+    ? "View poster"
+    : "View presentation";
+
+const formattedDate = date
+  ? new Date(date).toLocaleDateString("en-GB", {
+      month: "long",
+      year: "numeric",
+    })
+  : "";
+---
+
+<article
+  class:list={[
+    "group flex h-full flex-col overflow-hidden rounded-2xl shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-pop",
+    isMedia ? "bg-navy-700" : "bg-red-700",
+  ]}
+>
+  {
+    coverImage ? (
+      <img
+        src={coverImage}
+        alt=""
+        class="aspect-[4/3] w-full object-cover"
+        loading="lazy"
+      />
+    ) : (
+      <div
+        class:list={[
+          "flex aspect-[4/3] w-full items-center justify-center",
+          isMedia ? "bg-navy-800" : "bg-red-800",
+        ]}
+        aria-hidden="true"
+      >
+        <span class="text-lg font-medium text-white/75">
+          {typeLabel}
+        </span>
+      </div>
+    )
+  }
+
+  <div class="flex flex-1 flex-col p-6">
+    <div class="flex items-start justify-between gap-4">
+      <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-white">
+        {typeLabel}
+      </span>
+
+      {
+        formattedDate && (
+          <time
+            datetime={date ?? undefined}
+            class="text-right text-sm text-white/75"
+          >
+            {formattedDate}
+          </time>
+        )
+      }
+    </div>
+
+    <h2 class="mt-6 text-2xl leading-8 text-white">
+      {title}
+    </h2>
+
+    {
+      venue && (
+        <p class="mt-3 text-sm leading-6 text-white/75">
+          {venue}
+        </p>
+      )
+    }
+
+    {
+      link && (
+        <a
+          href={link}
+          class="mt-auto inline-flex self-start rounded-full bg-surface px-4 py-2 pt-2 text-sm font-medium text-navy-800 no-underline transition-colors hover:bg-white hover:no-underline"
+        >
+          {actionLabel}
+
+          <span
+            class="ml-2 inline-block transition-transform group-hover:translate-x-1"
+            aria-hidden="true"
+          >
+            →
+          </span>
+        </a>
+      )
+    }
+  </div>
+</article>

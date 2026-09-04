@@ -237,60 +237,83 @@ export default config({
       },
     }),
 
+    
     presentations: collection({
-      label: "Presentations",
-      slugField: "title",
-      path: "src/content/presentations/*",
-      format: {
-        data: "json",
-      },
-      columns: ["title", "date", "section"],
+  label: "Presentations & Posters",
+  slugField: "title",
+  path: "src/content/presentations/*",
+  format: {
+    data: "json",
+  },
+  columns: [
+    "title",
+    "date",
+    "section",
+  ],
 
-      schema: {
-        title: fields.slug({
-          name: {
-            label: "Title",
-          },
-        }),
-
-        date: fields.date({
-          label: "Date",
-        }),
-
-        venue: fields.text({
-          label: "Venue / details",
-          validation: {
-            isRequired: false,
-          },
-        }),
-
-        section: fields.select({
-          label: "Section",
-          options: [
-            {
-              label: "National inquiries",
-              value: "inquiry",
-            },
-            {
-              label: "Conferences and seminars",
-              value: "conference",
-            },
-            {
-              label: "Media coverage",
-              value: "media",
-            },
-          ],
-          defaultValue: "conference",
-        }),
-
-        link: fields.url({
-          label: "Link",
-          validation: {
-            isRequired: false,
-          },
-        }),
+  schema: {
+    title: fields.slug({
+      name: {
+        label: "Title",
       },
     }),
+
+    date: fields.date({
+      label: "Date",
+      validation: {
+        isRequired: false,
+      },
+    }),
+
+    venue: fields.text({
+      label: "Venue / details",
+      validation: {
+        isRequired: false,
+      },
+    }),
+
+    coverImage: fields.image({
+      label: "Card image",
+      description:
+        "Upload an image representing the presentation, poster or media coverage.",
+      directory: "public/images/presentations",
+      publicPath: "/images/presentations/",
+      validation: {
+        isRequired: false,
+      },
+    }),
+
+    section: fields.select({
+      label: "Content type",
+      options: [
+        {
+          label: "National inquiry presentation",
+          value: "inquiry",
+        },
+        {
+          label: "Conference or seminar presentation",
+          value: "conference",
+        },
+        {
+          label: "Poster",
+          value: "poster",
+        },
+        {
+          label: "Media coverage",
+          value: "media",
+        },
+      ],
+      defaultValue: "conference",
+    }),
+
+    link: fields.url({
+      label: "Link",
+      validation: {
+        isRequired: false,
+      },
+    }),
+  },
+}),
 
     projects: collection({
       label: "Projects",

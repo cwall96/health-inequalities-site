@@ -2,62 +2,79 @@
 import { createReader } from "@keystatic/core/reader";
 import keystaticConfig from "../../keystatic.config";
 import Layout from "../layouts/Layout.astro";
+import PresentationCard from "../components/PresentationCard.astro";
 
 const reader = createReader(process.cwd(), keystaticConfig);
-const all = await reader.collections.presentations.all();
 
-// Section order + labels (must match keystatic.config select values)
-const sections = [
-  { value: "inquiry", label: "National inquiries" },
-  { value: "conference", label: "Conferences and seminars" },
-  { value: "media", label: "Media coverage" },
-];
-
-const bySection = sections.map((s) => ({
-  ...s,
-  items: all
-    .filter((p) => (p.entry.section ?? "conference") === s.value)
-    .sort((a, b) => (b.entry.date ?? "").localeCompare(a.entry.date ?? "")),
-}));
-
-const fmt = (d: string | null) =>
-  d
-    ? new Date(d).toLocaleDateString("en-GB", { month: "long", year: "numeric" })
-    : "";
+const items = (await reader.collections.presentations.all()).sort(
+  (a, b) =>
+    (b.entry.date ?? "").localeCompare(a.entry.date ?? "")
+);
 
 export const prerender = true;
 ---
 
-<Layout title="Presentations — Health Inequalities Team">
+<Layout title="Presentations and posters — Health Inequalities Team">
   <section class="section">
-    <div class="container-page max-w-3xl">
-      <p class="eyebrow">Dissemination</p>
-      <h1 class="mt-3">Presentations</h1>
+    <div class="mx-auto w-full max-w-7xl px-6">
+      <div class="ml-auto max-w-2xl text-right">
+        <p class="eyebrow">
+          Dissemination
+        </p>
+
+        <h1 class="mt-3">
+          Presentations and posters
+        </h1>
+
+        <p class="mt-4 text-lg leading-8 text-muted">
+          Explore presentations, posters and media coverage from the
+          Health Inequalities Team.
+        </p>
+
+        <div class="mt-6 flex flex-wrap justify-end gap-x-6 gap-y-3 text-sm">
+          <span class="inline-flex items-center gap-2 text-muted">
+            <span
+              class="h-3 w-3 rounded-full bg-red-700"
+              aria-hidden="true"
+            ></span>
+
+            Presentations and posters
+          </span>
+
+          <span class="inline-flex items-center gap-2 text-muted">
+            <span
+              class="h-3 w-3 rounded-full bg-navy-700"
+              aria-hidden="true"
+            ></span>
+
+            Media coverage
+          </span>
+        </div>
+      </div>
 
       {
-        all.length === 0 ? (
-          <p class="mt-10 text-muted">
-            Nothing yet. Add presentations in the editor at <code>/keystatic</code>.
-          </p>
+        items.length === 0 ? (
+          <div class="mt-14 rounded-2xl border border-line bg-white p-8 text-center">
+            <p class="text-muted">
+              Nothing has been added yet. Add presentations, posters and
+              media coverage in the editor at <code>/keystatic</code>.
+            </p>
+          </div>
         ) : (
-          bySection
-            .filter((s) => s.items.length > 0)
-            .map((s) => (
-              <div class="mt-12 first:mt-10">
-                <h2 class="text-xl">{s.label}</h2>
-                <ol class="mt-5 border-l-2 border-red-200 pl-6">
-                  {s.items.map((p) => (
-                    <li class="mb-6 last:mb-0">
-                      <p class="text-sm text-red-600">{fmt(p.entry.date)}</p>
-                      <p class="mt-1 leading-6 text-ink">
-                        {p.entry.link ? <a href={p.entry.link}>{p.entry.title}</a> : p.entry.title}
-                      </p>
-                      {p.entry.venue && <p class="text-sm text-muted">{p.entry.venue}</p>}
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            ))
+          <div class="mt-14 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {
+              items.map((item) => (
+                <PresentationCard
+                  title={item.entry.title}
+                  section={item.entry.section ?? "conference"}
+                  date={item.entry.date}
+                  venue={item.entry.venue}
+                  link={item.entry.link}
+                  coverImage={item.entry.coverImage}
+                />
+              ))
+            }
+          </div>
         )
       }
     </div>

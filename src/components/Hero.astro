@@ -1,27 +1,25 @@
----
-interface Props {
-  eyebrow: string;
-  heading: string;
-  intro: string;
-}
-const { eyebrow, heading, intro } = Astro.props;
----
+<section class="home-hero" aria-labelledby="home-hero-title">
+  <div class="container-page home-hero-inner">
+    <div class="home-hero-content">
+      <h1 id="home-hero-title">
+        Health Inequalities Team
+      </h1>
 
-<section class="band-dark on-dark overflow-hidden">
-  <div class="container-page grid items-center gap-8 py-14 md:grid-cols-[1fr_1.1fr]">
-    <div>
-      <p class="eyebrow text-navy-100">{eyebrow}</p>
-      <h1 class="mt-4">{heading}</h1>
-      <div class="rule-accent mt-6"></div>
-      {intro && <p class="mt-6 max-w-[46ch] leading-7 text-white/75">{intro}</p>}
+      <div class="home-hero-rule" aria-hidden="true"></div>
+
+      <p>
+        The Health Inequalities Team is based in the Population Health Sciences
+        Institute at Newcastle University
+      </p>
     </div>
-    <div class="max-md:-mx-6">
+
+    <div class="home-hero-image">
       <img
         src="/images/hero.png"
-        alt="A balance scale weighing groups of people against a globe, ringed by icons for the social determinants of health"
-        class="mx-auto w-full max-w-[560px]"
+        alt="A balance scale weighing groups of people against a globe, surrounded by icons representing health and care"
         width="2000"
         height="1400"
+        loading="eager"
       />
     </div>
   </div>
