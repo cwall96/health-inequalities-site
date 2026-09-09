@@ -11,13 +11,25 @@ const items = (await reader.collections.presentations.all()).sort(
     (b.entry.date ?? "").localeCompare(a.entry.date ?? "")
 );
 
+const itemYear = (date?: string | null) => date?.slice(0, 4) || "undated";
+const years = [...new Set(items.map((item) => itemYear(item.entry.date)))].sort(
+  (a, b) => {
+    if (a === "undated") return 1;
+    if (b === "undated") return -1;
+    return b.localeCompare(a);
+  }
+);
+
+const itemsInYear = (year: string) =>
+  items.filter((item) => itemYear(item.entry.date) === year).length;
+
 export const prerender = true;
 ---
 
 <Layout title="Presentations and posters — Health Inequalities Team">
-  <section class="section">
+  <section class="section page-intro-section">
     <div class="mx-auto w-full max-w-7xl px-6">
-      <div class="ml-auto max-w-2xl text-right">
+      <div class="page-intro presentation-page-intro ml-auto max-w-2xl text-right">
         <p class="eyebrow">
           Dissemination
         </p>
@@ -26,22 +38,31 @@ export const prerender = true;
           Presentations and posters
         </h1>
 
-        <p class="mt-4 text-lg leading-8 text-muted">
-          Explore presentations, posters and media coverage from the
-          Health Inequalities Team.
-        </p>
+<p class="page-intro-copy mt-4 text-lg leading-8">
+  Explore presentations, posters and media coverage from the
+  Health Inequalities Team.
+</p>
 
-        <div class="mt-6 flex flex-wrap justify-end gap-x-6 gap-y-3 text-sm">
-          <span class="inline-flex items-center gap-2 text-muted">
+        <div class="mt-6 flex flex-wrap justify-end gap-x-6 gap-y-3 text-sm text-navy-800">
+          <span class="inline-flex items-center gap-2">
             <span
               class="h-3 w-3 rounded-full bg-red-700"
               aria-hidden="true"
             ></span>
 
-            Presentations and posters
+            Presentations
           </span>
 
-          <span class="inline-flex items-center gap-2 text-muted">
+          <span class="inline-flex items-center gap-2">
+            <span
+              class="h-3 w-3 rounded-full border border-navy-900/20 bg-lavender"
+              aria-hidden="true"
+            ></span>
+
+            Posters
+          </span>
+
+          <span class="inline-flex items-center gap-2">
             <span
               class="h-3 w-3 rounded-full bg-navy-700"
               aria-hidden="true"
@@ -61,22 +82,82 @@ export const prerender = true;
             </p>
           </div>
         ) : (
-          <div class="mt-14 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {
-              items.map((item) => (
-                <PresentationCard
-                  title={item.entry.title}
-                  section={item.entry.section ?? "conference"}
-                  date={item.entry.date}
-                  venue={item.entry.venue}
-                  link={item.entry.link}
-                  coverImage={item.entry.coverImage}
-                />
-              ))
-            }
+          <div class="output-gallery-layout mt-14" data-output-filters>
+            <div class="grid grid-flow-row-dense items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-6">
+              {
+                items.map((item) => (
+                  <PresentationCard
+                    title={item.entry.title}
+                    section={item.entry.section ?? "conference"}
+                    date={item.entry.date}
+                    venue={item.entry.venue}
+                    link={item.entry.link}
+                    coverImage={item.entry.coverImage}
+                  />
+                ))
+              }
+            </div>
+
+            <aside class="output-year-filter" aria-labelledby="output-year-heading">
+              <p class="eyebrow">Browse outputs</p>
+              <h2 id="output-year-heading" class="mt-2 text-xl">Year</h2>
+
+              <div class="output-year-options">
+                <button type="button" class="output-year-button is-active" data-year-filter="" aria-pressed="true">
+                  <span>All years</span>
+                  <span>{items.length}</span>
+                </button>
+
+                {years.map((year) => (
+                  <button type="button" class="output-year-button" data-year-filter={year} aria-pressed="false">
+                    <span>{year === "undated" ? "Undated" : year}</span>
+                    <span>{itemsInYear(year)}</span>
+                  </button>
+                ))}
+              </div>
+
+              <p class="mt-4 text-sm text-muted" aria-live="polite" data-output-count>
+                Showing all {items.length} outputs
+              </p>
+            </aside>
           </div>
         )
       }
     </div>
   </section>
+
+  <script>
+    const outputFilters = document.querySelector<HTMLElement>("[data-output-filters]");
+
+    if (outputFilters) {
+      const cards = [...outputFilters.querySelectorAll<HTMLElement>("[data-output-card]")];
+      const buttons = [...outputFilters.querySelectorAll<HTMLButtonElement>("[data-year-filter]")];
+      const count = outputFilters.querySelector<HTMLElement>("[data-output-count]");
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const selectedYear = button.dataset.yearFilter ?? "";
+          let visible = 0;
+
+          cards.forEach((card) => {
+            const matches = !selectedYear || card.dataset.year === selectedYear;
+            card.hidden = !matches;
+            if (matches) visible += 1;
+          });
+
+          buttons.forEach((yearButton) => {
+            const isActive = yearButton === button;
+            yearButton.classList.toggle("is-active", isActive);
+            yearButton.setAttribute("aria-pressed", String(isActive));
+          });
+
+          if (count) {
+            count.textContent = selectedYear
+              ? `Showing ${visible} output${visible === 1 ? "" : "s"}`
+              : `Showing all ${visible} outputs`;
+          }
+        });
+      });
+    }
+  </script>
 </Layout>

@@ -7,7 +7,21 @@ const links = [
   { href: "/research", label: "Research" },
   { href: "/presentations", label: "Presentations & Posters" },
   { href: "/publications", label: "Publications" },
-  { href: "/news", label: "News" },
+  { href: "/news", label: "What's New?" },
+];
+
+const homeSectionLinks = [
+  { href: "/#about-hit", label: "About HIT" },
+  {
+    href: "/#what-are-health-inequalities",
+    label: "What are health inequalities?",
+  },
+];
+
+const researchSectionLinks = [
+  { href: "/research#research-programmes", label: "Research programmes" },
+  { href: "/research#research-themes", label: "Research themes" },
+  { href: "/research#studies-heading", label: "Studies" },
 ];
 
 const isActive = (href: string) => {
@@ -25,19 +39,85 @@ const isActive = (href: string) => {
 
 <header class="site-header">
   <div class="container-page site-header-inner">
+    <details class="mobile-menu">
+      <summary class="mobile-menu-summary">
+        <i class="ti ti-menu-2" aria-hidden="true"></i>
+        <span>Menu</span>
+      </summary>
+
+      <nav class="mobile-navigation" aria-label="Mobile navigation">
+        {
+          links.map((link) => (
+            <>
+              <a
+                href={link.href}
+                aria-current={isActive(link.href) ? "page" : undefined}
+                class:list={[
+                  "mobile-nav-link",
+                  { "mobile-nav-link-active": isActive(link.href) },
+                ]}
+              >
+                {link.label}
+              </a>
+
+              {link.href === "/" && (
+                <div class="mobile-subnavigation">
+                  {homeSectionLinks.map((section) => (
+                    <a href={section.href}>{section.label}</a>
+                  ))}
+                </div>
+              )}
+
+              {link.href === "/research" && (
+                <div class="mobile-subnavigation">
+                  {researchSectionLinks.map((section) => (
+                    <a href={section.href}>{section.label}</a>
+                  ))}
+                </div>
+              )}
+            </>
+          ))
+        }
+      </nav>
+    </details>
+
     <nav class="site-navigation" aria-label="Main navigation">
       {
-        links.map((link) => (
-          <a
-            href={link.href}
-            class:list={[
-              "site-nav-link",
-              { "site-nav-link-active": isActive(link.href) },
-            ]}
-          >
-            {link.label}
-          </a>
-        ))
+        links.map((link) =>
+          link.href === "/" || link.href === "/research" ? (
+            <div class="site-nav-dropdown">
+              <a
+                href={link.href}
+                aria-current={isActive(link.href) ? "page" : undefined}
+                aria-haspopup="true"
+                class:list={[
+                  "site-nav-link site-nav-dropdown-trigger",
+                  { "site-nav-link-active": isActive(link.href) },
+                ]}
+              >
+                {link.label}
+                <i class="ti ti-chevron-down" aria-hidden="true"></i>
+              </a>
+
+              <div class="site-subnavigation">
+                {(link.href === "/" ? homeSectionLinks : researchSectionLinks).map((section) => (
+                  <a href={section.href}>{section.label}</a>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <a
+              href={link.href}
+              aria-current={isActive(link.href) ? "page" : undefined}
+              class:list={[
+                "site-nav-link",
+                { "site-nav-link-active": isActive(link.href) },
+              ]}
+            >
+              {link.label}
+            </a>
+          )
+        )
       }
     </nav>
 

@@ -19,6 +19,7 @@ const {
 
 const isMedia = section === "media";
 const isPoster = section === "poster";
+const isOnDark = !isPoster;
 
 const typeLabel = isMedia
   ? "Media coverage"
@@ -38,12 +39,18 @@ const formattedDate = date
       year: "numeric",
     })
   : "";
+const year = date?.slice(0, 4) || "undated";
 ---
 
 <article
+  data-output-card
+  data-year={year}
   class:list={[
     "group flex h-full flex-col overflow-hidden rounded-2xl shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-pop",
-    isMedia ? "bg-navy-700" : "bg-red-700",
+    isPoster
+      ? "sm:col-span-1 lg:col-span-1"
+      : "sm:col-span-2 lg:col-span-2",
+    isMedia ? "bg-navy-700" : isPoster ? "bg-lavender" : "bg-red-700",
   ]}
 >
   {
@@ -51,18 +58,26 @@ const formattedDate = date
       <img
         src={coverImage}
         alt=""
-        class="aspect-[4/3] w-full object-cover"
+        class:list={[
+          "w-full bg-surface",
+          isPoster
+            ? "aspect-[3/4] object-contain"
+            : isMedia
+              ? "aspect-video object-cover"
+              : "aspect-video object-contain",
+        ]}
         loading="lazy"
       />
     ) : (
       <div
         class:list={[
-          "flex aspect-[4/3] w-full items-center justify-center",
-          isMedia ? "bg-navy-800" : "bg-red-800",
+          "flex w-full items-center justify-center",
+          isPoster ? "aspect-[3/4]" : "aspect-video",
+          isMedia ? "bg-navy-800" : isPoster ? "bg-navy-50" : "bg-red-800",
         ]}
         aria-hidden="true"
       >
-        <span class="text-lg font-medium text-white/75">
+        <span class:list={["text-lg font-medium", isOnDark ? "text-white/75" : "text-navy-800"]}>
           {typeLabel}
         </span>
       </div>
@@ -71,7 +86,12 @@ const formattedDate = date
 
   <div class="flex flex-1 flex-col p-6">
     <div class="flex items-start justify-between gap-4">
-      <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-white">
+      <span
+        class:list={[
+          "rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wide",
+          isOnDark ? "bg-white/15 text-white" : "bg-navy-900/10 text-navy-900",
+        ]}
+      >
         {typeLabel}
       </span>
 
@@ -79,7 +99,10 @@ const formattedDate = date
         formattedDate && (
           <time
             datetime={date ?? undefined}
-            class="text-right text-sm text-white/75"
+            class:list={[
+              "text-right text-sm",
+              isOnDark ? "text-white/75" : "text-navy-800",
+            ]}
           >
             {formattedDate}
           </time>
@@ -87,13 +110,13 @@ const formattedDate = date
       }
     </div>
 
-    <h2 class="mt-6 text-2xl leading-8 text-white">
+    <h2 class:list={["mt-6 text-2xl leading-8", isOnDark ? "text-white" : "text-navy-900"]}>
       {title}
     </h2>
 
     {
       venue && (
-        <p class="mt-3 text-sm leading-6 text-white/75">
+        <p class:list={["mt-3 text-sm leading-6", isOnDark ? "text-white/75" : "text-navy-800"]}>
           {venue}
         </p>
       )
@@ -103,7 +126,12 @@ const formattedDate = date
       link && (
         <a
           href={link}
-          class="mt-auto inline-flex self-start rounded-full bg-surface px-4 py-2 pt-2 text-sm font-medium text-navy-800 no-underline transition-colors hover:bg-white hover:no-underline"
+          class:list={[
+            "mt-auto inline-flex self-start rounded-full px-4 py-2 pt-2 text-sm font-medium no-underline transition-colors hover:no-underline",
+            isOnDark
+              ? "bg-surface text-navy-800 hover:bg-white"
+              : "bg-navy-900 text-white hover:bg-navy-800",
+          ]}
         >
           {actionLabel}
 

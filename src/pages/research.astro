@@ -1,5 +1,6 @@
 ---
 import { createReader } from "@keystatic/core/reader";
+import { DocumentRenderer } from "@keystatic/core/renderer";
 import keystaticConfig from "../../keystatic.config";
 import Layout from "../layouts/Layout.astro";
 
@@ -14,11 +15,29 @@ const projects = (await reader.collections.projects.all()).sort(
     a.entry.title.localeCompare(b.entry.title)
 );
 
+const projectsWithContent = await Promise.all(
+  projects.map(async (project) => ({
+    ...project,
+    document: await project.entry.content(),
+  }))
+);
+
 const studies = (await reader.collections.studies.all()).sort(
   (a, b) =>
     (a.entry.order ?? 0) - (b.entry.order ?? 0) ||
     a.entry.title.localeCompare(b.entry.title)
 );
+
+const normaliseTheme = (theme: string) => theme.trim().toLowerCase();
+const themes = [
+  ...new Map(
+    studies
+      .flatMap((study) => study.entry.researchThemes ?? [])
+      .map((theme) => theme.trim())
+      .filter(Boolean)
+      .map((theme) => [normaliseTheme(theme), theme])
+  ).values(),
+].sort((a, b) => a.localeCompare(b));
 
 const statusLabel = {
   ongoing: "Ongoing",
@@ -27,18 +46,22 @@ const statusLabel = {
 ---
 
 <Layout title="Research — Health Inequalities Team">
-  <section class="section">
+  <section class="section page-intro-section">
     <div class="container-page max-w-5xl">
-      <h1>Our research</h1>
-      <p class="mt-5 max-w-2xl leading-7 text-muted">
-        Explore the Health Inequalities Team's major research programmes and individual studies.
-      </p>
+<div class="page-intro max-w-2xl">
+  <h1>Our research</h1>
+
+  <p class="page-intro-copy mt-5 leading-7">
+    Explore the Health Inequalities Team's research programmes and studies.
+  </p>
+</div>
 
 <div
+  id="research-programmes"
   class="mt-12 grid gap-10 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16"
 >
   <div>
-    <p class="eyebrow">Projects in HIT</p>
+    <p class="eyebrow">Research programmes</p>
 
     <p class="mt-5 leading-7 text-muted">
       {
@@ -50,26 +73,38 @@ const statusLabel = {
 
   <div>
     {
-      projects.length === 0 ? (
-        <p class="text-muted">No projects have been added yet.</p>
+      projectsWithContent.length === 0 ? (
+        <p class="text-muted">No research programmes have been added yet.</p>
       ) : (
-        <nav
-          class="project-title-list"
-          aria-label="Projects in HIT"
-        >
-          {projects.map((project) => (
-            <a
-              href={`/projects/${project.slug}`}
-              class="project-title-link"
-            >
-              <span>{project.entry.title}</span>
+        <div class="research-programme-list">
+          {projectsWithContent.map((project) => (
+            <article class="research-programme">
+              <div class="flex flex-wrap items-center gap-3 text-sm">
+                <span class={`project-status project-status-${project.entry.status}`}>
+                  {statusLabel[project.entry.status]}
+                </span>
+                {project.entry.timeframe && <span class="text-muted">{project.entry.timeframe}</span>}
+              </div>
 
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M5 12h14m0 0-5-5m5 5-5 5" />
-              </svg>
-            </a>
+              <h2 class="mt-4 text-2xl">{project.entry.title}</h2>
+              <p class="mt-4 leading-7 text-ink">{project.entry.summary}</p>
+
+              {(project.entry.lead || project.entry.funder) && (
+                <p class="mt-4 text-sm leading-6 text-muted">
+                  {[project.entry.lead && `Led by ${project.entry.lead}`, project.entry.funder && `Funded by ${project.entry.funder}`]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </p>
+              )}
+
+              {project.document.length > 0 && (
+                <article class="article research-programme-content">
+                  <DocumentRenderer document={project.document} />
+                </article>
+              )}
+            </article>
           ))}
-        </nav>
+        </div>
       )
     }
   </div>
@@ -82,10 +117,36 @@ const statusLabel = {
     class="studies-section on-dark"
     aria-labelledby="studies-heading">
     <div class="container-page">
+      <div id="research-themes" class="research-theme-filter">
+        <div>
+          <p class="eyebrow studies-eyebrow">Research themes</p>
+          <h2 class="mt-3 text-2xl text-white">Explore studies by theme</h2>
+          <p class="mt-3 max-w-2xl leading-7 text-white/75">
+            Choose a theme to show the studies connected to that area of work.
+          </p>
+        </div>
+
+        <div class="research-theme-options" aria-label="Filter studies by research theme">
+          <button type="button" class="research-theme-button is-active" data-theme-filter="" aria-pressed="true">
+            All studies
+          </button>
+          {themes.map((theme) => (
+            <button
+              type="button"
+              class="research-theme-button"
+              data-theme-filter={normaliseTheme(theme)}
+              aria-pressed="false"
+            >
+              {theme}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <p class="eyebrow studies-eyebrow">Our work in depth</p>
       <h2 id="studies-heading" class="mt-3">Studies</h2>
       <p class="mt-4 max-w-2xl leading-7 text-white/75">
-        Discover the individual studies through which we investigate and address health inequalities.
+        Discover the studies through which we investigate and address health inequalities.
       </p>
 
       {
@@ -94,10 +155,11 @@ const statusLabel = {
             Studies will appear here when they are added in Keystatic.
           </p>
         ) : (
-          <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div class="mt-10 grid gap-6 md:grid-cols-2" data-study-grid>
             {studies.map((study) => {
               const href = study.entry.externalLink || `/studies/${study.slug}`;
               const isExternal = Boolean(study.entry.externalLink);
+              const studyThemes = (study.entry.researchThemes ?? []).map((theme) => theme.trim()).filter(Boolean);
 
               return (
                 <a
@@ -105,6 +167,8 @@ const statusLabel = {
                   target={isExternal ? "_blank" : undefined}
                   rel={isExternal ? "noopener noreferrer" : undefined}
                   class="study-card group"
+                  data-study-card
+                  data-study-themes={JSON.stringify(studyThemes.map(normaliseTheme))}
                 >
                   {study.entry.coverImage && (
                     <img
@@ -115,15 +179,21 @@ const statusLabel = {
                   )}
 
                   <div class="study-card-content">
-                    <div class="flex flex-wrap items-center gap-3 text-xs text-white/70">
+                    <div class="flex flex-wrap items-center gap-3 text-xs text-navy-800">
                       <span class="study-status">{statusLabel[study.entry.status]}</span>
                       {study.entry.timeframe && <span>{study.entry.timeframe}</span>}
                     </div>
 
-                    <h3 class="mt-4 text-xl text-white">{study.entry.title}</h3>
-                    <p class="mt-3 flex-1 leading-7 text-white/75">{study.entry.summary}</p>
+                    <h3 class="mt-4 text-xl text-navy-900">{study.entry.title}</h3>
+                    <p class="mt-3 flex-1 leading-7 text-navy-800">{study.entry.summary}</p>
 
-                    <span class="mt-6 inline-flex items-center gap-2 text-sm font-medium text-white">
+                    {studyThemes.length > 0 && (
+                      <div class="study-theme-tags" aria-label="Research themes">
+                        {studyThemes.map((theme) => <span>{theme}</span>)}
+                      </div>
+                    )}
+
+                    <span class="mt-6 inline-flex items-center gap-2 text-sm font-medium text-navy-900">
                       View study
                       <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M5 12h14m0 0-5-5m5 5-5 5" />
@@ -136,6 +206,38 @@ const statusLabel = {
           </div>
         )
       }
+
+      <p class="study-filter-empty" data-study-filter-empty hidden>
+        No studies are currently assigned to this research theme.
+      </p>
     </div>
   </section>
+
+  <script>
+    const themeButtons = [...document.querySelectorAll<HTMLButtonElement>("[data-theme-filter]")];
+    const studyCards = [...document.querySelectorAll<HTMLElement>("[data-study-card]")];
+    const emptyMessage = document.querySelector<HTMLElement>("[data-study-filter-empty]");
+
+    themeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const selectedTheme = button.dataset.themeFilter ?? "";
+        let visible = 0;
+
+        studyCards.forEach((card) => {
+          const cardThemes = JSON.parse(card.dataset.studyThemes ?? "[]") as string[];
+          const matches = !selectedTheme || cardThemes.includes(selectedTheme);
+          card.hidden = !matches;
+          if (matches) visible += 1;
+        });
+
+        themeButtons.forEach((themeButton) => {
+          const isActive = themeButton === button;
+          themeButton.classList.toggle("is-active", isActive);
+          themeButton.setAttribute("aria-pressed", String(isActive));
+        });
+
+        if (emptyMessage) emptyMessage.hidden = visible !== 0;
+      });
+    });
+  </script>
 </Layout>

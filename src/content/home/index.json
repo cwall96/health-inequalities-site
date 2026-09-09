@@ -2,6 +2,28 @@
   "eyebrow": "Newcastle University",
   "heading": "Health Inequalities Team",
   "intro": "The Health Inequalities Team (HIT) is based in the Population Health Sciences Institute at Newcastle University.",
+  "inequalitiesSection": {
+    "eyebrow": "Understanding the issue",
+    "heading": "What are health inequalities?",
+    "definitionLabel": "A working definition",
+    "definition": "Health inequalities are systematic, unfair and avoidable differences in health between groups of people. They can be seen in how long people live, the conditions they experience, and their access to, experience of and outcomes from health and care.",
+    "definitionSourceLabel": "Read the NHS England definition",
+    "definitionSourceUrl": "https://www.england.nhs.uk/about/equality/equality-hub/national-healthcare-inequalities-improvement-programme/what-are-healthcare-inequalities/",
+    "subsections": [
+      {
+        "heading": "Social determinants of health",
+        "body": "Health is shaped by the conditions in which people are born, grow, live, work and age, together with their access to power, money and resources. Housing, education, employment, income and the local environment therefore influence opportunities for good health.",
+        "sourceLabel": "WHO: social determinants of health",
+        "sourceUrl": "https://www.who.int/health-topics/social-determinants-of-health"
+      },
+      {
+        "heading": "The social gradient",
+        "body": "Health does not divide neatly into a healthy advantaged group and an unhealthy disadvantaged group. Across society, health generally improves as social and economic position improves. This pattern is known as the social gradient in health.",
+        "sourceLabel": "The Marmot Review",
+        "sourceUrl": "https://www.gov.uk/research-for-development-outputs/fair-society-healthy-lives-the-marmot-review-strategic-review-of-health-inequalities-in-england-post-2010"
+      }
+    ]
+  },
   "aboutHeading": "Understanding and reducing health inequalities",
   "aboutBody": "The Health Inequalities Team is based in the Population Health Sciences Institute at Newcastle University. We research why health outcomes differ so sharply between places and social groups, and what policy can do to close those gaps, across the social, economic, and political determinants of health.\n\nThe team is led by Clare Bambra, Professor of Public Health. Clare is a Fellow of the Academy of Medical Sciences, a member of the German National Academy of Sciences (Leopoldina), an NIHR Senior Investigator, and a founding co-Director of Health Equity North.\n\nWe are an interdisciplinary team of social scientists, epidemiologists, geographers, economists, anthropologists, and clinical researchers.\n\nWe lead and contribute to major national and international collaborations, including a Wellcome Trust funded programme on regional health inequalities and CHAIN, the Centre for Global Health Inequalities Research in Norway. The team also advises WHO Europe on health equity, and supervises master's and doctoral researchers working across health inequalities.",
   "highlightHeading": "HIT Highlights",

@@ -1,21 +1,32 @@
-<section class="home-hero" aria-labelledby="home-hero-title">
+---
+interface Props {
+  heading?: string;
+  intro?: string;
+}
+
+const {
+  heading = "Health Inequalities Team",
+  intro = "The Health Inequalities Team is based in the Population Health Sciences Institute at Newcastle University.",
+} = Astro.props;
+---
+
+<section id="home-overview" class="home-hero" aria-labelledby="home-hero-title">
   <div class="container-page home-hero-inner">
     <div class="home-hero-content">
       <h1 id="home-hero-title">
-        Health Inequalities Team
+        {heading}
       </h1>
 
       <div class="home-hero-rule" aria-hidden="true"></div>
 
       <p>
-        The Health Inequalities Team is based in the Population Health Sciences
-        Institute at Newcastle University
+        {intro}
       </p>
     </div>
 
     <div class="home-hero-image">
       <img
-        src="/images/hero.png"
+        src="/images/Hero2.png"
         alt="A balance scale weighing groups of people against a globe, surrounded by icons representing health and care"
         width="2000"
         height="1400"

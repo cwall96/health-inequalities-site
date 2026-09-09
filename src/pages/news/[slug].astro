@@ -20,10 +20,10 @@ const fmt = (d: string | null) =>
   d ? new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : "";
 ---
 
-<Layout title={post ? `${post.title} — Health Inequalities Team` : "News"}>
+<Layout title={post ? `${post.title} — Health Inequalities Team` : "What's New?"}>
   <section class="section">
     <div class="container-page max-w-2xl">
-      <a href="/news" class="text-sm text-red-600">← Back to news</a>
+      <a href="/news" class="text-sm text-red-600">← Back to What's New?</a>
 
       {
         post && (

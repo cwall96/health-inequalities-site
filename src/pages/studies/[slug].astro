@@ -24,58 +24,220 @@ const statusLabel = {
   ongoing: "Ongoing",
   completed: "Completed",
 };
+
+const paragraphs = (value = "") =>
+  value
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+
+const highlights = study?.highlights?.filter((highlight) => highlight.trim()) ?? [];
+
+const structuredSections = study
+  ? [
+      {
+        id: "why-this-study-matters",
+        heading: study.whyItMatters?.heading,
+        body: study.whyItMatters?.body,
+        accent: false,
+      },
+      {
+        id: "what-we-are-doing",
+        heading: study.approach?.heading,
+        body: study.approach?.body,
+        accent: false,
+      },
+      {
+        id: "impact-and-outputs",
+        heading: study.impact?.heading,
+        body: study.impact?.body,
+        accent: true,
+      },
+    ].filter((section) => section.body?.trim())
+  : [];
+
+const studyStages = [
+  { value: "protocol", label: "Protocol" },
+  { value: "ethical-approval", label: "Ethical approval" },
+  { value: "study-setup", label: "Study set-up" },
+  { value: "data-collection", label: "Data collection" },
+  { value: "data-analysis", label: "Data analysis" },
+  { value: "dissemination", label: "Dissemination" },
+  { value: "concluded", label: "Concluded" },
+] as const;
+
+const currentStageIndex = Math.max(
+  0,
+  studyStages.findIndex((stage) => stage.value === study?.currentStage)
+);
+
+const outputTypeLabel = {
+  publication: "Publication",
+  presentation: "Presentation",
+  poster: "Poster",
+  media: "Media coverage",
+  other: "Output",
+};
+
+const relatedOutputs = study?.relatedOutputs ?? [];
 ---
 
 <Layout
   title={study ? `${study.title} — Health Inequalities Team` : "Study"}
   description={study?.summary}
 >
-  <section class="section">
-    <div class="container-page max-w-3xl">
-      <a href="/research#studies-heading" class="text-sm text-red-600">
-        ← Back to studies
-      </a>
+  {
+    study && (
+      <>
+        <section class="study-page-hero">
+          <div
+            class:list={[
+              "container-page study-page-hero-inner",
+              { "study-page-hero-with-image": Boolean(study.coverImage) },
+            ]}
+          >
+            <div>
+              <a href="/research#studies-heading" class="study-back-link">
+                ← Back to studies
+              </a>
 
-      {
-        study && (
-          <>
-            <div class="mt-7 flex flex-wrap items-center gap-3 text-sm">
-              <span class={`project-status project-status-${study.status}`}>
-                {statusLabel[study.status]}
-              </span>
-              {study.timeframe && <span class="text-muted">{study.timeframe}</span>}
+              <div class="mt-8 flex flex-wrap items-center gap-3 text-sm">
+                <span class="study-page-status">{statusLabel[study.status]}</span>
+                {study.timeframe && <span class="text-white/75">{study.timeframe}</span>}
+              </div>
+
+              <p class="study-page-eyebrow">Health Inequalities Team study</p>
+              <h1>{study.title}</h1>
+              <p class="study-page-summary">{study.summary}</p>
             </div>
 
-            <h1 class="mt-4">{study.title}</h1>
-            <p class="mt-5 text-lg leading-8 text-muted">{study.summary}</p>
-
-            {(study.lead || study.funder) && (
-              <dl class="mt-7 grid gap-4 rounded-lg border border-line bg-white p-5 sm:grid-cols-2">
-                {study.lead && (
-                  <div>
-                    <dt class="text-xs uppercase tracking-wide text-cloud-500">Study lead</dt>
-                    <dd class="mt-1">{study.lead}</dd>
-                  </div>
-                )}
-                {study.funder && (
-                  <div>
-                    <dt class="text-xs uppercase tracking-wide text-cloud-500">Funder</dt>
-                    <dd class="mt-1">{study.funder}</dd>
-                  </div>
-                )}
-              </dl>
-            )}
-
             {study.coverImage && (
-              <img src={study.coverImage} alt="" class="mt-8 w-full rounded-lg object-cover" />
+              <div class="study-page-image-panel">
+                <img
+                  src={study.coverImage}
+                  alt={`${study.title} study graphic`}
+                  class="study-page-image"
+                />
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section class="study-page-body">
+          <div class="container-page max-w-7xl">
+            {highlights.length > 0 && (
+              <section class="study-highlights" aria-labelledby="study-highlights-heading">
+                <p class="eyebrow">Key points</p>
+                <h2 id="study-highlights-heading" class="mt-2">Study at a glance</h2>
+
+                <ul class="study-highlight-list">
+                  {highlights.map((highlight) => (
+                    <li>{highlight}</li>
+                  ))}
+                </ul>
+              </section>
             )}
 
-            <article class="article mt-10">
-              <DocumentRenderer document={document} />
-            </article>
-          </>
-        )
-      }
-    </div>
-  </section>
+            <div class="study-page-layout">
+              <aside class="study-timeline" aria-labelledby="study-timeline-heading">
+                <p class="eyebrow">Research progress</p>
+                <h2 id="study-timeline-heading" class="mt-2 text-xl">Study timeline</h2>
+
+                <ol class="study-timeline-list">
+                  {studyStages.map((stage, index) => (
+                    <li
+                      class:list={[
+                        "study-timeline-step",
+                        {
+                          "is-complete": index < currentStageIndex,
+                          "is-current": index === currentStageIndex,
+                        },
+                      ]}
+                      aria-current={index === currentStageIndex ? "step" : undefined}
+                    >
+                      <span class="study-timeline-marker" aria-hidden="true"></span>
+                      <span>{stage.label}</span>
+                    </li>
+                  ))}
+                </ol>
+
+                <div class="study-related-outputs">
+                  <h3>Related outputs</h3>
+
+                  {relatedOutputs.length > 0 ? (
+                    <ul>
+                      {relatedOutputs.map((output) => (
+                        <li>
+                          <span>{outputTypeLabel[output.type]}</span>
+                          <a href={output.url}>{output.title} <span aria-hidden="true">→</span></a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>Outputs will be added here as they become available.</p>
+                  )}
+                </div>
+              </aside>
+
+              <main class="study-page-main">
+                {structuredSections.map((section, index) => (
+                  <section
+                    id={section.id}
+                    class:list={[
+                      "study-content-section",
+                      { "study-content-section-impact": section.accent },
+                    ]}
+                  >
+                    <p class="study-section-number">{String(index + 1).padStart(2, "0")}</p>
+                    <h2>{section.heading}</h2>
+                    <div class="study-section-copy">
+                      {paragraphs(section.body).map((paragraph) => (
+                        <p>{paragraph}</p>
+                      ))}
+                    </div>
+                  </section>
+                ))}
+
+                {document.length > 0 && (
+                  <article class="article study-additional-content">
+                    <DocumentRenderer document={document} />
+                  </article>
+                )}
+              </main>
+
+              {(study.lead || study.funder || study.timeframe) && (
+                <aside class="study-details" aria-labelledby="study-details-heading">
+                  <p class="eyebrow">Study information</p>
+                  <h2 id="study-details-heading" class="mt-2 text-xl">Study details</h2>
+
+                  <dl>
+                    {study.lead && (
+                      <div>
+                        <dt>Study lead</dt>
+                        <dd>{study.lead}</dd>
+                      </div>
+                    )}
+
+                    {study.funder && (
+                      <div>
+                        <dt>Funder</dt>
+                        <dd>{study.funder}</dd>
+                      </div>
+                    )}
+
+                    {study.timeframe && (
+                      <div>
+                        <dt>Study dates</dt>
+                        <dd>{study.timeframe}</dd>
+                      </div>
+                    )}
+                  </dl>
+                </aside>
+              )}
+            </div>
+          </div>
+        </section>
+      </>
+    )
+  }
 </Layout>

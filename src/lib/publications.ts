@@ -198,5 +198,10 @@ export async function teamPublications(
       if (better) byKey.set(key, p);
     }
   }
-  return [...byKey.values()].sort((a, b) => (b.year ?? 0) - (a.year ?? 0));
+  return [...byKey.values()].sort((a, b) => {
+    const yearDifference = (b.year ?? 0) - (a.year ?? 0);
+    if (yearDifference !== 0) return yearDifference;
+
+    return a.title.localeCompare(b.title, "en-GB", { sensitivity: "base" });
+  });
 }

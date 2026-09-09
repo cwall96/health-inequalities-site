@@ -29,7 +29,7 @@ const initials = name
 <a
   href={`/people/${slug}`}
   data-category={category}
-  class="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white no-underline transition-all duration-200 hover:-translate-y-1 hover:border-red-200 hover:shadow-pop focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-red-700"
+  class="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-lavender no-underline transition-all duration-200 hover:-translate-y-1 hover:border-red-700 hover:shadow-pop focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-red-700"
   aria-label={`View ${name}'s profile`}
 >
   {
@@ -41,7 +41,7 @@ const initials = name
       />
     ) : (
       <span
-        class="flex aspect-square w-full items-center justify-center bg-red-50 text-3xl font-medium text-red-700"
+        class="flex aspect-square w-full items-center justify-center bg-red-700 text-3xl font-medium text-white"
         aria-hidden="true"
       >
         {initials}
@@ -54,7 +54,7 @@ const initials = name
       {name}
     </h2>
 
-    <p class="mt-1 text-sm leading-6 text-muted">
+    <p class="mt-1 text-sm leading-6 text-navy-800">
       {role}
     </p>
 
@@ -68,7 +68,7 @@ const initials = name
 
     {
       researchKeywords && (
-        <p class="mt-4 text-sm leading-6 text-muted">
+        <p class="mt-4 text-sm leading-6 text-navy-800">
           <span class="font-medium text-ink">Research:</span>{" "}
           {researchKeywords}
         </p>

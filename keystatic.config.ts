@@ -50,6 +50,98 @@ export default config({
             "We study how where you live shapes how long and how well you live, and what policy can do to close the gap.",
         }),
 
+        inequalitiesSection: fields.object(
+          {
+            eyebrow: fields.text({
+              label: "Small heading above the title",
+              defaultValue: "Understanding the issue",
+            }),
+
+            heading: fields.text({
+              label: "Section title",
+              defaultValue: "What are health inequalities?",
+            }),
+
+            definitionLabel: fields.text({
+              label: "Definition box label",
+              defaultValue: "A working definition",
+            }),
+
+            definition: fields.text({
+              label: "Definition",
+              multiline: true,
+              description:
+                "A short plain-English definition shown in the lavender box.",
+              defaultValue:
+                "Health inequalities are systematic, unfair and avoidable differences in health between groups of people.",
+            }),
+
+            definitionSourceLabel: fields.text({
+              label: "Definition source link text",
+              description:
+                "For example: Read the NHS England definition.",
+              defaultValue: "Read the NHS England definition",
+            }),
+
+            definitionSourceUrl: fields.url({
+              label: "Definition source web address",
+              validation: {
+                isRequired: false,
+              },
+            }),
+
+            subsections: fields.array(
+              fields.object(
+                {
+                  heading: fields.text({
+                    label: "Subsection title",
+                  }),
+
+                  body: fields.text({
+                    label: "Subsection text",
+                    multiline: true,
+                    description:
+                      "Use a blank line if you want to start a new paragraph.",
+                  }),
+
+                  sourceLabel: fields.text({
+                    label: "Source link text",
+                    description:
+                      "Optional. For example: The Marmot Review.",
+                    validation: {
+                      isRequired: false,
+                    },
+                  }),
+
+                  sourceUrl: fields.url({
+                    label: "Source web address",
+                    validation: {
+                      isRequired: false,
+                    },
+                  }),
+                },
+                {
+                  label: "Background subsection",
+                  description:
+                    "A short explanation of a concept or theory, with an optional source.",
+                },
+              ),
+              {
+                label: "Background subsections",
+                description:
+                  "Add, remove or reorder the concepts shown beneath the definition.",
+                itemLabel: (props) =>
+                  props.fields.heading.value || "New subsection",
+              },
+            ),
+          },
+          {
+            label: "What are health inequalities? section",
+            description:
+              "Edit the homepage definition and add or reorder background concepts without changing any code.",
+          },
+        ),
+
         aboutHeading: fields.text({
           label: "About heading",
           defaultValue:
@@ -428,6 +520,88 @@ export default config({
             "Shown on the Research page study card.",
         }),
 
+        highlights: fields.array(
+          fields.text({
+            label: "Highlight",
+            multiline: true,
+          }),
+          {
+            label: "Study at a glance",
+            description:
+              "Add up to three short points summarising the most important features of the study.",
+            validation: {
+              length: {
+                max: 3,
+              },
+            },
+          },
+        ),
+
+        researchThemes: fields.array(
+          fields.text({
+            label: "Theme",
+          }),
+          {
+            label: "Research themes",
+            description:
+              "Add themes visitors can use to filter studies, such as Cancer or Vaccination. Reuse exactly the same wording across related studies.",
+          },
+        ),
+
+        whyItMatters: fields.object(
+          {
+            heading: fields.text({
+              label: "Section heading",
+              defaultValue: "Why this study matters",
+            }),
+            body: fields.text({
+              label: "Section text",
+              multiline: true,
+              description:
+                "Explain the problem or evidence gap the study addresses.",
+            }),
+          },
+          {
+            label: "Why this study matters",
+          },
+        ),
+
+        approach: fields.object(
+          {
+            heading: fields.text({
+              label: "Section heading",
+              defaultValue: "What we are doing",
+            }),
+            body: fields.text({
+              label: "Section text",
+              multiline: true,
+              description:
+                "Describe the study design, participants, data or methods in plain English.",
+            }),
+          },
+          {
+            label: "What we are doing",
+          },
+        ),
+
+        impact: fields.object(
+          {
+            heading: fields.text({
+              label: "Section heading",
+              defaultValue: "Impact and outputs",
+            }),
+            body: fields.text({
+              label: "Section text",
+              multiline: true,
+              description:
+                "Describe intended impact, emerging findings, outputs or completed achievements. Avoid claiming impact before it has occurred.",
+            }),
+          },
+          {
+            label: "Impact and outputs",
+          },
+        ),
+
         status: fields.select({
           label: "Status",
           options: [
@@ -442,6 +616,94 @@ export default config({
           ],
           defaultValue: "ongoing",
         }),
+
+        currentStage: fields.select({
+          label: "Current study stage",
+          description:
+            "Select the furthest stage the study has reached. Earlier stages will appear as completed on the timeline.",
+          options: [
+            {
+              label: "Protocol",
+              value: "protocol",
+            },
+            {
+              label: "Ethical approval",
+              value: "ethical-approval",
+            },
+            {
+              label: "Study set-up",
+              value: "study-setup",
+            },
+            {
+              label: "Data collection",
+              value: "data-collection",
+            },
+            {
+              label: "Data analysis",
+              value: "data-analysis",
+            },
+            {
+              label: "Dissemination",
+              value: "dissemination",
+            },
+            {
+              label: "Concluded",
+              value: "concluded",
+            },
+          ],
+          defaultValue: "protocol",
+        }),
+
+        relatedOutputs: fields.array(
+          fields.object(
+            {
+              title: fields.text({
+                label: "Output title",
+              }),
+              type: fields.select({
+                label: "Output type",
+                options: [
+                  {
+                    label: "Publication",
+                    value: "publication",
+                  },
+                  {
+                    label: "Presentation",
+                    value: "presentation",
+                  },
+                  {
+                    label: "Poster",
+                    value: "poster",
+                  },
+                  {
+                    label: "Media coverage",
+                    value: "media",
+                  },
+                  {
+                    label: "Other output",
+                    value: "other",
+                  },
+                ],
+                defaultValue: "publication",
+              }),
+              url: fields.url({
+                label: "Output link",
+                description:
+                  "Link directly to the output, or to its location on the Publications or Presentations and Posters page.",
+              }),
+            },
+            {
+              label: "Related output",
+            },
+          ),
+          {
+            label: "Related outputs",
+            description:
+              "Add publications, presentations, posters or media coverage associated with this study.",
+            itemLabel: (props) =>
+              props.fields.title.value || "New related output",
+          },
+        ),
 
         lead: fields.text({
           label: "Study lead",
@@ -505,7 +767,7 @@ export default config({
     }),
 
     news: collection({
-      label: "News",
+      label: "What's New?",
       slugField: "title",
       path: "src/content/news/*",
       format: {
