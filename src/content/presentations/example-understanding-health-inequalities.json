@@ -1,6 +1,10 @@
 {
   "title": "Example: Understanding Health Inequalities",
-  "venue": "Example poster — replace or delete this item in Keystatic.",
-  "coverImage": "/images/presentations/example-health-inequalities-poster.png",
-  "section": "poster"
+  "authors": "Amber Sacre",
+  "date": "2026-08-09",
+  "venue": "Ridley 1",
+  "section": "poster",
+  "teamMembers": [
+    "amber-sacre"
+  ]
 }
