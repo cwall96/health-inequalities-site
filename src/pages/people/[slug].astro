@@ -66,6 +66,7 @@ const relatedWorkGroups = [
     label: "Studies",
     items: relatedStudies.map((study) => ({
       title: study.entry.title,
+      summary: study.entry.peopleSummary,
       href: `/studies/${study.slug}`,
     })),
   },
@@ -73,6 +74,7 @@ const relatedWorkGroups = [
     label: "Research programmes",
     items: relatedProjects.map((project) => ({
       title: project.entry.title,
+      summary: null,
       href: `/research#project-${project.slug}`,
     })),
   },
@@ -80,6 +82,7 @@ const relatedWorkGroups = [
     label: "Posters, presentations and media",
     items: relatedPresentations.map((presentation) => ({
       title: presentation.entry.title,
+      summary: presentation.entry.peopleSummary,
       href:
         presentation.entry.section === "poster"
           ? `/presentations/${presentation.slug}`
@@ -90,6 +93,7 @@ const relatedWorkGroups = [
     label: "Awards and recognition",
     items: relatedAwards.map((award) => ({
       title: award.entry.title,
+      summary: null,
       href: `/presentations#award-${award.slug}`,
     })),
   },
@@ -151,6 +155,9 @@ const researchInterests = (person.researchKeywords ?? "")
   .map((keyword: string) => keyword.trim())
   .filter(Boolean);
 
+const methodsAndExpertise = (person.methodsExpertise ?? [])
+  .filter(Boolean) as string[];
+
 const orcidCandidate = String(person.orcid || person.identifier || "")
   .trim()
   .replace(/^https?:\/\/(?:www\.)?orcid\.org\//i, "");
@@ -160,7 +167,6 @@ const orcid = /^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/i.test(orcidCandidate)
 
 const profileSections = [
   { heading: "Research focus", copy: person.researchFocus },
-  { heading: "Methods and expertise", copy: person.methodsExpertise },
   { heading: "Impact and engagement", copy: person.impactEngagement },
   { heading: "Teaching and supervision", copy: person.teachingSupervision },
   { heading: "Professional roles and memberships", copy: person.professionalRoles },
@@ -192,15 +198,9 @@ export const prerender = true;
             )
           }
 
-          <h2 id="person-summary-heading">{person.name}</h2>
-          <p class="person-summary-role">{person.role}</p>
+          <h2 id="person-summary-heading">{person.displayName || person.name}</h2>
 
-          <dl class="person-summary-details">
-            <div>
-              <dt>Team group</dt>
-              <dd>{categoryLabels[displayCategory] ?? "Team member"}</dd>
-            </div>
-
+          {(email || orcid) && <dl class="person-summary-details">
             {email && (
               <div>
                 <dt>Email</dt>
@@ -218,13 +218,15 @@ export const prerender = true;
                 </dd>
               </div>
             )}
-          </dl>
+          </dl>}
 
           {researchInterests.length > 0 && (
             <div class="person-summary-interests">
-              <h3>Research interests</h3>
+              <h3>Main research themes</h3>
               <ul>
-                {researchInterests.map((interest: string) => <li>{interest}</li>)}
+                {researchInterests.map((interest: string) => (
+                  <li>{interest}</li>
+                ))}
               </ul>
             </div>
           )}
@@ -272,10 +274,31 @@ export const prerender = true;
                     </summary>
                     <ul>
                       {group.items.map((item) => (
-                        <li><a href={item.href}>{item.title}<span aria-hidden="true">→</span></a></li>
+                        <li>
+                          <a href={item.href}>
+                            <span>
+                              <strong>{item.title}</strong>
+                              {item.summary && <small>{item.summary}</small>}
+                            </span>
+                            <span aria-hidden="true">→</span>
+                          </a>
+                        </li>
                       ))}
                     </ul>
                   </details>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {methodsAndExpertise.length > 0 && (
+            <section class="person-expertise" aria-labelledby="expertise-heading">
+              <h2 id="expertise-heading">Methods and expertise</h2>
+              <div class="person-expertise-tags">
+                {methodsAndExpertise.map((item: string) => (
+                  <span class="person-expertise-tag">
+                    {item}
+                  </span>
                 ))}
               </div>
             </section>

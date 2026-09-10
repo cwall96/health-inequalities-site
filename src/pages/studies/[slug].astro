@@ -187,7 +187,7 @@ const relatedOutputs = study?.relatedOutputs ?? [];
               </aside>
 
               <main class="study-page-main">
-                {structuredSections.map((section, index) => (
+                {structuredSections.map((section) => (
                   <section
                     id={section.id}
                     class:list={[
@@ -195,7 +195,6 @@ const relatedOutputs = study?.relatedOutputs ?? [];
                       { "study-content-section-impact": section.accent },
                     ]}
                   >
-                    <p class="study-section-number">{String(index + 1).padStart(2, "0")}</p>
                     <h2>{section.heading}</h2>
                     <div class="study-section-copy">
                       {paragraphs(section.body).map((paragraph) => (

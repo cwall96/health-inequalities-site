@@ -14,6 +14,13 @@ const home = await reader.singletons.home.read();
 const team = await reader.collections.team.all();
 const manualEntries =
   await reader.collections.publications.all();
+const latestNews = (await reader.collections.news.all())
+  .sort((a, b) =>
+    (b.entry.publishedDate ?? "").localeCompare(
+      a.entry.publishedDate ?? ""
+    )
+  )
+  .slice(0, 3);
 
 const publicationIdentifiers = team
   .map((person) => person.entry.identifier)
@@ -42,14 +49,45 @@ const publications = await teamPublications(
 const memberCount = team.length;
 const publicationCount = publications.length;
 
-const citationCount = publications.reduce(
+const liveCitationCount = publications.reduce(
   (total, publication) =>
     total + publication.citations,
   0
 );
 
+const citationCount =
+  liveCitationCount > 0
+    ? liveCitationCount
+    : (home?.citationFallback ?? 0);
+
 const formatNumber = (value: number) =>
   value.toLocaleString("en-GB");
+
+const formatDate = (value: Date) =>
+  new Intl.DateTimeFormat(
+  "en-GB",
+  {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "Europe/London",
+  }
+).format(value);
+
+const fallbackMetricsDate = home?.metricsUpdatedDate
+  ? new Date(`${home.metricsUpdatedDate}T12:00:00Z`)
+  : new Date();
+
+const highlightsUpdatedDate = formatDate(
+  liveCitationCount > 0
+    ? new Date()
+    : fallbackMetricsDate
+);
+
+const formatNewsDate = (value: string | null) =>
+  value
+    ? formatDate(new Date(`${value}T12:00:00Z`))
+    : "";
 
 const aboutHeading =
   home?.aboutHeading ||
@@ -102,21 +140,55 @@ const splitParagraphs = (value: string) =>
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
 
+const homeDecorations = Array.from(
+  { length: 30 },
+  (_, index) => ({
+    type: index % 2 === 0 ? "not-equal" : "target",
+    left: 2 + ((index * 37) % 95),
+    duration: 48 + ((index * 7) % 29),
+    delay: -((index * 13) % 71),
+  })
+);
+
 export const prerender = true;
 ---
 
 <Layout>
+  <div class="home-page-shell">
+    <div class="home-floating-marks" aria-hidden="true">
+      {
+        homeDecorations.map((decoration) => (
+          <span
+            class:list={[
+              "home-floating-mark",
+              decoration.type === "target"
+                ? "home-floating-target"
+                : "home-floating-not-equal",
+            ]}
+            style={`--mark-left: ${decoration.left}%; --mark-duration: ${decoration.duration}s; --mark-delay: ${decoration.delay}s;`}
+          >
+            {decoration.type === "target" ? (
+              <><i></i><b></b></>
+            ) : (
+              "≠"
+            )}
+          </span>
+        ))
+      }
+    </div>
+
   <Hero
     heading={home?.heading || "Health Inequalities Team"}
     intro={home?.intro || "The Health Inequalities Team is based in the Population Health Sciences Institute at Newcastle University."}
   />
 
   <section class="section">
-    <div class="container-page grid items-start gap-10 lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-14">
-   <aside
+    <div class="container-page home-about-layout">
+<aside
   id="highlights"
   class="highlight-box"
   aria-labelledby="highlight-heading"
+  data-reveal
 >
   <h2
     id="highlight-heading"
@@ -156,9 +228,39 @@ export const prerender = true;
       </span>
     </div>
   </div>
+
+  <p class="highlight-updated">
+    (Approx., updated {highlightsUpdatedDate})
+  </p>
+
+  {latestNews.length > 0 && (
+    <div class="highlight-news">
+      <h3>What's New?</h3>
+
+      <ul>
+        {latestNews.map((post) => (
+          <li>
+            <a href={`/news/${post.slug}`}>
+              <span>{post.entry.title}</span>
+              {post.entry.publishedDate && (
+                <time datetime={post.entry.publishedDate}>
+                  {formatNewsDate(post.entry.publishedDate)}
+                </time>
+              )}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <a href="/news" class="highlight-news-all">
+        View all updates
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  )}
 </aside>
 
-      <div id="about-hit" class="max-w-3xl">
+      <div id="about-hit" class="max-w-3xl" data-reveal>
         <p class="eyebrow">
           About HIT
         </p>
@@ -190,7 +292,9 @@ export const prerender = true;
             Our research
           </a>
         </div>
+
       </div>
+
     </div>
   </section>
 
@@ -200,7 +304,7 @@ export const prerender = true;
     aria-labelledby="inequalities-heading"
   >
     <div class="container-page">
-      <div class="inequalities-intro">
+      <div class="inequalities-intro" data-reveal>
         <div>
           <p class="eyebrow">{inequalitiesEyebrow}</p>
 
@@ -237,12 +341,8 @@ export const prerender = true;
 
       {inequalitiesSubsections.length > 0 && (
         <div class="inequalities-theories">
-          {inequalitiesSubsections.map((subsection, index) => (
-            <article class="inequalities-theory-card">
-              <p class="inequalities-theory-number" aria-hidden="true">
-                {String(index + 1).padStart(2, "0")}
-              </p>
-
+          {inequalitiesSubsections.map((subsection) => (
+            <article class="inequalities-theory-card" data-reveal>
               <h3>{subsection.heading}</h3>
 
               <div class="inequalities-theory-copy">
@@ -342,6 +442,38 @@ export const prerender = true;
   } else {
     counters.forEach(animateCounter);
   }
+
+  const revealItems =
+    document.querySelectorAll<HTMLElement>("[data-reveal]");
+
+  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+    revealItems.forEach((item) => {
+      item.classList.add("is-revealed");
+    });
+  } else {
+    document.documentElement.classList.add("has-scroll-reveal");
+
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          entry.target.classList.add("is-revealed");
+          revealObserver.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -10% 0px",
+      }
+    );
+
+    revealItems.forEach((item) => {
+      revealObserver.observe(item);
+    });
+  }
 </script>
+
+  </div>
 
 </Layout>

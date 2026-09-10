@@ -52,7 +52,6 @@ export const prerender = true;
   <section class="section page-intro-section">
     <div class="mx-auto w-full max-w-7xl px-6">
       <div class="page-intro presentation-page-intro ml-auto max-w-2xl text-right">
-        <p class="eyebrow">Sharing, influence and recognition</p>
         <h1 class="mt-3">Engagement &amp; Impact</h1>
 
         <p class="page-intro-copy mt-4 text-lg leading-8">
@@ -79,8 +78,7 @@ export const prerender = true;
         <main class="engagement-sections">
           {sharingItems.length > 0 && (
             <section id="sharing-our-research" class="engagement-section" data-output-section>
-              <p class="eyebrow">Dissemination</p>
-              <h2 class="mt-3">Sharing our research</h2>
+              <h2>Sharing our research</h2>
               <p class="mt-4 max-w-2xl leading-7 text-muted">
                 Presentations and posters through which the team shares emerging methods, findings and ideas.
               </p>
@@ -104,8 +102,7 @@ export const prerender = true;
 
           {mediaItems.length > 0 && (
             <section id="media-coverage" class="engagement-section" data-output-section>
-              <p class="eyebrow">Engagement and reach</p>
-              <h2 class="mt-3">Media coverage</h2>
+              <h2>Media coverage</h2>
               <p class="mt-4 max-w-2xl leading-7 text-muted">
                 Selected media contributions and coverage involving members of the Health Inequalities Team.
               </p>
@@ -129,8 +126,7 @@ export const prerender = true;
 
           {impacts.length > 0 && (
             <section id="public-policy-impact" class="engagement-section">
-              <p class="eyebrow">Change and influence</p>
-              <h2 class="mt-3">Public and policy impact</h2>
+              <h2>Public and policy impact</h2>
               <p class="mt-4 max-w-2xl leading-7 text-muted">
                 Examples of how the team's research has contributed to change, influence or benefit beyond academia.
               </p>
@@ -149,9 +145,6 @@ export const prerender = true;
                       {impact.entry.evidence && (
                         <p class="impact-evidence"><strong>Evidence:</strong> {impact.entry.evidence}</p>
                       )}
-                      {impact.entry.link && (
-                        <a href={impact.entry.link} class="impact-link">Read supporting evidence →</a>
-                      )}
                     </div>
                   </article>
                 ))}
@@ -161,8 +154,7 @@ export const prerender = true;
 
           {recognition.length > 0 && (
             <section id="awards-recognition" class="engagement-section">
-              <p class="eyebrow">External recognition</p>
-              <h2 class="mt-3">Awards and recognition</h2>
+              <h2>Awards and recognition</h2>
 
               <div class="recognition-list mt-9">
                 {recognition.map((item) => (

@@ -169,6 +169,22 @@ export default config({
             "This is where the team highlight can go",
         }),
 
+        citationFallback: fields.integer({
+          label: "Last known citation total",
+          description:
+            "Used only when OpenAlex is temporarily unavailable, so the homepage never incorrectly displays zero citations.",
+          defaultValue: 22669,
+        }),
+
+        metricsUpdatedDate: fields.date({
+          label: "Last known citation update date",
+          description:
+            "The date on which the fallback citation total was last checked.",
+          defaultValue: {
+            kind: "today",
+          },
+        }),
+
         projectDescription: fields.text({
           label: "Research projects description",
           multiline: true,
@@ -259,6 +275,15 @@ export default config({
           },
         }),
 
+        displayName: fields.text({
+          label: "Full display name",
+          description:
+            "Include titles and qualifications exactly as they should appear in the navy profile box, for example Dr Amber Sacre, PhD.",
+          validation: {
+            isRequired: false,
+          },
+        }),
+
         role: fields.text({
           label: "Role / title",
         }),
@@ -308,13 +333,25 @@ export default config({
         }),
 
         researchKeywords: fields.text({
-          label: "Research keywords",
+          label: "Main research theme tags",
           description:
-            "A short comma-separated list shown on the People page.",
+            "Enter short research themes separated by commas. These appear as tags in the navy profile box.",
           validation: {
             isRequired: false,
           },
         }),
+
+        methodsExpertise: fields.array(
+          fields.text({
+            label: "Method or area of expertise",
+          }),
+          {
+            label: "Methods and expertise",
+            description:
+              "Add each research method or area of practical expertise as a separate item. These appear as animated pills beneath Related Work.",
+            itemLabel: (props) => props.value || "New method or expertise",
+          },
+        ),
 
         bio: fields.text({
           label: "Profile summary",
@@ -327,16 +364,6 @@ export default config({
           label: "Research focus",
           description:
             "What topics, populations or health inequalities does this person study?",
-          multiline: true,
-          validation: {
-            isRequired: false,
-          },
-        }),
-
-        methodsExpertise: fields.text({
-          label: "Methods and expertise",
-          description:
-            "List the research methods, subject knowledge or practical expertise they bring.",
           multiline: true,
           validation: {
             isRequired: false,
@@ -545,6 +572,15 @@ export default config({
       },
     }),
 
+    peopleSummary: fields.text({
+      label: "People-page description",
+      description:
+        "Write one short sentence explaining this output. It appears only in related-work lists on People profiles.",
+      validation: {
+        isRequired: false,
+      },
+    }),
+
     venue: fields.text({
       label: "Conference / venue / details",
       validation: {
@@ -676,13 +712,6 @@ export default config({
           label: "Impact image",
           directory: "public/images/impacts",
           publicPath: "/images/impacts/",
-          validation: {
-            isRequired: false,
-          },
-        }),
-
-        link: fields.url({
-          label: "Supporting link",
           validation: {
             isRequired: false,
           },
@@ -888,6 +917,15 @@ export default config({
           multiline: true,
           description:
             "Shown on the Research page study card.",
+        }),
+
+        peopleSummary: fields.text({
+          label: "People-page description",
+          description:
+            "Write one short sentence describing the study for related-work lists on People profiles.",
+          validation: {
+            isRequired: false,
+          },
         }),
 
         highlights: fields.array(
