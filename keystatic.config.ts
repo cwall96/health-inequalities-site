@@ -407,6 +407,128 @@ export default config({
   },
 }),
 
+    impacts: collection({
+      label: "Public & Policy Impact",
+      slugField: "title",
+      path: "src/content/impacts/*",
+      format: {
+        data: "json",
+      },
+      columns: ["title", "year", "order"],
+
+      schema: {
+        title: fields.slug({
+          name: {
+            label: "Impact story title",
+          },
+        }),
+
+        year: fields.integer({
+          label: "Year",
+          defaultValue: new Date().getFullYear(),
+        }),
+
+        summary: fields.text({
+          label: "What changed?",
+          multiline: true,
+          description:
+            "Describe the change, influence or benefit rather than only listing an activity or output.",
+        }),
+
+        evidence: fields.text({
+          label: "Evidence of impact",
+          multiline: true,
+          description:
+            "Optional: briefly describe how the change is evidenced.",
+          validation: {
+            isRequired: false,
+          },
+        }),
+
+        relatedWork: fields.text({
+          label: "Related study or programme",
+          validation: {
+            isRequired: false,
+          },
+        }),
+
+        image: fields.image({
+          label: "Impact image",
+          directory: "public/images/impacts",
+          publicPath: "/images/impacts/",
+          validation: {
+            isRequired: false,
+          },
+        }),
+
+        link: fields.url({
+          label: "Supporting link",
+          validation: {
+            isRequired: false,
+          },
+        }),
+
+        order: fields.integer({
+          label: "Sort order",
+          description: "Lower numbers appear first.",
+          defaultValue: 0,
+        }),
+      },
+    }),
+
+    recognition: collection({
+      label: "Awards & Recognition",
+      slugField: "title",
+      path: "src/content/recognition/*",
+      format: {
+        data: "json",
+      },
+      columns: ["title", "year", "recipient", "order"],
+
+      schema: {
+        title: fields.slug({
+          name: {
+            label: "Award or recognition",
+          },
+        }),
+
+        year: fields.integer({
+          label: "Year",
+          defaultValue: new Date().getFullYear(),
+        }),
+
+        recipient: fields.text({
+          label: "Recipient",
+          description: "A team member, study, programme or the whole team.",
+        }),
+
+        awardingBody: fields.text({
+          label: "Awarding organisation",
+        }),
+
+        description: fields.text({
+          label: "Short description",
+          multiline: true,
+          validation: {
+            isRequired: false,
+          },
+        }),
+
+        link: fields.url({
+          label: "Supporting link",
+          validation: {
+            isRequired: false,
+          },
+        }),
+
+        order: fields.integer({
+          label: "Sort order",
+          description: "Lower numbers appear first.",
+          defaultValue: 0,
+        }),
+      },
+    }),
+
     projects: collection({
       label: "Projects",
       slugField: "title",

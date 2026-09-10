@@ -7,8 +7,22 @@ import PresentationCard from "../components/PresentationCard.astro";
 const reader = createReader(process.cwd(), keystaticConfig);
 
 const items = (await reader.collections.presentations.all()).sort(
+  (a, b) => (b.entry.date ?? "").localeCompare(a.entry.date ?? "")
+);
+
+const sharingItems = items.filter((item) => item.entry.section !== "media");
+const mediaItems = items.filter((item) => item.entry.section === "media");
+
+const impacts = (await reader.collections.impacts.all()).sort(
   (a, b) =>
-    (b.entry.date ?? "").localeCompare(a.entry.date ?? "")
+    (a.entry.order ?? 0) - (b.entry.order ?? 0) ||
+    (b.entry.year ?? 0) - (a.entry.year ?? 0)
+);
+
+const recognition = (await reader.collections.recognition.all()).sort(
+  (a, b) =>
+    (a.entry.order ?? 0) - (b.entry.order ?? 0) ||
+    (b.entry.year ?? 0) - (a.entry.year ?? 0)
 );
 
 const itemYear = (date?: string | null) => date?.slice(0, 4) || "undated";
@@ -26,66 +40,45 @@ const itemsInYear = (year: string) =>
 export const prerender = true;
 ---
 
-<Layout title="Presentations and posters — Health Inequalities Team">
+<Layout title="Engagement and Impact — Health Inequalities Team">
   <section class="section page-intro-section">
     <div class="mx-auto w-full max-w-7xl px-6">
       <div class="page-intro presentation-page-intro ml-auto max-w-2xl text-right">
-        <p class="eyebrow">
-          Dissemination
+        <p class="eyebrow">Sharing, influence and recognition</p>
+        <h1 class="mt-3">Engagement &amp; Impact</h1>
+
+        <p class="page-intro-copy mt-4 text-lg leading-8">
+          Explore how the Health Inequalities Team shares research, engages with wider audiences and contributes to public and policy change.
         </p>
-
-        <h1 class="mt-3">
-          Presentations and posters
-        </h1>
-
-<p class="page-intro-copy mt-4 text-lg leading-8">
-  Explore presentations, posters and media coverage from the
-  Health Inequalities Team.
-</p>
 
         <div class="mt-6 flex flex-wrap justify-end gap-x-6 gap-y-3 text-sm text-navy-800">
           <span class="inline-flex items-center gap-2">
-            <span
-              class="h-3 w-3 rounded-full bg-red-700"
-              aria-hidden="true"
-            ></span>
-
+            <span class="h-3 w-3 rounded-full bg-red-700" aria-hidden="true"></span>
             Presentations
           </span>
-
           <span class="inline-flex items-center gap-2">
-            <span
-              class="h-3 w-3 rounded-full border border-navy-900/20 bg-lavender"
-              aria-hidden="true"
-            ></span>
-
+            <span class="h-3 w-3 rounded-full border border-navy-900/20 bg-lavender" aria-hidden="true"></span>
             Posters
           </span>
-
           <span class="inline-flex items-center gap-2">
-            <span
-              class="h-3 w-3 rounded-full bg-navy-700"
-              aria-hidden="true"
-            ></span>
-
+            <span class="h-3 w-3 rounded-full bg-navy-700" aria-hidden="true"></span>
             Media coverage
           </span>
         </div>
       </div>
 
-      {
-        items.length === 0 ? (
-          <div class="mt-14 rounded-2xl border border-line bg-white p-8 text-center">
-            <p class="text-muted">
-              Nothing has been added yet. Add presentations, posters and
-              media coverage in the editor at <code>/keystatic</code>.
-            </p>
-          </div>
-        ) : (
-          <div class="output-gallery-layout mt-14" data-output-filters>
-            <div class="grid grid-flow-row-dense items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-6">
-              {
-                items.map((item) => (
+      <div class="output-gallery-layout mt-14" data-output-filters>
+        <main class="engagement-sections">
+          {sharingItems.length > 0 && (
+            <section id="sharing-our-research" class="engagement-section" data-output-section>
+              <p class="eyebrow">Dissemination</p>
+              <h2 class="mt-3">Sharing our research</h2>
+              <p class="mt-4 max-w-2xl leading-7 text-muted">
+                Presentations and posters through which the team shares emerging methods, findings and ideas.
+              </p>
+
+              <div class="engagement-card-grid mt-9">
+                {sharingItems.map((item) => (
                   <PresentationCard
                     title={item.entry.title}
                     section={item.entry.section ?? "conference"}
@@ -94,35 +87,114 @@ export const prerender = true;
                     link={item.entry.link}
                     coverImage={item.entry.coverImage}
                   />
-                ))
-              }
-            </div>
-
-            <aside class="output-year-filter" aria-labelledby="output-year-heading">
-              <p class="eyebrow">Browse outputs</p>
-              <h2 id="output-year-heading" class="mt-2 text-xl">Year</h2>
-
-              <div class="output-year-options">
-                <button type="button" class="output-year-button is-active" data-year-filter="" aria-pressed="true">
-                  <span>All years</span>
-                  <span>{items.length}</span>
-                </button>
-
-                {years.map((year) => (
-                  <button type="button" class="output-year-button" data-year-filter={year} aria-pressed="false">
-                    <span>{year === "undated" ? "Undated" : year}</span>
-                    <span>{itemsInYear(year)}</span>
-                  </button>
                 ))}
               </div>
+            </section>
+          )}
 
-              <p class="mt-4 text-sm text-muted" aria-live="polite" data-output-count>
-                Showing all {items.length} outputs
+          {mediaItems.length > 0 && (
+            <section id="media-coverage" class="engagement-section" data-output-section>
+              <p class="eyebrow">Engagement and reach</p>
+              <h2 class="mt-3">Media coverage</h2>
+              <p class="mt-4 max-w-2xl leading-7 text-muted">
+                Selected media contributions and coverage involving members of the Health Inequalities Team.
               </p>
-            </aside>
-          </div>
-        )
-      }
+
+              <div class="engagement-card-grid mt-9">
+                {mediaItems.map((item) => (
+                  <PresentationCard
+                    title={item.entry.title}
+                    section={item.entry.section ?? "media"}
+                    date={item.entry.date}
+                    venue={item.entry.venue}
+                    link={item.entry.link}
+                    coverImage={item.entry.coverImage}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {impacts.length > 0 && (
+            <section id="public-policy-impact" class="engagement-section">
+              <p class="eyebrow">Change and influence</p>
+              <h2 class="mt-3">Public and policy impact</h2>
+              <p class="mt-4 max-w-2xl leading-7 text-muted">
+                Examples of how the team's research has contributed to change, influence or benefit beyond academia.
+              </p>
+
+              <div class="impact-story-grid mt-9">
+                {impacts.map((impact) => (
+                  <article class="impact-story-card">
+                    {impact.entry.image && <img src={impact.entry.image} alt="" class="impact-story-image" />}
+                    <div class="impact-story-content">
+                      <div class="flex flex-wrap items-center justify-between gap-3 text-sm">
+                        <span class="impact-year">{impact.entry.year}</span>
+                        {impact.entry.relatedWork && <span class="text-muted">{impact.entry.relatedWork}</span>}
+                      </div>
+                      <h3 class="mt-4 text-2xl">{impact.entry.title}</h3>
+                      <p class="mt-4 leading-7 text-ink">{impact.entry.summary}</p>
+                      {impact.entry.evidence && (
+                        <p class="impact-evidence"><strong>Evidence:</strong> {impact.entry.evidence}</p>
+                      )}
+                      {impact.entry.link && (
+                        <a href={impact.entry.link} class="impact-link">Read supporting evidence →</a>
+                      )}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {recognition.length > 0 && (
+            <section id="awards-recognition" class="engagement-section">
+              <p class="eyebrow">External recognition</p>
+              <h2 class="mt-3">Awards and recognition</h2>
+
+              <div class="recognition-list mt-9">
+                {recognition.map((item) => (
+                  <article class="recognition-item">
+                    <p class="recognition-year">{item.entry.year}</p>
+                    <div>
+                      <h3>{item.entry.title}</h3>
+                      <p class="mt-2 text-sm text-muted">
+                        {[item.entry.recipient, item.entry.awardingBody].filter(Boolean).join(" · ")}
+                      </p>
+                      {item.entry.description && <p class="mt-3 leading-7 text-ink">{item.entry.description}</p>}
+                      {item.entry.link && <a href={item.entry.link} class="mt-3 inline-block text-sm">Find out more →</a>}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          )}
+        </main>
+
+        {items.length > 0 && (
+          <aside class="output-year-filter" aria-labelledby="output-year-heading">
+            <p class="eyebrow">Filter the gallery</p>
+            <h2 id="output-year-heading" class="mt-2 text-xl">Output year</h2>
+
+            <div class="output-year-options">
+              <button type="button" class="output-year-button is-active" data-year-filter="" aria-pressed="true">
+                <span>All years</span>
+                <span>{items.length}</span>
+              </button>
+              {years.map((year) => (
+                <button type="button" class="output-year-button" data-year-filter={year} aria-pressed="false">
+                  <span>{year === "undated" ? "Undated" : year}</span>
+                  <span>{itemsInYear(year)}</span>
+                </button>
+              ))}
+            </div>
+
+            <p class="mt-4 text-sm text-muted" aria-live="polite" data-output-count>
+              Showing all {items.length} outputs
+            </p>
+          </aside>
+        )}
+      </div>
     </div>
   </section>
 
@@ -131,6 +203,7 @@ export const prerender = true;
 
     if (outputFilters) {
       const cards = [...outputFilters.querySelectorAll<HTMLElement>("[data-output-card]")];
+      const sections = [...outputFilters.querySelectorAll<HTMLElement>("[data-output-section]")];
       const buttons = [...outputFilters.querySelectorAll<HTMLButtonElement>("[data-year-filter]")];
       const count = outputFilters.querySelector<HTMLElement>("[data-output-count]");
 
@@ -143,6 +216,10 @@ export const prerender = true;
             const matches = !selectedYear || card.dataset.year === selectedYear;
             card.hidden = !matches;
             if (matches) visible += 1;
+          });
+
+          sections.forEach((section) => {
+            section.hidden = !section.querySelector("[data-output-card]:not([hidden])");
           });
 
           buttons.forEach((yearButton) => {

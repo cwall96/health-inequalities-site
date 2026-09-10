@@ -1,11 +1,20 @@
 ---
+import { createReader } from "@keystatic/core/reader";
+import keystaticConfig from "../../keystatic.config";
+
 const path = Astro.url.pathname;
+const reader = createReader(process.cwd(), keystaticConfig);
+
+const [impactItems, recognitionItems] = await Promise.all([
+  reader.collections.impacts.all(),
+  reader.collections.recognition.all(),
+]);
 
 const links = [
   { href: "/", label: "Home" },
   { href: "/people", label: "People" },
   { href: "/research", label: "Research" },
-  { href: "/presentations", label: "Presentations & Posters" },
+  { href: "/presentations", label: "Engagement & Impact" },
   { href: "/publications", label: "Publications" },
   { href: "/news", label: "What's New?" },
 ];
@@ -23,6 +32,23 @@ const researchSectionLinks = [
   { href: "/research#research-themes", label: "Research themes" },
   { href: "/research#studies-heading", label: "Studies" },
 ];
+
+const engagementSectionLinks = [
+  { href: "/presentations#sharing-our-research", label: "Presentations & posters" },
+  { href: "/presentations#media-coverage", label: "Media coverage" },
+  ...(impactItems.length > 0
+    ? [{ href: "/presentations#public-policy-impact", label: "Public & policy impact" }]
+    : []),
+  ...(recognitionItems.length > 0
+    ? [{ href: "/presentations#awards-recognition", label: "Awards & recognition" }]
+    : []),
+];
+
+const sectionLinksFor = (href: string) => {
+  if (href === "/") return homeSectionLinks;
+  if (href === "/research") return researchSectionLinks;
+  return engagementSectionLinks;
+};
 
 const isActive = (href: string) => {
   if (href === "/") return path === "/";
@@ -75,6 +101,14 @@ const isActive = (href: string) => {
                   ))}
                 </div>
               )}
+
+              {link.href === "/presentations" && (
+                <div class="mobile-subnavigation">
+                  {engagementSectionLinks.map((section) => (
+                    <a href={section.href}>{section.label}</a>
+                  ))}
+                </div>
+              )}
             </>
           ))
         }
@@ -84,7 +118,7 @@ const isActive = (href: string) => {
     <nav class="site-navigation" aria-label="Main navigation">
       {
         links.map((link) =>
-          link.href === "/" || link.href === "/research" ? (
+          link.href === "/" || link.href === "/research" || link.href === "/presentations" ? (
             <div class="site-nav-dropdown">
               <a
                 href={link.href}
@@ -100,7 +134,7 @@ const isActive = (href: string) => {
               </a>
 
               <div class="site-subnavigation">
-                {(link.href === "/" ? homeSectionLinks : researchSectionLinks).map((section) => (
+                {sectionLinksFor(link.href).map((section) => (
                   <a href={section.href}>{section.label}</a>
                 ))}
               </div>
