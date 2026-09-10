@@ -1,10 +1,13 @@
 {
   "name": "Amber Sacre",
   "role": "Research Associate",
-  "category": "staff",
+  "category": "ecr",
   "photo": "/images/team/amber-sacre/photo.jpeg",
   "email": "Amber.Sacre@newcastle.ac.uk",
-  "bio": "As a dedicated mixed methods researcher specialising in health inequalities, I bring a comprehensive and interdisciplinary approach to understanding the complex factors contributing to disparities in health experiences and outcomes.",
+  "researchKeywords": "healthcare access, vaccination, healthcare services research",
+  "bio": "As a mixed methods researcher specialising in health inequalities, Amber brings a comprehensive and interdisciplinary approach to understanding the complex factors contributing to disparities in health experiences and outcomes.",
+  "researchFocus": "While Amber's research explores various different aspects of health inequalities, her socioeconomic inequalities in healthcare access and uptake.",
+  "orcid": "0009-0005-1459-1782",
   "identifier": "https://orcid.org/0009-0005-1459-1782",
   "order": 0
 }
