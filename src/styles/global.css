@@ -67,6 +67,355 @@
   --spacing-section: 5rem;
 }
 
+/* Individual People profiles */
+.person-profile-section {
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+}
+
+.person-profile-back {
+  display: inline-flex;
+  color: var(--color-red-700);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.person-profile-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(2.5rem, 6vw, 5rem);
+  margin-top: 2rem;
+}
+
+.person-summary {
+  position: sticky;
+  top: 2rem;
+  overflow: hidden;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  background: var(--color-navy-700);
+  box-shadow: var(--shadow-pop);
+  color: var(--color-surface);
+}
+
+.person-summary-photo,
+.person-summary-placeholder {
+  display: flex;
+  width: 100%;
+  aspect-ratio: 1;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  border-radius: 1rem;
+  background: var(--color-red-700);
+  object-fit: cover;
+  color: white;
+  font-family: var(--font-display);
+  font-size: 3rem;
+}
+
+.person-summary h2 {
+  color: var(--color-surface);
+  font-size: 1.5rem;
+}
+
+.content-people-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-size: 0.8rem;
+}
+
+.content-people-links > span {
+  font-weight: 600;
+}
+
+.content-people-links > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.content-people-links a,
+.publication-tags a,
+.publication-tags span {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  background: var(--color-navy-50);
+  color: var(--color-navy-700);
+  font-weight: 500;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.content-people-links a:hover,
+.publication-tags a:hover {
+  background: var(--color-lavender);
+  color: var(--color-navy-900);
+  text-decoration: none;
+}
+
+.content-people-links-on-dark {
+  color: rgb(251 250 247 / 0.78);
+}
+
+.content-people-links-on-dark a {
+  background: rgb(251 250 247 / 0.14);
+  color: var(--color-surface);
+}
+
+.content-people-links-on-dark a:hover {
+  background: var(--color-surface);
+  color: var(--color-navy-900);
+}
+
+.publication-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+}
+
+.publication-tags span {
+  background: color-mix(in srgb, var(--color-lavender) 55%, white);
+  color: var(--color-navy-900);
+}
+
+.person-summary-role {
+  margin-top: 0.4rem;
+  color: rgb(251 250 247 / 0.78);
+  font-size: 0.925rem;
+  line-height: 1.55;
+}
+
+.person-summary-details {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(251 250 247 / 0.2);
+}
+
+.person-summary-details dt,
+.person-summary-interests h3 {
+  color: var(--color-lavender);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.person-summary-details dd {
+  margin-top: 0.2rem;
+  color: var(--color-surface);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.person-summary a {
+  color: var(--color-surface);
+}
+
+.person-summary-interests {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(251 250 247 / 0.2);
+}
+
+.person-summary-interests ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+}
+
+.person-summary-interests li {
+  padding: 0.3rem 0.65rem;
+  border-radius: 9999px;
+  background: rgb(190 178 200 / 0.18);
+  color: var(--color-surface);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.person-profile-main {
+  min-width: 0;
+  max-width: 48rem;
+}
+
+.person-profile-main > h1 {
+  margin-top: 0.45rem;
+}
+
+.person-profile-role {
+  margin-top: 0.75rem;
+  color: var(--color-red-700);
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+.person-profile-introduction,
+.person-profile-content,
+.person-publications {
+  margin-top: 2.75rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.person-profile-content {
+  padding: 1.75rem;
+  border: 1px solid var(--color-line);
+  border-left: 0.3rem solid var(--color-lavender);
+  border-radius: 0.85rem;
+  background: white;
+  box-shadow: var(--shadow-card);
+}
+
+.person-profile-sections {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2.75rem;
+}
+
+.person-profile-sections .person-profile-content {
+  margin-top: 0;
+}
+
+.person-profile-main h2 {
+  color: var(--color-navy-900);
+  font-size: 1.45rem;
+}
+
+.person-profile-copy {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+  color: var(--color-navy-800);
+  line-height: 1.8;
+}
+
+.person-related-work {
+  margin-top: 2.75rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.person-related-intro {
+  margin-top: 0.75rem;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.person-related-dropdowns {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.person-related-dropdown {
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: 0.75rem;
+  background: white;
+  box-shadow: var(--shadow-card);
+}
+
+.person-related-dropdown summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  color: var(--color-navy-900);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 500;
+  list-style: none;
+}
+
+.person-related-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.person-related-dropdown summary span:last-child {
+  display: inline-flex;
+  min-width: 1.8rem;
+  height: 1.8rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--color-lavender);
+  color: var(--color-navy-900);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.person-related-dropdown[open] summary {
+  border-bottom: 1px solid var(--color-line);
+  background: color-mix(in srgb, var(--color-lavender) 32%, white);
+}
+
+.person-related-dropdown ul {
+  display: grid;
+  padding: 0.35rem 1rem 0.65rem;
+}
+
+.person-related-dropdown li + li {
+  border-top: 1px solid var(--color-line);
+}
+
+.person-related-dropdown li a {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.75rem;
+  color: var(--color-navy-800);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+.person-related-dropdown li a:hover {
+  color: var(--color-red-700);
+  text-decoration: none;
+}
+
+.person-related-dropdown li a span {
+  color: var(--color-red-700);
+  font-weight: 600;
+}
+
+@media (max-width: 767px) {
+  .person-profile-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+
+  .person-summary {
+    position: static;
+  }
+
+  .person-summary-photo,
+  .person-summary-placeholder {
+    aspect-ratio: 4 / 3;
+  }
+
+  .person-profile-content {
+    padding: 1.35rem;
+  }
+
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
@@ -1280,7 +1629,13 @@
   }
 
   .publication-filters {
-    @apply grid items-end gap-4 rounded-xl border border-line bg-white p-5 shadow-card sm:grid-cols-2 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1.3fr)_auto];
+    @apply grid items-end gap-4 rounded-xl border border-line bg-white p-5 shadow-card sm:grid-cols-2;
+  }
+
+  @media (min-width: 1280px) {
+    .publication-filters {
+      grid-template-columns: minmax(0, 0.7fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.25fr) auto;
+    }
   }
 
   .publication-filters label {
@@ -1501,6 +1856,179 @@
 @media (min-width: 640px) and (max-width: 1023px) {
   .engagement-card-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Full poster pages */
+.poster-page {
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+  background: var(--color-surface);
+}
+
+.poster-back-link {
+  display: inline-flex;
+  color: var(--color-red-700);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.poster-page-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(17rem, 0.8fr);
+  align-items: start;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  margin-top: 2rem;
+}
+
+.poster-viewer {
+  min-width: 0;
+}
+
+.poster-image-link {
+  display: block;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  border: 1px solid rgb(18 39 68 / 0.14);
+  border-radius: 1.25rem;
+  background: var(--color-lavender);
+  box-shadow: var(--shadow-pop);
+  text-decoration: none;
+}
+
+.poster-image-link:hover {
+  text-decoration: none;
+}
+
+.poster-full-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-inline: auto;
+  background: white;
+  box-shadow: 0 4px 20px rgb(18 39 68 / 0.15);
+}
+
+.poster-full-size-link {
+  display: inline-flex;
+  gap: 0.45rem;
+  margin-top: 1rem;
+  color: var(--color-red-700);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.poster-image-missing {
+  display: grid;
+  min-height: 35rem;
+  place-items: center;
+  padding: 2rem;
+  border-radius: 1.25rem;
+  background: var(--color-lavender);
+  color: var(--color-navy-900);
+  text-align: center;
+}
+
+.poster-information {
+  position: sticky;
+  top: 2rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border-radius: 1.25rem;
+  background: var(--color-navy-700);
+  box-shadow: var(--shadow-pop);
+  color: var(--color-surface);
+}
+
+.poster-type-label {
+  color: var(--color-lavender);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.poster-information h1 {
+  margin-top: 0.75rem;
+  color: var(--color-surface);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1.15;
+}
+
+.poster-details {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(251 250 247 / 0.2);
+}
+
+.poster-details dt,
+.poster-team h2 {
+  color: var(--color-lavender);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.poster-details dd {
+  margin-top: 0.3rem;
+  color: var(--color-surface);
+  font-size: 0.925rem;
+  line-height: 1.65;
+}
+
+.poster-authors {
+  white-space: pre-line;
+}
+
+.poster-team {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(251 250 247 / 0.2);
+}
+
+.poster-team .content-people-links {
+  margin-top: 0.75rem;
+}
+
+.poster-team .content-people-links a {
+  background: rgb(251 250 247 / 0.14);
+  color: var(--color-surface);
+}
+
+.poster-team .content-people-links a:hover {
+  background: var(--color-surface);
+  color: var(--color-navy-900);
+}
+
+.poster-abstract-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding: 0.75rem 1rem;
+  border-radius: 9999px;
+  background: var(--color-lavender);
+  color: var(--color-navy-900);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.poster-abstract-link:hover {
+  background: var(--color-surface);
+  color: var(--color-navy-900);
+  text-decoration: none;
+}
+
+@media (max-width: 899px) {
+  .poster-page-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .poster-information {
+    position: static;
+    order: -1;
   }
 }
 

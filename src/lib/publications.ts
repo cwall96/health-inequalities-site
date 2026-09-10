@@ -26,7 +26,17 @@ export type Pub = {
   citations: number;
   authors: string;
   url: string | null;
+  teamMembers?: string[];
+  researchThemes?: string[];
+  searchTerms?: string[];
 };
+
+export type PublicationSource =
+  | string
+  | {
+      identifier: string;
+      teamMember: string;
+    };
 
 export function normDoi(doi?: string | null): string | null {
   if (!doi) return null;
@@ -52,7 +62,27 @@ function bareOrcid(id: string): string {
 }
 
 /* ---------- OpenAlex: exact citation/author lookup by DOI ---------- */
-type Enrichment = { citations: number; venue: string; authors: string; url: string | null };
+type Enrichment = {
+  citations: number;
+  venue: string;
+  authors: string;
+  url: string | null;
+  searchTerms: string[];
+};
+
+function openAlexSearchTerms(work: any): string[] {
+  const keywords = (work.keywords ?? [])
+    .filter((keyword: any) => (keyword.score ?? 1) >= 0.25)
+    .map((keyword: any) => keyword.display_name);
+  const topics = (work.topics ?? []).flatMap((topic: any) => [
+    topic.display_name,
+    topic.subfield?.display_name,
+    topic.field?.display_name,
+    topic.domain?.display_name,
+  ]);
+
+  return [...new Set([...keywords, ...topics].filter(Boolean))];
+}
 
 async function openAlexByDois(dois: string[]): Promise<Map<string, Enrichment>> {
   const map = new Map<string, Enrichment>();
@@ -79,6 +109,7 @@ async function openAlexByDois(dois: string[]): Promise<Map<string, Enrichment>> 
             .filter(Boolean)
             .join(", "),
           url: w.doi ?? null,
+          searchTerms: openAlexSearchTerms(w),
         });
       }
     } catch {}
@@ -130,6 +161,7 @@ async function worksForOrcid(orcid: string): Promise<Pub[]> {
       citations: e?.citations ?? 0,
       authors: e?.authors ?? "",
       url: e?.url ?? (w.doi ? `https://doi.org/${w.doi}` : null),
+      searchTerms: e?.searchTerms ?? [],
     };
   });
 }
@@ -166,6 +198,7 @@ async function worksForOpenAlexAuthor(id: string): Promise<Pub[]> {
             .filter(Boolean)
             .join(", "),
           url: w.doi ?? w.primary_location?.landing_page_url ?? null,
+          searchTerms: openAlexSearchTerms(w),
         })
       );
   } catch {
@@ -179,10 +212,28 @@ async function worksFor(id: string): Promise<Pub[]> {
 
 /* ---------- aggregate the whole team ---------- */
 export async function teamPublications(
-  ids: string[],
+  ids: PublicationSource[],
   opts: { hidden?: string[]; manual?: Pub[] } = {}
 ): Promise<Pub[]> {
-  const fetched = (await Promise.all(ids.filter(Boolean).map(worksFor))).flat();
+  const sources = ids
+    .map((source) =>
+      typeof source === "string"
+        ? { identifier: source, teamMember: null }
+        : source
+    )
+    .filter((source) => source.identifier);
+
+  const fetched = (
+    await Promise.all(
+      sources.map(async (source) => {
+        const publications = await worksFor(source.identifier);
+        return publications.map((publication) => ({
+          ...publication,
+          teamMembers: source.teamMember ? [source.teamMember] : [],
+        }));
+      })
+    )
+  ).flat();
   const all = [...fetched, ...(opts.manual ?? [])];
   const hidden = new Set((opts.hidden ?? []).map((d) => normDoi(d)).filter(Boolean));
 
@@ -195,7 +246,28 @@ export async function teamPublications(
       byKey.set(key, p);
     } else {
       const better = (!existing.doi && p.doi) || p.citations > existing.citations;
-      if (better) byKey.set(key, p);
+      const preferred = better ? p : existing;
+      byKey.set(key, {
+        ...preferred,
+        teamMembers: [
+          ...new Set([
+            ...(existing.teamMembers ?? []),
+            ...(p.teamMembers ?? []),
+          ]),
+        ],
+        researchThemes: [
+          ...new Set([
+            ...(existing.researchThemes ?? []),
+            ...(p.researchThemes ?? []),
+          ]),
+        ],
+        searchTerms: [
+          ...new Set([
+            ...(existing.searchTerms ?? []),
+            ...(p.searchTerms ?? []),
+          ]),
+        ],
+      });
     }
   }
   return [...byKey.values()].sort((a, b) => {

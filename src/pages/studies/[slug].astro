@@ -19,6 +19,13 @@ export async function getStaticPaths() {
 const reader = createReader(process.cwd(), keystaticConfig);
 const study = await reader.collections.studies.read(Astro.props.slug);
 const document = study ? await study.content() : [];
+const team = await reader.collections.team.all();
+const teamBySlug = new Map(team.map((person) => [person.slug, person.entry.name]));
+const studyTeam = (study?.teamMembers ?? []).flatMap((slug) => {
+  if (!slug) return [];
+  const name = teamBySlug.get(slug);
+  return name ? [{ slug, name }] : [];
+});
 
 const statusLabel = {
   ongoing: "Ongoing",
@@ -205,7 +212,7 @@ const relatedOutputs = study?.relatedOutputs ?? [];
                 )}
               </main>
 
-              {(study.lead || study.funder || study.timeframe) && (
+              {(study.lead || study.funder || study.timeframe || studyTeam.length > 0) && (
                 <aside class="study-details" aria-labelledby="study-details-heading">
                   <p class="eyebrow">Study information</p>
                   <h2 id="study-details-heading" class="mt-2 text-xl">Study details</h2>
@@ -229,6 +236,17 @@ const relatedOutputs = study?.relatedOutputs ?? [];
                       <div>
                         <dt>Study dates</dt>
                         <dd>{study.timeframe}</dd>
+                      </div>
+                    )}
+
+                    {studyTeam.length > 0 && (
+                      <div>
+                        <dt>Study team</dt>
+                        <dd class="content-people-links">
+                          {studyTeam.map((person) => (
+                            <a href={`/people/${person.slug}`}>{person.name}</a>
+                          ))}
+                        </dd>
                       </div>
                     )}
                   </dl>

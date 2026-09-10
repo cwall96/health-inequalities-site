@@ -19,6 +19,13 @@ export async function getStaticPaths() {
 const reader = createReader(process.cwd(), keystaticConfig);
 const project = await reader.collections.projects.read(Astro.props.slug);
 const document = project ? await project.content() : [];
+const team = await reader.collections.team.all();
+const teamBySlug = new Map(team.map((person) => [person.slug, person.entry.name]));
+const projectTeam = (project?.teamMembers ?? []).flatMap((slug) => {
+  if (!slug) return [];
+  const name = teamBySlug.get(slug);
+  return name ? [{ slug, name }] : [];
+});
 
 const statusLabel = {
   ongoing: "Ongoing",
@@ -55,7 +62,7 @@ const statusLabel = {
               {project.summary}
             </p>
 
-            {(project.lead || project.funder) && (
+            {(project.lead || project.funder || projectTeam.length > 0) && (
               <dl class="mt-7 grid gap-4 rounded-lg border border-line bg-white p-5 sm:grid-cols-2">
                 {project.lead && (
                   <div>
@@ -72,6 +79,18 @@ const statusLabel = {
                       Funder
                     </dt>
                     <dd class="mt-1">{project.funder}</dd>
+                  </div>
+                )}
+                {projectTeam.length > 0 && (
+                  <div class="sm:col-span-2">
+                    <dt class="text-xs uppercase tracking-wide text-cloud-500">
+                      Project team
+                    </dt>
+                    <dd class="content-people-links mt-2">
+                      {projectTeam.map((person) => (
+                        <a href={`/people/${person.slug}`}>{person.name}</a>
+                      ))}
+                    </dd>
                   </div>
                 )}
               </dl>

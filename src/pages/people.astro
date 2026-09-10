@@ -18,11 +18,6 @@ const groupedTeam = team.filter(
   (person) => person.slug !== teamLead?.slug
 );
 
-/*
- * Existing profiles may still use the old "staff" category.
- * This keeps everyone in the correct section until their
- * category is updated through Keystatic.
- */
 const seniorFallbackSlugs = new Set([
   "adam-todd",
   "anna-robinson-barella",

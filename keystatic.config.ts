@@ -200,6 +200,49 @@ export default config({
   },
 
   collections: {
+    researchThemes: collection({
+      label: "Research themes",
+      slugField: "name",
+      path: "src/content/research-themes/*",
+      format: {
+        data: "json",
+      },
+      columns: ["name", "order"],
+
+      schema: {
+        name: fields.slug({
+          name: {
+            label: "Theme name",
+          },
+        }),
+
+        description: fields.text({
+          label: "Short description",
+          multiline: true,
+          validation: {
+            isRequired: false,
+          },
+        }),
+
+        publicationKeywords: fields.array(
+          fields.text({
+            label: "Matching term",
+          }),
+          {
+            label: "Automatic publication matching terms",
+            description:
+              "Add phrases that commonly appear in publication titles or OpenAlex topics for this theme. Add each phrase once; all matching publications will be tagged automatically.",
+          },
+        ),
+
+        order: fields.integer({
+          label: "Sort order",
+          description: "Lower numbers appear first in theme filters.",
+          defaultValue: 0,
+        }),
+      },
+    }),
+
     team: collection({
       label: "People",
       slugField: "name",
@@ -274,14 +317,75 @@ export default config({
         }),
 
         bio: fields.text({
-          label: "Short bio",
+          label: "Profile summary",
+          description:
+            "Write two or three sentences introducing the person and their work. This appears near the top of their profile.",
           multiline: true,
         }),
 
-        identifier: fields.text({
-          label: "Publication identifier",
+        researchFocus: fields.text({
+          label: "Research focus",
           description:
-            "Preferred: ORCID iD. Also accepts an OpenAlex author ID or the person's full name.",
+            "What topics, populations or health inequalities does this person study?",
+          multiline: true,
+          validation: {
+            isRequired: false,
+          },
+        }),
+
+        methodsExpertise: fields.text({
+          label: "Methods and expertise",
+          description:
+            "List the research methods, subject knowledge or practical expertise they bring.",
+          multiline: true,
+          validation: {
+            isRequired: false,
+          },
+        }),
+
+        impactEngagement: fields.text({
+          label: "Impact and engagement",
+          description:
+            "Add examples of policy, practice, public involvement, media or other impact work.",
+          multiline: true,
+          validation: {
+            isRequired: false,
+          },
+        }),
+
+        teachingSupervision: fields.text({
+          label: "Teaching and supervision",
+          description:
+            "Describe teaching, supervision and opportunities for prospective students. Leave blank if not relevant.",
+          multiline: true,
+          validation: {
+            isRequired: false,
+          },
+        }),
+
+        professionalRoles: fields.text({
+          label: "Professional roles and memberships",
+          description:
+            "Add relevant committees, networks, clinical roles, fellowships or professional memberships.",
+          multiline: true,
+          validation: {
+            isRequired: false,
+          },
+        }),
+
+        orcid: fields.text({
+          label: "ORCID iD",
+          description:
+            "Enter the 16-character ORCID iD, for example 0000-0002-1825-0097. It will become a clickable link.",
+          validation: {
+            isRequired: false,
+          },
+        }),
+
+        identifier: fields.text({
+          label: "Publication data identifier (advanced)",
+          description:
+            "Used to find publications automatically. This may be an ORCID iD, an OpenAlex author ID or the person's full name.",
         }),
 
         order: fields.integer({
@@ -292,7 +396,7 @@ export default config({
     }),
 
     publications: collection({
-      label: "Manual publications",
+      label: "Publications (manual additions)",
       slugField: "title",
       path: "src/content/publications/*",
       format: {
@@ -311,6 +415,30 @@ export default config({
           label: "Authors",
         }),
 
+        teamMembers: fields.array(
+          fields.relationship({
+            label: "Team member",
+            collection: "team",
+          }),
+          {
+            label: "HIT team members",
+            description:
+              "Select every HIT member who contributed, regardless of author order. Their names will link to their People profiles.",
+          },
+        ),
+
+        researchThemes: fields.array(
+          fields.relationship({
+            label: "Research theme",
+            collection: "researchThemes",
+          }),
+          {
+            label: "Research themes",
+            description:
+              "Select from the same themes used for studies. Add new options in the Research themes collection first.",
+          },
+        ),
+
         year: fields.integer({
           label: "Year",
           defaultValue: new Date().getFullYear(),
@@ -326,6 +454,56 @@ export default config({
             isRequired: false,
           },
         }),
+      },
+    }),
+
+    publicationTags: collection({
+      label: "Publication tag corrections (optional)",
+      slugField: "label",
+      path: "src/content/publication-tags/*",
+      format: {
+        data: "json",
+      },
+      columns: ["label", "doi"],
+
+      schema: {
+        label: fields.slug({
+          name: {
+            label: "Publication title",
+            description:
+              "Only use this optional collection when the automatic theme or person matching needs correcting.",
+          },
+        }),
+
+        doi: fields.text({
+          label: "DOI",
+          description:
+            "Paste the DOI for an automatically imported publication, for example 10.1234/example. The tags below will then be attached to that publication.",
+        }),
+
+        teamMembers: fields.array(
+          fields.relationship({
+            label: "Team member",
+            collection: "team",
+          }),
+          {
+            label: "HIT team members",
+            description:
+              "Select every HIT member who contributed, regardless of author order.",
+          },
+        ),
+
+        researchThemes: fields.array(
+          fields.relationship({
+            label: "Research theme",
+            collection: "researchThemes",
+          }),
+          {
+            label: "Research themes",
+            description:
+              "Select from the same shared themes used for studies.",
+          },
+        ),
       },
     }),
 
@@ -350,6 +528,16 @@ export default config({
       },
     }),
 
+    authors: fields.text({
+      label: "Authors",
+      description:
+        "For posters, enter the authors in the order shown on the poster.",
+      multiline: true,
+      validation: {
+        isRequired: false,
+      },
+    }),
+
     date: fields.date({
       label: "Date",
       validation: {
@@ -358,16 +546,27 @@ export default config({
     }),
 
     venue: fields.text({
-      label: "Venue / details",
+      label: "Conference / venue / details",
       validation: {
         isRequired: false,
       },
     }),
 
     coverImage: fields.image({
-      label: "Card image",
+      label: "Card preview image",
       description:
-        "Upload an image representing the presentation, poster or media coverage.",
+        "Upload a smaller preview for the gallery card. For a poster, this can be the same image as the full poster if needed.",
+      directory: "public/images/presentations",
+      publicPath: "/images/presentations/",
+      validation: {
+        isRequired: false,
+      },
+    }),
+
+    posterImage: fields.image({
+      label: "Full-resolution poster image",
+      description:
+        "For posters only. Upload a clear portrait image of the complete poster. Large A3 or A2 exports are suitable; PNG, JPEG or WebP work best.",
       directory: "public/images/presentations",
       publicPath: "/images/presentations/",
       validation: {
@@ -404,6 +603,27 @@ export default config({
         isRequired: false,
       },
     }),
+
+    abstractLink: fields.url({
+      label: "Abstract link",
+      description:
+        "For posters, link to the conference abstract, proceedings entry or abstract webpage.",
+      validation: {
+        isRequired: false,
+      },
+    }),
+
+    teamMembers: fields.array(
+      fields.relationship({
+        label: "Team member",
+        collection: "team",
+      }),
+      {
+        label: "HIT team members",
+        description:
+          "Select the people involved. Their names will link to their People profiles.",
+      },
+    ),
   },
 }),
 
@@ -498,9 +718,25 @@ export default config({
         }),
 
         recipient: fields.text({
-          label: "Recipient",
-          description: "A team member, study, programme or the whole team.",
+          label: "Other recipient",
+          description:
+            "Optional. Use this for a study, programme, the whole team or someone who does not have a People profile.",
+          validation: {
+            isRequired: false,
+          },
         }),
+
+        teamMembers: fields.array(
+          fields.relationship({
+            label: "Team member",
+            collection: "team",
+          }),
+          {
+            label: "HIT recipients",
+            description:
+              "Select every HIT member who received or was named in this award. Their names will link to their People profiles.",
+          },
+        ),
 
         awardingBody: fields.text({
           label: "Awarding organisation",
@@ -590,6 +826,18 @@ export default config({
           },
         }),
 
+        teamMembers: fields.array(
+          fields.relationship({
+            label: "Team member",
+            collection: "team",
+          }),
+          {
+            label: "Project team",
+            description:
+              "Select the HIT members involved in this research programme.",
+          },
+        ),
+
         coverImage: fields.image({
           label: "Cover image",
           directory: "public/images/projects",
@@ -660,13 +908,14 @@ export default config({
         ),
 
         researchThemes: fields.array(
-          fields.text({
-            label: "Theme",
+          fields.relationship({
+            label: "Research theme",
+            collection: "researchThemes",
           }),
           {
             label: "Research themes",
             description:
-              "Add themes visitors can use to filter studies, such as Cancer or Vaccination. Reuse exactly the same wording across related studies.",
+              "Select themes from the shared Research themes collection.",
           },
         ),
 
@@ -833,6 +1082,18 @@ export default config({
             isRequired: false,
           },
         }),
+
+        teamMembers: fields.array(
+          fields.relationship({
+            label: "Team member",
+            collection: "team",
+          }),
+          {
+            label: "Study team",
+            description:
+              "Select the HIT members involved in this study.",
+          },
+        ),
 
         funder: fields.text({
           label: "Funder",

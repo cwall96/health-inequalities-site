@@ -1,0 +1,138 @@
+---
+import { createReader } from "@keystatic/core/reader";
+import keystaticConfig from "../../../keystatic.config";
+import Layout from "../../layouts/Layout.astro";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const reader = createReader(process.cwd(), keystaticConfig);
+  const posters = (await reader.collections.presentations.all()).filter(
+    (item) => item.entry.section === "poster"
+  );
+
+  return posters.map((poster) => ({
+    params: { slug: poster.slug },
+    props: { slug: poster.slug },
+  }));
+}
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const poster = await reader.collections.presentations.read(Astro.props.slug);
+const team = await reader.collections.team.all();
+const teamBySlug = new Map(team.map((person) => [person.slug, person.entry.name]));
+const posterTeam = (poster?.teamMembers ?? []).flatMap((slug) => {
+  if (!slug) return [];
+  const name = teamBySlug.get(slug);
+  return name ? [{ slug, name }] : [];
+});
+const posterImage = poster?.posterImage || poster?.coverImage;
+const formattedDate = poster?.date
+  ? new Date(poster.date).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    })
+  : null;
+---
+
+<Layout
+  title={poster ? `${poster.title} — Poster — Health Inequalities Team` : "Poster"}
+  description={poster?.venue || undefined}
+>
+  {
+    poster && poster.section === "poster" && (
+      <section class="poster-page">
+        <div class="container-page max-w-7xl">
+          <a href="/presentations#sharing-our-research" class="poster-back-link">
+            ← Back to posters and presentations
+          </a>
+
+          <div class="poster-page-layout">
+            <div class="poster-viewer">
+              {posterImage ? (
+                <>
+                  <a
+                    href={posterImage}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="poster-image-link"
+                    aria-label={`Open ${poster.title} at full size in a new tab`}
+                  >
+                    <img
+                      src={posterImage}
+                      alt={`Full poster: ${poster.title}`}
+                      class="poster-full-image"
+                    />
+                  </a>
+                  <a
+                    href={posterImage}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="poster-full-size-link"
+                  >
+                    Open full-size poster <span aria-hidden="true">↗</span>
+                  </a>
+                </>
+              ) : (
+                <div class="poster-image-missing">
+                  <p>The full poster image has not been uploaded yet.</p>
+                </div>
+              )}
+            </div>
+
+            <aside class="poster-information" aria-labelledby="poster-title">
+              <p class="poster-type-label">Research poster</p>
+              <h1 id="poster-title">{poster.title}</h1>
+
+              <dl class="poster-details">
+                {poster.authors && (
+                  <div>
+                    <dt>Authors</dt>
+                    <dd class="poster-authors">{poster.authors}</dd>
+                  </div>
+                )}
+
+                {poster.venue && (
+                  <div>
+                    <dt>Conference presented at</dt>
+                    <dd>{poster.venue}</dd>
+                  </div>
+                )}
+
+                {formattedDate && (
+                  <div>
+                    <dt>Date presented</dt>
+                    <dd><time datetime={poster.date ?? undefined}>{formattedDate}</time></dd>
+                  </div>
+                )}
+              </dl>
+
+              {posterTeam.length > 0 && (
+                <div class="poster-team">
+                  <h2>HIT team members</h2>
+                  <div class="content-people-links">
+                    {posterTeam.map((person) => (
+                      <a href={`/people/${person.slug}`}>{person.name}</a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {poster.abstractLink && (
+                <a
+                  href={poster.abstractLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="poster-abstract-link"
+                >
+                  Read the conference abstract <span aria-hidden="true">→</span>
+                </a>
+              )}
+            </aside>
+          </div>
+        </div>
+      </section>
+    )
+  }
+</Layout>

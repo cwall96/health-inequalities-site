@@ -1,7 +1,9 @@
 {
   "title": "Award 1",
   "year": 2026,
-  "recipient": "Amber Sacre",
+  "teamMembers": [
+    "amber-sacre"
+  ],
   "awardingBody": "NIHR",
   "description": "Description",
   "order": 0

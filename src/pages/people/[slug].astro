@@ -15,9 +15,85 @@ export async function getStaticPaths() {
 
 const { person } = Astro.props;
 
-const pubs: Pub[] = person.identifier
-  ? await teamPublications([person.identifier as string])
-  : [];
+const pageReader = createReader(process.cwd(), keystaticConfig);
+const [manualEntries, projectEntries, studyEntries, presentationEntries, recognitionEntries] = await Promise.all([
+  pageReader.collections.publications.all(),
+  pageReader.collections.projects.all(),
+  pageReader.collections.studies.all(),
+  pageReader.collections.presentations.all(),
+  pageReader.collections.recognition.all(),
+]);
+
+const manualPublications: Pub[] = manualEntries
+  .filter((publication) => publication.entry.teamMembers?.includes(person.slug))
+  .map((publication) => ({
+    title: publication.entry.title,
+    year: publication.entry.year ?? null,
+    doi: null,
+    venue: publication.entry.venue ?? "",
+    citations: 0,
+    authors: publication.entry.authors ?? "",
+    url: publication.entry.url ?? null,
+    teamMembers: (publication.entry.teamMembers ?? []).filter(Boolean) as string[],
+    researchThemes: (publication.entry.researchThemes ?? []).filter(Boolean) as string[],
+  }));
+
+const pubs: Pub[] = await teamPublications(
+  person.identifier ? [person.identifier as string] : [],
+  { manual: manualPublications }
+);
+
+const relatedProjects = projectEntries.filter((project) =>
+  project.entry.teamMembers?.includes(person.slug)
+);
+const relatedStudies = studyEntries.filter((study) =>
+  study.entry.teamMembers?.includes(person.slug)
+);
+const relatedPresentations = presentationEntries.filter((presentation) =>
+  presentation.entry.teamMembers?.includes(person.slug)
+);
+const relatedAwards = recognitionEntries.filter((award) =>
+  award.entry.teamMembers?.includes(person.slug)
+);
+const hasRelatedWork =
+  relatedProjects.length > 0 ||
+  relatedStudies.length > 0 ||
+  relatedPresentations.length > 0 ||
+  relatedAwards.length > 0;
+
+const relatedWorkGroups = [
+  {
+    label: "Studies",
+    items: relatedStudies.map((study) => ({
+      title: study.entry.title,
+      href: `/studies/${study.slug}`,
+    })),
+  },
+  {
+    label: "Research programmes",
+    items: relatedProjects.map((project) => ({
+      title: project.entry.title,
+      href: `/research#project-${project.slug}`,
+    })),
+  },
+  {
+    label: "Posters, presentations and media",
+    items: relatedPresentations.map((presentation) => ({
+      title: presentation.entry.title,
+      href:
+        presentation.entry.section === "poster"
+          ? `/presentations/${presentation.slug}`
+          : presentation.entry.link || "/presentations",
+    })),
+  },
+  {
+    label: "Awards and recognition",
+    items: relatedAwards.map((award) => ({
+      title: award.entry.title,
+      href: `/presentations#award-${award.slug}`,
+    })),
+  },
+].filter((group) => group.items.length > 0);
 
 const byYear = new Map<number, Pub[]>();
 for (const p of pubs) {
@@ -33,40 +109,180 @@ const initials = person.name
   .slice(0, 2)
   .join("");
 
+const categoryLabels: Record<string, string> = {
+  lead: "Team lead",
+  senior: "Senior team member",
+  ecr: "Early career researcher",
+  phd: "PhD student",
+  services: "Team administration",
+  staff: "Team member",
+};
+
+const seniorFallbackSlugs = new Set([
+  "adam-todd",
+  "anna-robinson-barella",
+  "courtney-mcnamara",
+  "laura-woods",
+  "sarah-sowden",
+  "shelina-visram",
+  "steph-scott",
+  "vic-mcgowan",
+  "victoria-morgan",
+  "viviana-albani",
+]);
+
+const displayCategory = person.slug === "clare-bambra"
+  ? "lead"
+  : person.category !== "staff"
+    ? person.category
+    : person.slug === "donna-wakefield"
+      ? "phd"
+      : seniorFallbackSlugs.has(person.slug)
+        ? "senior"
+        : "ecr";
+
+const emailCandidate = String(person.email || "").trim();
+const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailCandidate)
+  ? emailCandidate
+  : null;
+
+const researchInterests = (person.researchKeywords ?? "")
+  .split(",")
+  .map((keyword: string) => keyword.trim())
+  .filter(Boolean);
+
+const orcidCandidate = String(person.orcid || person.identifier || "")
+  .trim()
+  .replace(/^https?:\/\/(?:www\.)?orcid\.org\//i, "");
+const orcid = /^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/i.test(orcidCandidate)
+  ? orcidCandidate.toUpperCase()
+  : null;
+
+const profileSections = [
+  { heading: "Research focus", copy: person.researchFocus },
+  { heading: "Methods and expertise", copy: person.methodsExpertise },
+  { heading: "Impact and engagement", copy: person.impactEngagement },
+  { heading: "Teaching and supervision", copy: person.teachingSupervision },
+  { heading: "Professional roles and memberships", copy: person.professionalRoles },
+].filter((section) => section.copy?.trim());
+
+const paragraphs = (copy: string) =>
+  copy
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+
 export const prerender = true;
 ---
 
 <Layout title={`${person.name} — Health Inequalities Team`}>
-  <section class="section">
-    <div class="container-page max-w-3xl">
-      <a href="/people" class="text-sm text-red-600">← Back to people</a>
+  <section class="person-profile-section">
+    <div class="container-page">
+      <a href="/people" class="person-profile-back">← Back to people</a>
 
-      <div class="mt-6 flex items-start gap-5">
-        {
-          person.photo ? (
-            <img src={person.photo} alt={person.name} class="h-20 w-20 shrink-0 rounded-full object-cover" />
-          ) : (
-            <span class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-red-700 text-lg text-white">
-              {initials}
-            </span>
-          )
-        }
-        <div>
-          <h1 class="text-2xl md:text-3xl">{person.name}</h1>
-          <p class="mt-1 text-muted">{person.role}</p>
+      <div class="person-profile-layout">
+        <aside class="person-summary" aria-labelledby="person-summary-heading">
           {
-            person.email && (
-              <a href={`mailto:${person.email}`} class="mt-1 inline-block text-sm text-red-600">
-                {person.email}
-              </a>
+            person.photo ? (
+              <img src={person.photo} alt={person.name} class="person-summary-photo" />
+            ) : (
+              <span class="person-summary-placeholder" aria-hidden="true">
+                {initials}
+              </span>
             )
           }
-        </div>
-      </div>
 
-      {person.bio && <p class="mt-6 leading-7 text-ink">{person.bio}</p>}
+          <h2 id="person-summary-heading">{person.name}</h2>
+          <p class="person-summary-role">{person.role}</p>
 
-      <h2 class="mt-12 text-xl">Publications</h2>
+          <dl class="person-summary-details">
+            <div>
+              <dt>Team group</dt>
+              <dd>{categoryLabels[displayCategory] ?? "Team member"}</dd>
+            </div>
+
+            {email && (
+              <div>
+                <dt>Email</dt>
+                <dd><a href={`mailto:${email}`}>{email}</a></dd>
+              </div>
+            )}
+
+            {orcid && (
+              <div>
+                <dt>ORCID iD</dt>
+                <dd>
+                  <a href={`https://orcid.org/${orcid}`} target="_blank" rel="noopener noreferrer">
+                    {orcid}<span class="sr-only"> (opens in a new tab)</span>
+                  </a>
+                </dd>
+              </div>
+            )}
+          </dl>
+
+          {researchInterests.length > 0 && (
+            <div class="person-summary-interests">
+              <h3>Research interests</h3>
+              <ul>
+                {researchInterests.map((interest: string) => <li>{interest}</li>)}
+              </ul>
+            </div>
+          )}
+        </aside>
+
+        <div class="person-profile-main">
+          <p class="eyebrow">{categoryLabels[displayCategory] ?? "Team member"}</p>
+          <h1>{person.name}</h1>
+          <p class="person-profile-role">{person.role}</p>
+
+          {person.bio && (
+            <section class="person-profile-introduction" aria-labelledby="profile-heading">
+              <h2 id="profile-heading">Profile</h2>
+              <div class="person-profile-copy">
+                {paragraphs(person.bio).map((paragraph) => <p>{paragraph}</p>)}
+              </div>
+            </section>
+          )}
+
+          {profileSections.length > 0 && (
+            <div class="person-profile-sections">
+              {profileSections.map((section, index) => (
+                <section class="person-profile-content" aria-labelledby={`profile-section-${index}`}>
+                  <h2 id={`profile-section-${index}`}>{section.heading}</h2>
+                  <div class="person-profile-copy">
+                    {paragraphs(section.copy).map((paragraph) => <p>{paragraph}</p>)}
+                  </div>
+                </section>
+              ))}
+            </div>
+          )}
+
+          {hasRelatedWork && (
+            <section class="person-related-work" aria-labelledby="related-work-heading">
+              <h2 id="related-work-heading">Related work</h2>
+              <p class="person-related-intro">
+                Open a category and follow a link to the full study or output page.
+              </p>
+              <div class="person-related-dropdowns">
+                {relatedWorkGroups.map((group, index) => (
+                  <details class="person-related-dropdown" open={index === 0}>
+                    <summary>
+                      <span>{group.label}</span>
+                      <span>{group.items.length}</span>
+                    </summary>
+                    <ul>
+                      {group.items.map((item) => (
+                        <li><a href={item.href}>{item.title}<span aria-hidden="true">→</span></a></li>
+                      ))}
+                    </ul>
+                  </details>
+                ))}
+              </div>
+            </section>
+          )}
+
+      <section class="person-publications" aria-labelledby="publications-heading">
+      <h2 id="publications-heading">Publications</h2>
       {
         pubs.length === 0 ? (
           <p class="mt-3 text-muted">No publications found for this person yet.</p>
@@ -96,6 +312,9 @@ export const prerender = true;
           </div>
         )
       }
+      </section>
+        </div>
+      </div>
     </div>
   </section>
 </Layout>

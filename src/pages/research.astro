@@ -8,6 +8,21 @@ export const prerender = true;
 
 const reader = createReader(process.cwd(), keystaticConfig);
 const siteContent = await reader.singletons.home.read();
+const team = await reader.collections.team.all();
+const teamBySlug = new Map(team.map((person) => [person.slug, person.entry.name]));
+const linkedPeople = (slugs: readonly (string | null)[] = []) =>
+  slugs.flatMap((slug) => {
+    if (!slug) return [];
+    const name = teamBySlug.get(slug);
+    return name ? [{ slug, name }] : [];
+  });
+
+const themeEntries = (await reader.collections.researchThemes.all()).sort(
+  (a, b) =>
+    (a.entry.order ?? 0) - (b.entry.order ?? 0) ||
+    a.entry.name.localeCompare(b.entry.name)
+);
+const themeBySlug = new Map(themeEntries.map((theme) => [theme.slug, theme.entry.name]));
 
 const projects = (await reader.collections.projects.all()).sort(
   (a, b) =>
@@ -28,16 +43,10 @@ const studies = (await reader.collections.studies.all()).sort(
     a.entry.title.localeCompare(b.entry.title)
 );
 
-const normaliseTheme = (theme: string) => theme.trim().toLowerCase();
-const themes = [
-  ...new Map(
-    studies
-      .flatMap((study) => study.entry.researchThemes ?? [])
-      .map((theme) => theme.trim())
-      .filter(Boolean)
-      .map((theme) => [normaliseTheme(theme), theme])
-  ).values(),
-].sort((a, b) => a.localeCompare(b));
+const usedThemeSlugs = new Set(
+  studies.flatMap((study) => study.entry.researchThemes ?? []).filter(Boolean)
+);
+const themes = themeEntries.filter((theme) => usedThemeSlugs.has(theme.slug));
 
 const statusLabel = {
   ongoing: "Ongoing",
@@ -78,7 +87,7 @@ const statusLabel = {
       ) : (
         <div class="research-programme-list">
           {projectsWithContent.map((project) => (
-            <article class="research-programme">
+            <article class="research-programme" id={`project-${project.slug}`}>
               <div class="flex flex-wrap items-center gap-3 text-sm">
                 <span class={`project-status project-status-${project.entry.status}`}>
                   {statusLabel[project.entry.status]}
@@ -95,6 +104,17 @@ const statusLabel = {
                     .filter(Boolean)
                     .join(" · ")}
                 </p>
+              )}
+
+              {linkedPeople(project.entry.teamMembers).length > 0 && (
+                <div class="content-people-links">
+                  <span>Project team</span>
+                  <div>
+                    {linkedPeople(project.entry.teamMembers).map((person) => (
+                      <a href={`/people/${person.slug}`}>{person.name}</a>
+                    ))}
+                  </div>
+                </div>
               )}
 
               {project.document.length > 0 && (
@@ -134,10 +154,10 @@ const statusLabel = {
             <button
               type="button"
               class="research-theme-button"
-              data-theme-filter={normaliseTheme(theme)}
+              data-theme-filter={theme.slug}
               aria-pressed="false"
             >
-              {theme}
+              {theme.entry.name}
             </button>
           ))}
         </div>
@@ -159,7 +179,12 @@ const statusLabel = {
             {studies.map((study) => {
               const href = study.entry.externalLink || `/studies/${study.slug}`;
               const isExternal = Boolean(study.entry.externalLink);
-              const studyThemes = (study.entry.researchThemes ?? []).map((theme) => theme.trim()).filter(Boolean);
+              const studyThemes = (study.entry.researchThemes ?? [])
+                .filter(Boolean)
+                .flatMap((slug) => {
+                  const name = themeBySlug.get(slug);
+                  return name ? [{ slug, name }] : [];
+                });
 
               return (
                 <a
@@ -168,7 +193,7 @@ const statusLabel = {
                   rel={isExternal ? "noopener noreferrer" : undefined}
                   class="study-card group"
                   data-study-card
-                  data-study-themes={JSON.stringify(studyThemes.map(normaliseTheme))}
+                  data-study-themes={JSON.stringify(studyThemes.map((theme) => theme.slug))}
                 >
                   {study.entry.coverImage && (
                     <img
@@ -189,7 +214,7 @@ const statusLabel = {
 
                     {studyThemes.length > 0 && (
                       <div class="study-theme-tags" aria-label="Research themes">
-                        {studyThemes.map((theme) => <span>{theme}</span>)}
+                        {studyThemes.map((theme) => <span>{theme.name}</span>)}
                       </div>
                     )}
 

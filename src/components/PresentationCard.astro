@@ -6,6 +6,8 @@ interface Props {
   venue?: string | null;
   link?: string | null;
   coverImage?: string | null;
+  teamMembers?: Array<{ slug: string; name: string }>;
+  detailHref?: string | null;
 }
 
 const {
@@ -15,6 +17,8 @@ const {
   venue,
   link,
   coverImage,
+  teamMembers = [],
+  detailHref,
 } = Astro.props;
 
 const isMedia = section === "media";
@@ -40,16 +44,26 @@ const formattedDate = date
     })
   : "";
 const year = date?.slice(0, 4) || "undated";
+const actionHref = isPoster && detailHref ? detailHref : link;
 ---
 
 <article
   data-output-card
   data-year={year}
   class:list={[
-    "engagement-output-card group flex h-full flex-col overflow-hidden rounded-2xl shadow-card transition-all duration-200 hover:shadow-pop",
+    "engagement-output-card group relative flex h-full flex-col overflow-hidden rounded-2xl shadow-card transition-all duration-200 hover:shadow-pop",
     isMedia ? "bg-navy-700" : isPoster ? "bg-lavender" : "bg-red-700",
   ]}
 >
+  {
+    isPoster && detailHref && (
+      <a
+        href={detailHref}
+        class="absolute inset-0 z-10 rounded-2xl"
+        aria-label={`View full poster: ${title}`}
+      ></a>
+    )
+  }
   {
     coverImage ? (
       <img
@@ -119,11 +133,24 @@ const year = date?.slice(0, 4) || "undated";
     }
 
     {
-      link && (
+      teamMembers.length > 0 && (
+        <div class:list={["content-people-links relative z-20", { "content-people-links-on-dark": isOnDark }]}>
+          <span>HIT team</span>
+          <div>
+            {teamMembers.map((person) => (
+              <a href={`/people/${person.slug}`}>{person.name}</a>
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    {
+      actionHref && (
         <a
-          href={link}
+          href={actionHref}
           class:list={[
-            "mt-auto inline-flex self-start rounded-full px-4 py-2 pt-2 text-sm font-medium no-underline transition-colors hover:no-underline",
+            "relative z-20 mt-auto inline-flex self-start rounded-full px-4 py-2 pt-2 text-sm font-medium no-underline transition-colors hover:no-underline",
             isOnDark
               ? "bg-surface text-navy-800 hover:bg-white"
               : "bg-navy-900 text-white hover:bg-navy-800",

@@ -2,14 +2,31 @@
 import { createReader } from "@keystatic/core/reader";
 import keystaticConfig from "../../keystatic.config";
 import Layout from "../layouts/Layout.astro";
-import { teamPublications, type Pub } from "../lib/publications";
+import { normDoi, teamPublications, type Pub } from "../lib/publications";
 
 const reader = createReader(process.cwd(), keystaticConfig);
 const team = await reader.collections.team.all();
 const settings = await reader.singletons.home.read();
 const manualEntries = await reader.collections.publications.all();
+const publicationTagEntries = await reader.collections.publicationTags.all();
+const themeEntries = (await reader.collections.researchThemes.all()).sort(
+  (a, b) =>
+    (a.entry.order ?? 0) - (b.entry.order ?? 0) ||
+    a.entry.name.localeCompare(b.entry.name)
+);
 
-const ids = team.map((t) => t.entry.identifier).filter(Boolean) as string[];
+const publicationSources = team
+  .filter((person) => person.entry.identifier)
+  .map((person) => ({
+    identifier: person.entry.identifier as string,
+    teamMember: person.slug,
+  }));
+
+const teamBySlug = new Map(team.map((person) => [person.slug, person.entry.name]));
+const themeBySlug = new Map(themeEntries.map((theme) => [theme.slug, theme.entry.name]));
+const teamOptions = [...team]
+  .sort((a, b) => a.entry.name.localeCompare(b.entry.name))
+  .map((person) => ({ slug: person.slug, name: person.entry.name }));
 
 const manual: Pub[] = manualEntries.map((m) => ({
   title: m.entry.title,
@@ -19,11 +36,63 @@ const manual: Pub[] = manualEntries.map((m) => ({
   citations: 0,
   authors: m.entry.authors ?? "",
   url: m.entry.url ?? null,
+  teamMembers: (m.entry.teamMembers ?? []).filter(Boolean) as string[],
+  researchThemes: (m.entry.researchThemes ?? []).filter(Boolean) as string[],
 }));
 
-const pubs = await teamPublications(ids, {
+const importedPubs = await teamPublications(publicationSources, {
   hidden: (settings?.hiddenDois ?? []) as string[],
   manual,
+});
+
+const tagsByDoi = new Map(
+  publicationTagEntries.flatMap((entry) => {
+    const doi = normDoi(entry.entry.doi);
+    return doi ? [[doi, entry.entry] as const] : [];
+  })
+);
+
+const normaliseSearchText = (value: string) =>
+  value
+    .normalize("NFKD")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+
+const pubs = importedPubs.map((publication) => {
+  const tags = publication.doi ? tagsByDoi.get(publication.doi) : undefined;
+  const searchableText = normaliseSearchText(
+    [publication.title, ...(publication.searchTerms ?? [])].join(" ")
+  );
+  const automaticThemes = themeEntries
+    .filter((theme) => {
+      const matchingTerms = [
+        theme.entry.name,
+        ...(theme.entry.publicationKeywords ?? []),
+      ];
+      return matchingTerms.some((term) => {
+        const normalisedTerm = normaliseSearchText(term);
+        return normalisedTerm && searchableText.includes(normalisedTerm);
+      });
+    })
+    .map((theme) => theme.slug);
+
+  return {
+    ...publication,
+    teamMembers: [
+      ...new Set([
+        ...(publication.teamMembers ?? []),
+        ...((tags?.teamMembers ?? []).filter(Boolean) as string[]),
+      ]),
+    ],
+    researchThemes: [
+      ...new Set([
+        ...(publication.researchThemes ?? []),
+        ...automaticThemes,
+        ...((tags?.researchThemes ?? []).filter(Boolean) as string[]),
+      ]),
+    ],
+  };
 });
 
 const byYear = new Map<number, Pub[]>();
@@ -34,22 +103,6 @@ for (const p of pubs) {
 }
 const years = [...byYear.keys()].sort((a, b) => b - a);
 
-const firstAuthorSurname = (authors: string) => {
-  const clean = authors.trim();
-  if (!clean) return "";
-
-  if (clean.includes(";")) {
-    const firstAuthor = clean.split(";")[0].trim();
-    if (firstAuthor.includes(",")) return firstAuthor.split(",")[0].trim();
-    return firstAuthor.split(/\s+/).at(-1) ?? "";
-  }
-
-  const firstAuthor = clean.split(",")[0].trim();
-  return firstAuthor.split(/\s+/).at(-1) ?? "";
-};
-
-const firstAuthors = [...new Set(pubs.map((p) => firstAuthorSurname(p.authors)).filter(Boolean))]
-  .sort((a, b) => a.localeCompare(b));
 const journals = [...new Set(pubs.map((p) => p.venue.trim()).filter(Boolean))]
   .sort((a, b) => a.localeCompare(b));
 
@@ -82,10 +135,18 @@ export const prerender = true;
               </div>
 
               <div>
-                <label for="first-author">First author surname</label>
-                <select id="first-author" data-filter="author">
-                  <option value="">All surnames</option>
-                  {firstAuthors.map((author) => <option value={author}>{author}</option>)}
+                <label for="team-member">HIT team member</label>
+                <select id="team-member" data-filter="person">
+                  <option value="">All team members</option>
+                  {teamOptions.map((person) => <option value={person.slug}>{person.name}</option>)}
+                </select>
+              </div>
+
+              <div>
+                <label for="publication-theme">Research theme</label>
+                <select id="publication-theme" data-filter="theme">
+                  <option value="">All themes</option>
+                  {themeEntries.map((theme) => <option value={theme.slug}>{theme.entry.name}</option>)}
                 </select>
               </div>
 
@@ -113,7 +174,8 @@ export const prerender = true;
                     class="flex items-start justify-between gap-4 border-t border-line py-4"
                     data-publication
                     data-year={String(p.year ?? 0)}
-                    data-first-author={firstAuthorSurname(p.authors).toLowerCase()}
+                    data-team-members={JSON.stringify(p.teamMembers ?? [])}
+                    data-themes={JSON.stringify(p.researchThemes ?? [])}
                     data-journal={p.venue.trim().toLowerCase()}
                   >
                     <div>
@@ -122,6 +184,18 @@ export const prerender = true;
                         {[p.authors, p.venue].filter(Boolean).join(" · ")}
                         {p.citations > 0 && <span> · {p.citations} citations</span>}
                       </p>
+                      {((p.teamMembers?.length ?? 0) > 0 || (p.researchThemes?.length ?? 0) > 0) && (
+                        <div class="publication-tags">
+                          {(p.teamMembers ?? []).map((slug) => {
+                            const name = teamBySlug.get(slug);
+                            return name ? <a href={`/people/${slug}`}>{name}</a> : null;
+                          })}
+                          {(p.researchThemes ?? []).map((slug) => {
+                            const name = themeBySlug.get(slug);
+                            return name ? <span>{name}</span> : null;
+                          })}
+                        </div>
+                      )}
                     </div>
                     {p.url && (
                       <a href={p.url} aria-label="Open publication">
@@ -156,14 +230,18 @@ export const prerender = true;
 
       const applyFilters = () => {
         const year = filterPanel.querySelector<HTMLSelectElement>("[data-filter='year']")?.value ?? "";
-        const author = filterPanel.querySelector<HTMLInputElement>("[data-filter='author']")?.value.trim().toLowerCase() ?? "";
+        const person = filterPanel.querySelector<HTMLSelectElement>("[data-filter='person']")?.value ?? "";
+        const theme = filterPanel.querySelector<HTMLSelectElement>("[data-filter='theme']")?.value ?? "";
         const journal = filterPanel.querySelector<HTMLInputElement>("[data-filter='journal']")?.value.trim().toLowerCase() ?? "";
         let visible = 0;
 
         publications.forEach((publication) => {
+          const teamMembers = JSON.parse(publication.dataset.teamMembers ?? "[]") as string[];
+          const themes = JSON.parse(publication.dataset.themes ?? "[]") as string[];
           const matches =
             (!year || publication.dataset.year === year) &&
-            (!author || publication.dataset.firstAuthor?.includes(author)) &&
+            (!person || teamMembers.includes(person)) &&
+            (!theme || themes.includes(theme)) &&
             (!journal || publication.dataset.journal?.includes(journal));
 
           publication.hidden = !matches;
