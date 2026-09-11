@@ -2,6 +2,7 @@
   "name": "Eman Zied",
   "role": "Research Fellow",
   "category": "staff",
+  "email": "eman.zied-abozied@ncl.ac.uk",
   "researchKeywords": "spatial health inequalities, climate and health, built environment, heatwaves",
   "bio": "Dr Eman Zied, PhD is a Research Fellow and geospatial data scientist affiliated with the Addressing Inequity in Health and Care Systems theme at NIHR ARC North East and North Cumbria.",
   "researchFocus": "Eman studies the interplay between social, spatial and health inequalities, including the spatial determinants of health and climate. Her work examines vulnerability and hospitalisation during heatwaves, the effects of built and natural environments on health, cognitive health, high-street health amenities and community pharmacy distribution in deprived areas.",
@@ -10,6 +11,40 @@
     "Geographical information systems",
     "Spatial analysis",
     "Public health research"
+  ],
+  "teaching": [
+    {
+      "course": "Master of Public Health",
+      "module": "Social Determinants of Health (MPH8004)",
+      "level": "mph"
+    },
+    {
+      "course": "Public health",
+      "module": "Climate change and health inequalities",
+      "level": "postgraduate"
+    },
+    {
+      "course": "Public health research",
+      "module": "Measuring the built environment",
+      "level": "postgraduate"
+    }
+  ],
+  "professionalRoles": [
+    {
+      "title": "Associate Fellow",
+      "organisation": "Higher Education Academy",
+      "type": "membership"
+    },
+    {
+      "title": "Member",
+      "organisation": "Regional Studies Association",
+      "type": "membership"
+    },
+    {
+      "title": "Member",
+      "organisation": "Society for Social Medicine and Population Health",
+      "type": "membership"
+    }
   ],
   "identifier": "0000-0002-7984-3793",
   "order": 0

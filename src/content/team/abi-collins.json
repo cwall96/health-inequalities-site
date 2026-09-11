@@ -3,7 +3,14 @@
   "role": "PhD Student",
   "category": "phd",
   "email": "a.collins5@newcastle.ac.uk",
-  "bio": "Abi Collins is a PhD student.",
+  "researchKeywords": "child health inequalities, financial barriers to healthcare, childhood illness, patient safety",
+  "bio": "Abi Collins is a PhD student researching the financial impact of childhood illness and barriers to care for families, including those living in disadvantaged communities. Her work examines how the non-medical costs of hospital attendance may create financial strain and affect how promptly children access care.",
+  "researchFocus": "Abi's project explores the transport, food and drink, and lost-wage costs associated with taking a child to hospital. It considers how these costs may contribute to delayed presentation, financial stress and unequal access to safe and compassionate care, particularly for families in the North East of England. The findings could inform interventions intended to reduce financial barriers and their impacts on families.",
+  "methodsExpertise": [
+    "Systematic reviews",
+    "Survey analysis",
+    "Semi-structured interviews"
+  ],
   "identifier": "0009-0005-2721-5049",
   "order": 0
 }

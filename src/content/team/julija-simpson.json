@@ -12,6 +12,22 @@
     "Systematic reviews",
     "Health economics"
   ],
+  "teaching": [
+    {
+      "course": "Master of Public Health",
+      "level": "mph"
+    },
+    {
+      "course": "Psychology",
+      "module": "Research Methods seminars",
+      "level": "undergraduate"
+    },
+    {
+      "course": "Undergraduate programmes",
+      "module": "Statistical Methods seminars",
+      "level": "undergraduate"
+    }
+  ],
   "identifier": "0000-0001-8540-5717",
   "order": 0
 }

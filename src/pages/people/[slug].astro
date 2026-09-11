@@ -16,11 +16,12 @@ export async function getStaticPaths() {
 const { person } = Astro.props;
 
 const pageReader = createReader(process.cwd(), keystaticConfig);
-const [manualEntries, projectEntries, studyEntries, presentationEntries, recognitionEntries, teamEntries] = await Promise.all([
+const [manualEntries, projectEntries, studyEntries, presentationEntries, impactEntries, recognitionEntries, teamEntries] = await Promise.all([
   pageReader.collections.publications.all(),
   pageReader.collections.projects.all(),
   pageReader.collections.studies.all(),
   pageReader.collections.presentations.all(),
+  pageReader.collections.impacts.all(),
   pageReader.collections.recognition.all(),
   pageReader.collections.team.all(),
 ]);
@@ -57,6 +58,9 @@ const relatedStudies = studyEntries.filter((study) =>
 const relatedPresentations = presentationEntries.filter((presentation) =>
   presentation.entry.teamMembers?.includes(person.slug)
 );
+const relatedImpacts = impactEntries.filter((impact) =>
+  impact.entry.teamMembers?.includes(person.slug)
+);
 const relatedAwards = recognitionEntries.filter((award) =>
   award.entry.teamMembers?.includes(person.slug)
 );
@@ -64,6 +68,7 @@ const hasRelatedWork =
   relatedProjects.length > 0 ||
   relatedStudies.length > 0 ||
   relatedPresentations.length > 0 ||
+  relatedImpacts.length > 0 ||
   relatedAwards.length > 0;
 
 const relatedWorkGroups = [
@@ -92,6 +97,14 @@ const relatedWorkGroups = [
         presentation.entry.section === "poster"
           ? `/presentations/${presentation.slug}`
           : presentation.entry.link || "/presentations",
+    })),
+  },
+  {
+    label: "Public and policy impact",
+    items: relatedImpacts.map((impact) => ({
+      title: impact.entry.title,
+      summary: impact.entry.summary,
+      href: `/presentations#impact-${impact.slug}`,
     })),
   },
   {

@@ -220,9 +220,22 @@ export default config({
         }),
 
         featuredDoi: fields.text({
-          label: "Featured publication DOI (homepage)",
+          label: "Publication spotlight DOI",
           description:
-            "Paste a DOI to pin one paper. Leave blank to show the newest.",
+            "Paste the DOI of the publication to showcase at the top of the Publications page. Leave blank to show the team's most-cited publication.",
+          validation: {
+            isRequired: false,
+          },
+        }),
+
+        featuredPublicationSummary: fields.text({
+          label: "Why are we spotlighting it?",
+          description:
+            "Add a short, accessible explanation of why this publication is important. Leave blank to use a simple default sentence.",
+          multiline: true,
+          validation: {
+            isRequired: false,
+          },
         }),
 
         hiddenDois: fields.array(
@@ -296,14 +309,16 @@ export default config({
       schema: {
         name: fields.slug({
           name: {
-            label: "Name",
+            label: "Profile page name",
+            description:
+              "The name shown as the main heading on the person's profile page and on the People page, for example Clare Bambra.",
           },
         }),
 
         displayName: fields.text({
-          label: "Full display name",
+          label: "Name in the navy profile card",
           description:
-            "Include titles and qualifications exactly as they should appear in the navy profile box, for example Dr Amber Sacre, PhD.",
+            "This can be different from the profile page name. Include titles and qualifications exactly as they should appear, for example Professor Clare Bambra PhD, FMedSci, FAcSS, HonFPH, Leopoldina.",
           validation: {
             isRequired: false,
           },
@@ -883,6 +898,18 @@ export default config({
           defaultValue: new Date().getFullYear(),
         }),
 
+        teamMembers: fields.array(
+          fields.relationship({
+            label: "Team member",
+            collection: "team",
+          }),
+          {
+            label: "HIT people connected to this impact",
+            description:
+              "Select every team member involved. The impact will also be linked from their People profile.",
+          },
+        ),
+
         summary: fields.text({
           label: "What changed?",
           multiline: true,
@@ -895,6 +922,13 @@ export default config({
           multiline: true,
           description:
             "Optional: briefly describe how the change is evidenced.",
+          validation: {
+            isRequired: false,
+          },
+        }),
+
+        link: fields.url({
+          label: "Supporting link",
           validation: {
             isRequired: false,
           },

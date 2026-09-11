@@ -127,16 +127,42 @@ export const prerender = true;
           )}
 
           {impacts.length > 0 && (
-            <section id="public-policy-impact" class="engagement-section">
-              <h2>Public and policy impact</h2>
-              <p class="mt-4 max-w-2xl leading-7 text-muted">
-                Examples of how the team's research has contributed to change, influence or benefit beyond academia.
-              </p>
+            <section id="public-policy-impact" class="engagement-section impact-feature-section">
+              <div class="engagement-section-heading">
+                <span class="engagement-section-icon impact-section-icon" aria-hidden="true">
+                  <svg viewBox="0 0 32 32">
+                    <path d="M6 25V14m8 11V9m8 16V5" />
+                    <path d="m5 10 7-5 6 3 8-5" />
+                    <path d="m21 3 5 .1-.8 4.9" />
+                  </svg>
+                </span>
+                <div>
+                  <p class="eyebrow">Beyond academia</p>
+                  <h2>Public and policy impact</h2>
+                  <p class="mt-4 max-w-2xl leading-7 text-muted">
+                    Examples of how the team's research has contributed to change, influence or benefit beyond academia.
+                  </p>
+                </div>
+              </div>
 
               <div class="impact-story-grid mt-9">
-                {impacts.map((impact) => (
-                  <article class="impact-story-card">
-                    {impact.entry.image && <img src={impact.entry.image} alt="" class="impact-story-image" />}
+                {impacts.map((impact, index) => (
+                  <article class="impact-story-card" id={`impact-${impact.slug}`}>
+                    <div class="impact-story-media">
+                      {impact.entry.image ? (
+                        <img src={impact.entry.image} alt="" class="impact-story-image" />
+                      ) : (
+                        <div class="impact-story-placeholder" aria-hidden="true">
+                          <svg viewBox="0 0 48 48">
+                            <path d="M9 38V22m10 16V15m10 23V9m10 29V5" />
+                            <path d="m8 15 10-7 9 4 12-8" />
+                          </svg>
+                        </div>
+                      )}
+                      <span class="impact-story-number" aria-hidden="true">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                    </div>
                     <div class="impact-story-content">
                       <div class="flex flex-wrap items-center justify-between gap-3 text-sm">
                         <span class="impact-year">{impact.entry.year}</span>
@@ -144,47 +170,36 @@ export const prerender = true;
                       </div>
                       <h3 class="mt-4 text-2xl">{impact.entry.title}</h3>
                       <p class="mt-4 leading-7 text-ink">{impact.entry.summary}</p>
-                      {impact.entry.evidence && (
-                        <p class="impact-evidence"><strong>Evidence:</strong> {impact.entry.evidence}</p>
-                      )}
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {recognition.length > 0 && (
-            <section id="awards-recognition" class="engagement-section">
-              <h2>Awards and recognition</h2>
-
-              <div class="recognition-list mt-9">
-                {recognition.map((item) => (
-                  <article class="recognition-item" id={`award-${item.slug}`}>
-                    <p class="recognition-year">{item.entry.year}</p>
-                    <div>
-                      <h3>{item.entry.title}</h3>
-                      <p class="mt-2 text-sm text-muted">
-                        {[item.entry.recipient, item.entry.awardingBody].filter(Boolean).join(" · ")}
-                      </p>
-                      {linkedPeople(item.entry.teamMembers).length > 0 && (
+                      {linkedPeople(impact.entry.teamMembers).length > 0 && (
                         <div class="content-people-links">
-                          <span>Recipient</span>
+                          <span>Team</span>
                           <div>
-                            {linkedPeople(item.entry.teamMembers).map((person) => (
+                            {linkedPeople(impact.entry.teamMembers).map((person) => (
                               <a href={`/people/${person.slug}`}>{person.name}</a>
                             ))}
                           </div>
                         </div>
                       )}
-                      {item.entry.description && <p class="mt-3 leading-7 text-ink">{item.entry.description}</p>}
-                      {item.entry.link && <a href={item.entry.link} class="mt-3 inline-block text-sm">Find out more →</a>}
+                      {impact.entry.evidence && (
+                        <div class="impact-evidence">
+                          <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m5 12 4 4L19 6" />
+                          </svg>
+                          <p><strong>Evidence:</strong> {impact.entry.evidence}</p>
+                        </div>
+                      )}
+                      {impact.entry.link && (
+                        <a href={impact.entry.link} class="impact-supporting-link" target="_blank" rel="noopener noreferrer">
+                          View supporting evidence <span aria-hidden="true">↗</span>
+                        </a>
+                      )}
                     </div>
                   </article>
                 ))}
               </div>
             </section>
           )}
+
         </main>
 
         {items.length > 0 && (
@@ -213,6 +228,78 @@ export const prerender = true;
       </div>
     </div>
   </section>
+
+  {recognition.length > 0 && (
+    <section id="awards-recognition" class="recognition-feature-section recognition-full-width">
+      <div class="container-page">
+        <div class="engagement-section-heading">
+          <span class="engagement-section-icon recognition-section-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32">
+              <path d="M10 4h12v7a6 6 0 0 1-12 0V4Z" />
+              <path d="M10 7H5v2a6 6 0 0 0 6 6m11-8h5v2a6 6 0 0 1-6 6M16 17v6m-5 5h10m-8-5h6" />
+            </svg>
+          </span>
+          <div>
+            <p class="eyebrow">Celebrating achievement</p>
+            <h2>Awards and recognition</h2>
+            <p class="recognition-section-copy mt-4 max-w-2xl leading-7">
+              Recognition of the team's people, partnerships and contributions to research and public health.
+            </p>
+          </div>
+        </div>
+
+        <div class="recognition-list mt-9">
+          {recognition.map((item, index) => (
+            <article class="recognition-item" id={`award-${item.slug}`}>
+              <div class="recognition-card-top">
+                <span class={`recognition-icon recognition-icon-${(index % 3) + 1}`} aria-hidden="true">
+                  {index % 3 === 0 ? (
+                    <svg viewBox="0 0 32 32">
+                      <path d="M10 4h12v7a6 6 0 0 1-12 0V4Z" />
+                      <path d="M10 7H5v2a6 6 0 0 0 6 6m11-8h5v2a6 6 0 0 1-6 6M16 17v6m-5 5h10m-8-5h6" />
+                    </svg>
+                  ) : index % 3 === 1 ? (
+                    <svg viewBox="0 0 32 32">
+                      <circle cx="16" cy="13" r="8" />
+                      <path d="m11 20-2 9 7-4 7 4-2-9" />
+                      <path d="m16 8 1.5 3 3.5.5-2.5 2.5.6 3.5-3.1-1.7-3.1 1.7.6-3.5-2.5-2.5 3.5-.5L16 8Z" />
+                    </svg>
+                  ) : (
+                    <svg viewBox="0 0 32 32">
+                      <path d="m16 3 3.7 7.6 8.3 1.2-6 5.8 1.4 8.2-7.4-3.9-7.4 3.9 1.4-8.2-6-5.8 8.3-1.2L16 3Z" />
+                    </svg>
+                  )}
+                </span>
+                <p class="recognition-year">{item.entry.year}</p>
+              </div>
+              <div class="recognition-content">
+                <h3>{item.entry.title}</h3>
+                <p class="mt-2 text-sm text-muted">
+                  {[item.entry.recipient, item.entry.awardingBody].filter(Boolean).join(" · ")}
+                </p>
+                {linkedPeople(item.entry.teamMembers).length > 0 && (
+                  <div class="content-people-links">
+                    <span>Recipient</span>
+                    <div>
+                      {linkedPeople(item.entry.teamMembers).map((person) => (
+                        <a href={`/people/${person.slug}`}>{person.name}</a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {item.entry.description && <p class="mt-3 leading-7 text-ink">{item.entry.description}</p>}
+                {item.entry.link && (
+                  <a href={item.entry.link} class="mt-3 inline-block text-sm" target="_blank" rel="noopener noreferrer">
+                    Find out more <span aria-hidden="true">↗</span>
+                  </a>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
 
   <script>
     const outputFilters = document.querySelector<HTMLElement>("[data-output-filters]");

@@ -3,17 +3,28 @@
   "role": "Lecturer in Clinical Pharmacy and Health- and Medicines- Inequality",
   "category": "staff",
   "email": "anna.robinson-barella@newcastle.ac.uk",
-  "researchKeywords": "medicines inequalities, health inequalities, minoritised communities, marginalised communities",
+  "researchKeywords": "medicines inequalities, minoritised communities, marginalised communities",
   "bio": "Anna Robinson-Barella is a Lecturer in Clinical Pharmacy and Health and Medicines Inequality at Newcastle School of Pharmacy. She is also a Specialist Clinical Pharmacist with experience across primary and secondary care in North East England.",
   "researchFocus": "Anna works with people from minoritised and marginalised communities. Her research seeks to address inequalities in medicines and health.",
   "methodsExpertise": [
     "Clinical pharmacy",
     "Primary care",
-    "Secondary care"
+    "Secondary care",
+    "Qualitative research",
+    "Remote interviewing",
+    "Co-design",
+    "Patient and public involvement and engagement",
+    "Qualitative evidence synthesis",
+    "Meta-ethnography"
   ],
   "professionalRoles": [
     { "title": "Director for Equality, Diversity and Inclusion", "organisation": "Newcastle School of Pharmacy", "type": "leadership" },
-    { "title": "Director of Education", "organisation": "Newcastle School of Pharmacy", "type": "leadership" }
+    { "title": "Director of Education", "organisation": "Newcastle School of Pharmacy", "type": "leadership" },
+    { "title": "Senior Fellow", "organisation": "Higher Education Academy", "type": "membership" },
+    { "title": "Mentor and member", "organisation": "Royal College of Pharmacy", "type": "membership" },
+    { "title": "Steering group member", "organisation": "Royal College of Pharmacy Equality, Diversity and Inclusion group", "type": "committee" },
+    { "title": "Advisory board member", "organisation": "International Collaboration of Pharmacy Journal Editors", "type": "editorial" },
+    { "title": "Registered pharmacist", "organisation": "General Pharmaceutical Council", "type": "membership" }
   ],
   "identifier": "0000-0002-9523-4760",
   "order": 0

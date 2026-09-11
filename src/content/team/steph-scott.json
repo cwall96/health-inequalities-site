@@ -15,10 +15,18 @@
     "Mixed methods"
   ],
   "teaching": [
-    { "course": "Qualitative and mixed research methods", "level": "other" },
-    { "course": "Applied public health", "level": "other" },
-    { "course": "Criminology and Sociology programmes", "level": "undergraduate" },
-    { "course": "Social Research Methods", "level": "msc" }
+    { "course": "Postgraduate taught programmes", "module": "Fundamentals of Research", "level": "postgraduate", "fromYear": "2020", "toYear": "present" },
+    { "course": "Postgraduate taught programmes", "module": "Public Policy, Health and Health Inequalities", "level": "postgraduate", "fromYear": "2020", "toYear": "2022" },
+    { "course": "Postgraduate Researcher Development Programme", "module": "Introduction to Qualitative Methods", "level": "postgraduate", "fromYear": "2022", "toYear": "present" },
+    { "course": "Criminology and Sociology programmes", "level": "undergraduate", "fromYear": "2019", "toYear": "2020" },
+    { "course": "Social Research Methods", "level": "msc", "fromYear": "2018", "toYear": "2019" }
+  ],
+  "supervision": [
+    { "studentName": "Zoe Bell", "fromYear": "2018", "toYear": "2023", "qualification": "phd", "projectTitle": "Exploring young people's experiences of a close family member's imprisonment through a public health lens" },
+    { "studentName": "Sarah Hopwood", "fromYear": "2018", "toYear": "2023", "qualification": "phd", "projectTitle": "Young people's understandings and experiences of health inequalities in the North East of England" },
+    { "studentName": "Philippa Raby", "fromYear": "2018", "toYear": "present", "qualification": "phd", "projectTitle": "Exploring food insecurity among people living with severe mental illness" },
+    { "studentName": "Mark Adley", "fromYear": "2021", "toYear": "present", "qualification": "phd", "projectTitle": "Understanding first-time perpetrators of domestic abuse" },
+    { "studentName": "Nik Nasir", "fromYear": "2022", "toYear": "present", "qualification": "phd", "projectTitle": "Exploring inequalities in vaccination" }
   ],
   "professionalRoles": [
     { "title": "Trustee", "organisation": "NE Youth", "type": "committee" },

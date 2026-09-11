@@ -113,7 +113,7 @@ export const prerender = true;
               <!-- Team lead and Ridley Building image -->
               {
                 teamLead && (
-                  <section aria-labelledby="team-lead-heading">
+                  <section id="team-lead" aria-labelledby="team-lead-heading">
                     <div
                       class="grid gap-7 lg:grid-cols-[10rem_minmax(0,1fr)] lg:gap-10"
                     >
@@ -175,6 +175,13 @@ export const prerender = true;
 
                   return (
                     <section
+                      id={
+                        group.value === "senior"
+                          ? "senior-team-members"
+                          : group.value === "ecr"
+                            ? "early-career-researchers"
+                            : "phd-students"
+                      }
                       aria-labelledby={`${group.value}-heading`}
                     >
                       <div

@@ -12,6 +12,23 @@
     "Comparative research",
     "Cancer survival analysis"
   ],
+  "teaching": [
+    {
+      "course": "Master of Public Health",
+      "module": "Social Determinants of Health: Theories and Applications",
+      "level": "mph"
+    },
+    {
+      "course": "Postgraduate taught programmes",
+      "module": "Fundamentals of Research",
+      "level": "postgraduate"
+    },
+    {
+      "course": "Postgraduate taught programmes",
+      "module": "Public Policy, Health and Health Inequalities",
+      "level": "postgraduate"
+    }
+  ],
   "professionalRoles": [
     { "title": "Former Postdoctoral Fellow", "organisation": "Cancer Research UK and London School of Hygiene and Tropical Medicine", "type": "research" }
   ],

@@ -95,6 +95,22 @@ const pubs = importedPubs.map((publication) => {
   };
 });
 
+const selectedSpotlightDoi = normDoi(settings?.featuredDoi);
+const selectedSpotlight = selectedSpotlightDoi
+  ? pubs.find((publication) => publication.doi === selectedSpotlightDoi)
+  : null;
+const spotlightPublication =
+  selectedSpotlight ??
+  [...pubs].sort(
+    (a, b) =>
+      b.citations - a.citations ||
+      (b.year ?? 0) - (a.year ?? 0)
+  )[0] ??
+  null;
+const spotlightSummary =
+  settings?.featuredPublicationSummary?.trim() ||
+  "Selected from the Health Inequalities Team’s published research.";
+
 const byYear = new Map<number, Pub[]>();
 for (const p of pubs) {
   const y = p.year ?? 0;
@@ -116,6 +132,81 @@ export const prerender = true;
         <p class="eyebrow">Research outputs</p>
         <h1 class="mt-3">Publications</h1>
       </div>
+
+      {spotlightPublication && (
+        <article class="publication-spotlight" aria-labelledby="publication-spotlight-title">
+          <div class="publication-spotlight-main">
+            <p class="publication-spotlight-label">
+              <span aria-hidden="true">✦</span>
+              Publication spotlight
+            </p>
+            <h2 id="publication-spotlight-title">{spotlightPublication.title}</h2>
+            <p class="publication-spotlight-summary">{spotlightSummary}</p>
+            {spotlightPublication.authors && (
+              <p class="publication-spotlight-authors">{spotlightPublication.authors}</p>
+            )}
+            {((spotlightPublication.teamMembers?.length ?? 0) > 0 ||
+              (spotlightPublication.researchThemes?.length ?? 0) > 0) && (
+              <div class="publication-spotlight-tags">
+                {(spotlightPublication.teamMembers ?? []).map((slug) => {
+                  const name = teamBySlug.get(slug);
+                  return name ? <a href={`/people/${slug}`}>{name}</a> : null;
+                })}
+                {(spotlightPublication.researchThemes ?? []).map((slug) => {
+                  const name = themeBySlug.get(slug);
+                  return name ? <span>{name}</span> : null;
+                })}
+              </div>
+            )}
+            {spotlightPublication.url && (
+              <a
+                href={spotlightPublication.url}
+                class="publication-spotlight-link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Read the publication
+                <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
+                <span class="sr-only"> (opens in a new tab)</span>
+              </a>
+            )}
+          </div>
+
+          <aside class="publication-spotlight-details" aria-label="Publication details">
+            <div class="publication-spotlight-mark" aria-hidden="true">
+              <span></span>
+              <i></i>
+            </div>
+            <p class="publication-spotlight-details-label">At a glance</p>
+            {spotlightPublication.citations > 0 && (
+              <div class="publication-spotlight-citations">
+                <strong>{spotlightPublication.citations.toLocaleString("en-GB")}</strong>
+                <span>citations recorded by OpenAlex</span>
+              </div>
+            )}
+            <dl>
+              {spotlightPublication.year && (
+                <div>
+                  <dt>Published</dt>
+                  <dd>{spotlightPublication.year}</dd>
+                </div>
+              )}
+              {spotlightPublication.venue && (
+                <div>
+                  <dt>Journal</dt>
+                  <dd>{spotlightPublication.venue}</dd>
+                </div>
+              )}
+              {spotlightPublication.doi && (
+                <div>
+                  <dt>DOI</dt>
+                  <dd>{spotlightPublication.doi}</dd>
+                </div>
+              )}
+            </dl>
+          </aside>
+        </article>
+      )}
 
       {
         pubs.length === 0 ? (

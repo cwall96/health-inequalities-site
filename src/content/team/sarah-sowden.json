@@ -2,14 +2,38 @@
   "name": "Sarah Sowden",
   "role": "Senior Clinical Lecturer",
   "category": "staff",
+  "email": "sarah.sowden@ncl.ac.uk",
   "researchKeywords": "health and care inequalities, Deep End primary care, public health workforce, research capacity",
   "bio": "Dr Sarah Sowden, MA(Oxf), MPH, PhD, FFPH, FHEA is a Clinical Senior Lecturer and Honorary Consultant in Public Health. Her work combines research leadership, workforce development and system-wide collaboration to improve health and care equity.",
   "researchFocus": "Sarah leads research focused on reducing health and care inequalities. Her Deep End and UNFAIR programmes examine inequalities in healthcare and support collaboration across research, practice and health systems.",
   "teaching": [
-    { "course": "Public health workforce development", "level": "other" }
+    {
+      "course": "Master of Public Health",
+      "module": "Health Protection",
+      "level": "mph"
+    },
+    {
+      "course": "Master of Public Health",
+      "module": "Advanced Social Determinants of Health",
+      "level": "mph"
+    },
+    {
+      "course": "Master of Public Health",
+      "module": "Principles of Public Health",
+      "level": "mph"
+    },
+    {
+      "course": "Public health workforce development",
+      "level": "other"
+    }
   ],
   "professionalRoles": [
     { "title": "Deputy Director", "organisation": "NIHR Research Support Service Specialist Centre for Public Health", "type": "leadership" },
+    { "title": "Deputy Director for Clinical Academic Development", "organisation": "Newcastle University", "type": "leadership" },
+    { "title": "Co-lead, Public Health Pillar", "organisation": "Newcastle Health Research Partnership Academy", "type": "leadership" },
+    { "title": "Research Programme Lead", "organisation": "NIHR Applied Research Collaboration North East and North Cumbria and Fuse", "type": "leadership" },
+    { "title": "Deputy Chair, Doctoral Award Panel", "organisation": "NIHR", "type": "committee" },
+    { "title": "Honorary Consultant in Public Health", "organisation": "Office for Health Improvement and Disparities", "type": "clinical" },
     { "title": "Co-lead", "organisation": "National platform for public health research capacity", "type": "leadership" }
   ],
   "orcid": "0000-0001-9359-3463",

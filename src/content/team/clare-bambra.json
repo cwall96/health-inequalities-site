@@ -1,12 +1,22 @@
 {
   "name": "Clare Bambra",
+  "displayName": "Professor Clare Bambra PhD, FMedSci, FAcSS, HonFPH, Leopoldina",
   "role": "Professor of Public Health",
   "category": "staff",
-  "researchKeywords": "health inequalities, north-south health divide, place and health, health equity",
+  "researchKeywords": "north-south health divide, place and health",
   "bio": "Clare Bambra, PhD, FMedSci, FAcSS, HonFPH, Leopoldina, is Professor of Public Health. Her work focuses on understanding and reducing health inequalities, and she has published more than 300 books and articles.",
   "researchFocus": "Clare leads major research collaborations on health inequalities, including a Wellcome Trust-funded project examining the north-south health divide. Her international work includes health equity, place-based solutions and inequalities in access to infectious disease interventions.",
   "teaching": [
-    { "course": "Health inequalities teaching", "level": "other" }
+    {
+      "course": "MPharm",
+      "module": "Public health projects",
+      "level": "mpharm"
+    },
+    {
+      "course": "Master of Public Health",
+      "module": "Health inequalities",
+      "level": "mph"
+    }
   ],
   "professionalRoles": [
     { "title": "Fellow", "organisation": "Academy of Medical Sciences", "type": "membership" },

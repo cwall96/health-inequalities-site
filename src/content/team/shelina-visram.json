@@ -3,7 +3,60 @@
   "role": "Senior Lecturer in Public Health",
   "category": "staff",
   "email": "Shelina.Visram@newcastle.ac.uk",
-  "bio": "Dr Shelina Visram is a Senior Lecturer in Public Health.",
+  "displayName": "Dr Shelina Visram, PhD, MPH, FFPH",
+  "researchKeywords": "marginalised populations, place-based public health, co-production, knowledge mobilisation",
+  "bio": "Dr Shelina Visram, PhD, MPH, FFPH is a Senior Lecturer in Public Health and a member of Newcastle University's Public Health and Health Inequalities research theme. She is the Population Health Sciences Institute's Equality, Diversity and Inclusion Lead and a member of its Executive Committee.",
+  "researchFocus": "Shelina studies the lived experiences of marginalised, vulnerable and under-represented populations; asset- and place-based approaches to improving health; lay involvement in public health; and complex policy and system-level interventions. Her work uses co-production and knowledge mobilisation to connect research with policy and practice.",
+  "methodsExpertise": [
+    "Qualitative research",
+    "Participatory research",
+    "Creative research methods",
+    "Co-production",
+    "Knowledge mobilisation",
+    "Complex intervention evaluation"
+  ],
+  "professionalRoles": [
+    {
+      "title": "Equality, Diversity and Inclusion Lead",
+      "organisation": "Population Health Sciences Institute",
+      "type": "leadership"
+    },
+    {
+      "title": "Executive Committee member",
+      "organisation": "Population Health Sciences Institute",
+      "type": "committee"
+    },
+    {
+      "title": "Honorary Secretary",
+      "organisation": "Society for Social Medicine and Population Health",
+      "type": "leadership"
+    },
+    {
+      "title": "Fellow by Distinction",
+      "organisation": "Faculty of Public Health",
+      "type": "membership"
+    },
+    {
+      "title": "Fellow",
+      "organisation": "Advance HE",
+      "type": "membership"
+    },
+    {
+      "title": "Member",
+      "organisation": "European Public Health Association",
+      "type": "membership"
+    },
+    {
+      "title": "Member",
+      "organisation": "Fuse, the Centre for Translational Research in Public Health",
+      "type": "research"
+    },
+    {
+      "title": "Member",
+      "organisation": "NIHR Applied Research Collaboration North East and North Cumbria",
+      "type": "research"
+    }
+  ],
   "identifier": "0000-0001-9576-2689",
   "order": 0
 }

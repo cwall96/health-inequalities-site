@@ -2,6 +2,7 @@
   "name": "Vic McGowan",
   "role": "Senior Research Fellow",
   "category": "staff",
+  "email": "victoria.mcgowan@ncl.ac.uk",
   "researchKeywords": "political economy of health, structural inequalities, place and health, coastal communities",
   "bio": "Vic McGowan is a medical anthropologist and interdisciplinary social scientist working across applied public health, anthropology and health geography. She studies health inequalities as structural violence and a matter of social justice.",
   "researchFocus": "Vic examines the political economy of health inequalities and the structural processes that drive differences in health outcomes between places. She recently completed ethnographic research across four English coastal towns as part of the Wellcome Trust-funded North South Health Divide project.",
@@ -12,6 +13,22 @@
     "Participatory research",
     "Ethnography",
     "Qualitative Comparative Analysis"
+  ],
+  "supervision": [
+    {
+      "studentName": "Dominika Dmitrzak",
+      "fromYear": "2024",
+      "toYear": "present",
+      "qualification": "phd",
+      "projectTitle": "The effects of internal migration on regional inequalities and spatial stratification in England"
+    },
+    {
+      "studentName": "Tim Price",
+      "fromYear": "2021",
+      "toYear": "2025",
+      "qualification": "phd",
+      "projectTitle": "Socio-economic deprivation and deaths of despair: a mixed methods investigation in the North East of England"
+    }
   ],
   "professionalRoles": [
     { "title": "Editorial board member", "organisation": "Health & Place", "type": "editorial" },

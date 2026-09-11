@@ -16,6 +16,7 @@
     { "course": "Mesothelioma and inequalities in care", "level": "other" }
   ],
   "professionalRoles": [
+    { "title": "Honorary Research Fellow and Consultant in Palliative Medicine", "type": "clinical" },
     { "title": "Member", "organisation": "National mesothelioma expert group", "type": "clinical" },
     { "title": "Vice-Chair", "organisation": "Palliative Care Research Society", "type": "leadership" },
     { "title": "Elected member, Research and Ethics Committee", "organisation": "Association of Palliative Medicine", "type": "committee" }

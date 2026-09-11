@@ -3,7 +3,7 @@
   "role": "Professor of Pharmaceutical Public Health",
   "category": "staff",
   "email": "adam.todd@newcastle.ac.uk",
-  "researchKeywords": "pharmaceutical public health, health inequalities, deprescribing, palliative care",
+  "researchKeywords": "pharmaceutical public health, deprescribing, palliative care",
   "bio": "Adam Todd is Professor of Pharmaceutical Public Health and Deputy Head of the School of Pharmacy at Newcastle University. He is a qualified pharmacist and leads an interdisciplinary programme of research spanning pharmacy, public health and health inequalities.",
   "researchFocus": "Adam applies pharmaceutical knowledge to prevent disease, prolong life, promote health and reduce health inequalities across different populations. His work includes deprescribing, palliative care and public health interventions delivered through community pharmacy.",
   "methodsExpertise": [
@@ -14,6 +14,20 @@
   ],
   "teaching": [
     { "course": "MPharm programme", "level": "mpharm" }
+  ],
+  "supervision": [
+    { "studentName": "Rayah Asiri", "toYear": "present", "qualification": "phd", "projectTitle": "Challenges of medication adherence in minority ethnic communities" },
+    { "studentName": "Janine Beezer", "toYear": "present", "qualification": "phd", "projectTitle": "Relationships between polypharmacy and adverse outcomes in people with heart failure" },
+    { "studentName": "Nathania Bestwick", "toYear": "present", "qualification": "phd", "projectTitle": "Inequalities in multiple long-term conditions for people with cancer" },
+    { "studentName": "Maguy El Hajj", "toYear": "present", "qualification": "phd", "projectTitle": "Challenges of delivering medication safety initiatives in community pharmacy settings" },
+    { "studentName": "Katie Elliott", "toYear": "present", "qualification": "phd", "projectTitle": "The relationship between mental health conditions and treatment receipt among older people with cancer" },
+    { "studentName": "Hilary Shepherd Holding", "toYear": "present", "qualification": "phd", "projectTitle": "The interplay between multimorbidity and polypharmacy among older people" },
+    { "studentName": "Anum Iqbal", "toYear": "present", "qualification": "phd", "projectTitle": "Socioeconomic inequalities in polypharmacy among older people" },
+    { "studentName": "Tania Jones", "toYear": "present", "qualification": "phd", "projectTitle": "Developing and evaluating a novel opioid deprescribing intervention in primary care" },
+    { "studentName": "Radin Karimi", "toYear": "present", "qualification": "phd", "projectTitle": "Polypharmacy and medication safety for people using home-care services" },
+    { "studentName": "Amber Sacre", "toYear": "present", "qualification": "phd", "projectTitle": "Socioeconomic inequalities in vaccination" },
+    { "studentName": "Emily Shaw", "toYear": "present", "qualification": "phd", "projectTitle": "Inequalities in outcomes for people using immunological, biological and precision therapies" },
+    { "studentName": "Rajeev Shrestha", "toYear": "present", "qualification": "phd", "projectTitle": "Polypharmacy and patient-safety challenges for people using palliative and end-of-life care services" }
   ],
   "professionalRoles": [
     { "title": "Fellow", "organisation": "Royal Pharmaceutical Society of Great Britain", "type": "membership" },

@@ -3,5 +3,15 @@
   "role": "PhD Student",
   "category": "phd",
   "email": "A.M.S.Ismail2@newcastle.ac.uk",
+  "researchKeywords": "Palestinian health, health systems, medical referrals, health policy",
+  "bio": "Anas Ismail is a Palestinian doctor and PhD student at Newcastle University. Before beginning his PhD, he worked with the Alliance for Health Policy and Systems Research at the World Health Organization.",
+  "researchFocus": "Anas's doctoral research explores the health and social impact of outside medical referrals of Palestinian patients to Egypt and Jordan.",
+  "professionalRoles": [
+    {
+      "title": "Former team member",
+      "organisation": "Alliance for Health Policy and Systems Research, World Health Organization",
+      "type": "research"
+    }
+  ],
   "order": 0
 }

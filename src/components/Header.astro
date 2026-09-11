@@ -27,6 +27,13 @@ const homeSectionLinks = [
   },
 ];
 
+const peopleSectionLinks = [
+  { href: "/people#team-lead", label: "Team lead" },
+  { href: "/people#senior-team-members", label: "Senior team members" },
+  { href: "/people#early-career-researchers", label: "Early career researchers" },
+  { href: "/people#phd-students", label: "PhD students" },
+];
+
 const researchSectionLinks = [
   { href: "/research#research-programmes", label: "Research programmes" },
   { href: "/research#research-themes", label: "Research themes" },
@@ -46,6 +53,7 @@ const engagementSectionLinks = [
 
 const sectionLinksFor = (href: string) => {
   if (href === "/") return homeSectionLinks;
+  if (href === "/people") return peopleSectionLinks;
   if (href === "/research") return researchSectionLinks;
   return engagementSectionLinks;
 };
@@ -102,6 +110,14 @@ const isActive = (href: string) => {
                 </div>
               )}
 
+              {link.href === "/people" && (
+                <div class="mobile-subnavigation">
+                  {peopleSectionLinks.map((section) => (
+                    <a href={section.href}>{section.label}</a>
+                  ))}
+                </div>
+              )}
+
               {link.href === "/presentations" && (
                 <div class="mobile-subnavigation">
                   {engagementSectionLinks.map((section) => (
@@ -118,7 +134,7 @@ const isActive = (href: string) => {
     <nav class="site-navigation" aria-label="Main navigation">
       {
         links.map((link) =>
-          link.href === "/" || link.href === "/research" || link.href === "/presentations" ? (
+          link.href === "/" || link.href === "/people" || link.href === "/research" || link.href === "/presentations" ? (
             <div class="site-nav-dropdown">
               <a
                 href={link.href}

@@ -11,6 +11,13 @@
     "Qualitative methods",
     "Public health policy research"
   ],
+  "teaching": [
+    {
+      "course": "Public health",
+      "module": "Social and Commercial Determinants of Health",
+      "level": "postgraduate"
+    }
+  ],
   "professionalRoles": [
     { "title": "Affiliated researcher", "organisation": "Centre for Global Health Inequalities Research (CHAIN), Trondheim", "type": "research" },
     { "title": "Chair, Trade and Health Forum", "organisation": "American Public Health Association", "type": "leadership" }
