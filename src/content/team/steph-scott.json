@@ -2,7 +2,30 @@
   "name": "Steph Scott",
   "role": "Senior Lecturer",
   "category": "staff",
-  "bio": "Steph Scott is a Senior Lecturer in Public Health and Qualitative Methods and holds a Trustee role with the charity NE Youth. She is a social scientist with inter-disciplinary expertise across applied public health, sociology and criminology. Steph has secured research income with a total value of over £6.5 million (£2.3 million as PI), including the recent award of a prestigious ESRC New Investigator grant and ESRC large grant. Her research interests include marginalisation, stigma and health inequalities, particularly in relation to justice-involved families, young people, vulnerable populations and those experiencing multiple, complex needs. Methodologically, Steph is a highly experienced qualitative researcher with particular expertise in advanced qualitative skills such as longitudinal methods; co-created and equitable data collection and analysis; and visual or creative methodologies such as diary elicitation and poetry.\n\nShe has taught at undergraduate and postgraduate levels, with teaching and module leadership expertise in research methods (qualitative, mixed methods) as well as in applied public health (social determinants of health, health inequalities) and sociological and criminological theory. Steph has experience of Programme Leadership, having acted in this capacity for all undergraduate Criminology and Sociology programmes (2019/2020) at Teesside University. During this academic post, she also developed and validated the ESRC accredited MSc Social Research Methods programme (Social Policy and Criminology) for 2018/2019.\n\nDr Scott is an associate member of Fuse, the Centre for Translational Research in Public Health, involved in several NIHR SPHR research programmes and a named collaborator for the NIHR NENC ARC. Current work focuses on: young people’s experiences of the COVID-19 pandemic; emotional wellbeing, health and health inequalities in children and young people with an incarcerated family member; the impact of stigma on the health of marginalised groups; vaccine inequalities; prison food environments; food insecurity amongst those experiencing severe mental illness; and first-time offenders of domestic violence and abuse. ",
+  "researchKeywords": "marginalisation and stigma, justice-involved families, young people, vaccine inequalities",
+  "bio": "Steph Scott is a Senior Lecturer in Public Health and Qualitative Methods. She is an interdisciplinary social scientist whose work spans applied public health, sociology and criminology.",
+  "researchFocus": "Steph studies marginalisation, stigma and health inequalities, particularly among justice-involved families, young people, vulnerable populations and people experiencing multiple and complex needs. Her current work includes young people's experiences of COVID-19, children with an incarcerated family member, vaccine inequalities, prison food environments, food insecurity among people with severe mental illness, and first-time perpetrators of domestic abuse.",
+  "methodsExpertise": [
+    "Qualitative research",
+    "Longitudinal methods",
+    "Co-created data collection and analysis",
+    "Equitable data collection and analysis",
+    "Diary elicitation",
+    "Poetry and creative methods",
+    "Mixed methods"
+  ],
+  "teaching": [
+    { "course": "Qualitative and mixed research methods", "level": "other" },
+    { "course": "Applied public health", "level": "other" },
+    { "course": "Criminology and Sociology programmes", "level": "undergraduate" },
+    { "course": "Social Research Methods", "level": "msc" }
+  ],
+  "professionalRoles": [
+    { "title": "Trustee", "organisation": "NE Youth", "type": "committee" },
+    { "title": "Associate member", "organisation": "Fuse, the Centre for Translational Research in Public Health", "type": "research" },
+    { "title": "Programme contributor", "organisation": "NIHR School for Public Health Research", "type": "research" },
+    { "title": "Named collaborator", "organisation": "NIHR Applied Research Collaboration North East and North Cumbria", "type": "research" }
+  ],
   "identifier": "0000-0002-5334-9746",
   "order": 0
 }

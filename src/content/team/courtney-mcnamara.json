@@ -3,7 +3,18 @@
   "role": "Lecturer in Public Health",
   "category": "staff",
   "email": "Courtney.McNamara@newcastle.ac.uk",
-  "bio": "Courtney McNamara is Lecturer of Public Health. She uses advanced quantitative and qualitative methods to address pressing public health policy problems and has written extensively on: the health impacts of international trade, the social determinants of health inequalities, and the links between COVID-19, labour markets, and health.\n\nShe currently leads a large research project funded by the Norwegian Research Council. This project asks if trade shocks cause health to suffer and investigates which policies could help prevent any potential harms.\n\nShe is also an affiliated researcher at the Centre for Global Health Inequalities Research (CHAIN) in Trondheim, Norway, and Chair of the Trade and Health Forum within the American Public Health Association.",
+  "researchKeywords": "international trade and health, social determinants of health, labour markets, public health policy",
+  "bio": "Courtney McNamara is a Lecturer in Public Health whose work addresses public health policy problems and the social determinants of health inequalities.",
+  "researchFocus": "Courtney studies the health effects of international trade and the relationships between COVID-19, labour markets and health. She leads a Norwegian Research Council-funded project examining whether trade shocks harm health and which policies could prevent those harms.",
+  "methodsExpertise": [
+    "Advanced quantitative methods",
+    "Qualitative methods",
+    "Public health policy research"
+  ],
+  "professionalRoles": [
+    { "title": "Affiliated researcher", "organisation": "Centre for Global Health Inequalities Research (CHAIN), Trondheim", "type": "research" },
+    { "title": "Chair, Trade and Health Forum", "organisation": "American Public Health Association", "type": "leadership" }
+  ],
   "identifier": "0000-0001-8754-0509",
   "order": 0
 }

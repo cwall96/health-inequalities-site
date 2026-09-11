@@ -3,7 +3,18 @@
   "role": "Research Associate",
   "category": "staff",
   "email": "Mihirini.Sirisena@newcastle.ac.uk ",
-  "bio": "Dr Mihirini Sirisena PhD, is a Research Associate and a member of Fuse/SPHR, with an interest in mental health, wellbeing, and the wider determinants of health. \nIn her current role, she has been involved in research on non-clinical interventions aimed at improving mental health and wellbeing of people living in socio-economically disadvantaged communities. She is currently involved in the evaluation of the social determinants of health pilot (Caredeep) for GPs at the Deep End NENC. Her previous projects include a multi-region evaluation of the rollout of PCN social prescribing link worker intervention, the evaluation of the Reading for Wellbeing initiative and the evaluation of the Well Newcastle Gateshead model.",
+  "researchKeywords": "mental health and wellbeing, wider determinants of health, social prescribing, disadvantaged communities",
+  "bio": "Dr Mihirini Sirisena, PhD is a Research Associate and member of Fuse and the NIHR School for Public Health Research. Her work focuses on mental health, wellbeing and the wider determinants of health.",
+  "researchFocus": "Mihirini studies non-clinical interventions intended to improve mental health and wellbeing in socioeconomically disadvantaged communities. Her work includes the Caredeep social determinants of health pilot for Deep End NENC general practices, social prescribing link workers, Reading for Wellbeing and the Well Newcastle Gateshead model.",
+  "methodsExpertise": [
+    "Evaluation research",
+    "Multi-region evaluation",
+    "Public health research"
+  ],
+  "professionalRoles": [
+    { "title": "Member", "organisation": "Fuse, the Centre for Translational Research in Public Health", "type": "research" },
+    { "title": "Member", "organisation": "NIHR School for Public Health Research", "type": "research" }
+  ],
   "identifier": "0000-0002-0717-2636",
   "order": 0
 }

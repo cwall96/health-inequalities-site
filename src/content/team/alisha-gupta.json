@@ -4,7 +4,12 @@
   "category": "staff",
   "photo": "/images/team/alisha-gupta/photo.jpeg",
   "email": "alisha.gupta@ncl.ac.uk",
-  "bio": "Dr Alisha Gupta, BMBS is a Public Health Speciality Registrar and NIHR Academic Clinical Fellow, following completion of the Specialised Foundation Programme (2023-2025) in the North East.\n\nShe works within Academic Public Health, as part of the North East and North Cumbria Deep End Research Team and the Health Inequalities Team at the Population Health Sciences Institute. She also works with the NIHR Partnership for Workforce Sustainability.",
+  "researchKeywords": "academic public health, health inequalities, Deep End primary care, workforce sustainability",
+  "bio": "Dr Alisha Gupta, BMBS is a Public Health Specialty Registrar and NIHR Academic Clinical Fellow, following completion of the Specialised Foundation Programme in the North East from 2023 to 2025.",
+  "researchFocus": "Alisha works in academic public health as part of the North East and North Cumbria Deep End Research Team and the Health Inequalities Team.",
+  "professionalRoles": [
+    { "title": "Research collaborator", "organisation": "NIHR Partnership for Workforce Sustainability", "type": "research" }
+  ],
   "identifier": "0000-0002-7715-1371",
   "order": 0
 }

@@ -3,7 +3,23 @@
   "role": "PhD Student",
   "category": "staff",
   "email": "Donna.Wakefield@newcastle.ac.uk",
-  "bio": "Donna Wakefield has worked as a doctor in the NHS since graduating from Aberdeen Medical School in 2008. She has been a Consultant in Palliative Medicine since 2019 and is a Fellow of the Royal College of Physicians of Edinburgh.\n\nAfter being awarded multiple sources of research funding (including Mesothelioma UK, NHS England, Hospice UK, NIHR) she divided her time between clinical work and research within a research naive department and hospice. She gained experience of being PI/CI on multiple studies and was awarded a Distinction for her Masters in Clinical Research from Newcastle University in 2021; with her Masters research receiving an award from The Royal Society of Medicine.\n\nDonna was awarded a competitive NIHR Doctoral Fellowship in 2023 and is undertaking her PhD research (Jan 2024- Dec 2027) on inequalities in access to palliative care for people with advanced lung disease (lung cancer, mesothelioma, COPD, ILD). Her Fellowship supervisors are Professor Jonathan Koffman & Professor Fliss Murtagh (Wolfson Palliative Care Research Centre, Hull York Medical School), Professor Clare Bambra (Newcastle University) and Dr Joanna Davies (Cicely Saunders Institute, Kings College London).\n\nAfter growing up in a socio-economically deprived area of the North-East (South Shields), her main research interest is socio-economic inequities/inequalities, and she has presented at national and international conferences on this topic. She is particularly interested in improving care for people with mesothelioma in socio-economically deprived areas and teaches widely on this topic. She is part of the national mesothelioma expert group, is involved in multiple research projects and publications on this topic and recently joined the north of England's first regional mesothelioma MDT.\n\nDonna is enthusiastic about improving palliative care research and was previously Vice-Chair of the national Palliative Care Research Society (PCRS). She is an elected member of the national Association of Palliative Medicine (APM) Research & Ethics Committee and is part of several groups and projects about mapping and improving the palliative care research workforce.",
+  "researchKeywords": "palliative care access, advanced lung disease, mesothelioma, socioeconomic inequalities",
+  "bio": "Donna Wakefield has worked as an NHS doctor since 2008 and has been a Consultant in Palliative Medicine since 2019. She is a Fellow of the Royal College of Physicians of Edinburgh and an NIHR Doctoral Fellow.",
+  "researchFocus": "Donna's PhD examines inequalities in access to palliative care for people with advanced lung disease, including lung cancer, mesothelioma, COPD and interstitial lung disease. She is particularly interested in improving care for people with mesothelioma in socioeconomically deprived areas.",
+  "methodsExpertise": [
+    "Clinical research",
+    "Principal investigator experience",
+    "Chief investigator experience",
+    "Palliative medicine"
+  ],
+  "teaching": [
+    { "course": "Mesothelioma and inequalities in care", "level": "other" }
+  ],
+  "professionalRoles": [
+    { "title": "Member", "organisation": "National mesothelioma expert group", "type": "clinical" },
+    { "title": "Vice-Chair", "organisation": "Palliative Care Research Society", "type": "leadership" },
+    { "title": "Elected member, Research and Ethics Committee", "organisation": "Association of Palliative Medicine", "type": "committee" }
+  ],
   "identifier": "0000-0002-6811-1255",
   "order": 0
 }

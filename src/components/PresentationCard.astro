@@ -4,6 +4,7 @@ interface Props {
   section: string;
   date?: string | null;
   venue?: string | null;
+  authors?: string | null;
   link?: string | null;
   coverImage?: string | null;
   teamMembers?: Array<{ slug: string; name: string }>;
@@ -15,6 +16,7 @@ const {
   section,
   date,
   venue,
+  authors,
   link,
   coverImage,
   teamMembers = [],
@@ -120,7 +122,7 @@ const actionHref = isPoster && detailHref ? detailHref : link;
       }
     </div>
 
-    <h2 class:list={["mt-6 text-2xl leading-8", isOnDark ? "text-white" : "text-navy-900"]}>
+    <h2 class:list={["mt-6 text-lg leading-7", isOnDark ? "text-white" : "text-navy-900"]}>
       {title}
     </h2>
 
@@ -133,13 +135,18 @@ const actionHref = isPoster && detailHref ? detailHref : link;
     }
 
     {
-      teamMembers.length > 0 && (
+      (teamMembers.length > 0 || authors) && (
         <div class:list={["content-people-links relative z-20", { "content-people-links-on-dark": isOnDark }]}>
-          <span>HIT team</span>
+          <span>Authors</span>
           <div>
             {teamMembers.map((person) => (
               <a href={`/people/${person.slug}`}>{person.name}</a>
             ))}
+            {authors && (
+              <span class:list={["output-author-names", isOnDark ? "text-white/75" : "text-navy-800"]}>
+                {authors}
+              </span>
+            )}
           </div>
         </div>
       )

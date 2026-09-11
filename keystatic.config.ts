@@ -5,6 +5,31 @@ import {
   singleton,
 } from "@keystatic/core";
 
+const currentProfileYear = new Date().getFullYear();
+
+const profileYearOptions = [
+  { label: "Present", value: "present" },
+  ...Array.from({ length: currentProfileYear - 1979 }, (_, index) => {
+    const year = String(currentProfileYear - index);
+    return { label: year, value: year };
+  }),
+];
+
+const courseLevelOptions = [
+  { label: "PhD", value: "phd" },
+  { label: "MD", value: "md" },
+  { label: "MA", value: "ma" },
+  { label: "MSc", value: "msc" },
+  { label: "MPH", value: "mph" },
+  { label: "MPharm", value: "mpharm" },
+  { label: "BA", value: "ba" },
+  { label: "BSc", value: "bsc" },
+  { label: "MBBS", value: "mbbs" },
+  { label: "Other undergraduate", value: "undergraduate" },
+  { label: "Other postgraduate", value: "postgraduate" },
+  { label: "Other", value: "other" },
+];
+
 /**
  * Content model for the Health Inequalities Team website.
  */
@@ -288,6 +313,15 @@ export default config({
           label: "Role / title",
         }),
 
+        profileSubtitle: fields.text({
+          label: "Profile subtitle (optional)",
+          description:
+            "Add a short personalised line to appear above the person's name. If left blank, their team category is shown.",
+          validation: {
+            isRequired: false,
+          },
+        }),
+
         category: fields.select({
           label: "Category",
           options: [
@@ -341,18 +375,6 @@ export default config({
           },
         }),
 
-        methodsExpertise: fields.array(
-          fields.text({
-            label: "Method or area of expertise",
-          }),
-          {
-            label: "Methods and expertise",
-            description:
-              "Add each research method or area of practical expertise as a separate item. These appear as animated pills beneath Related Work.",
-            itemLabel: (props) => props.value || "New method or expertise",
-          },
-        ),
-
         bio: fields.text({
           label: "Profile summary",
           description:
@@ -370,35 +392,212 @@ export default config({
           },
         }),
 
-        impactEngagement: fields.text({
-          label: "Impact and engagement",
-          description:
-            "Add examples of policy, practice, public involvement, media or other impact work.",
-          multiline: true,
-          validation: {
-            isRequired: false,
+        researchActivity: fields.array(
+          fields.object({
+            projectTitle: fields.text({
+              label: "Project title",
+            }),
+            teamCollaborators: fields.array(
+              fields.relationship({
+                label: "HIT collaborator",
+                collection: "team",
+              }),
+              {
+                label: "HIT collaborators",
+                description:
+                  "Select collaborators who have a profile on this website. Their names will link to their profiles.",
+              },
+            ),
+            otherCollaborators: fields.array(
+              fields.text({
+                label: "Collaborator name",
+              }),
+              {
+                label: "Other collaborators",
+                description:
+                  "Type the name of each collaborator who is not in the HIT team.",
+                itemLabel: (props) => props.value || "New collaborator",
+              },
+            ),
+            year: fields.integer({
+              label: "Year",
+              description:
+                "For ongoing work, use the year the activity started.",
+              validation: {
+                isRequired: false,
+              },
+            }),
+            status: fields.select({
+              label: "Status",
+              options: [
+                { label: "Ongoing", value: "ongoing" },
+                { label: "Completed", value: "completed" },
+              ],
+              defaultValue: "ongoing",
+            }),
+            funder: fields.text({
+              label: "Funder",
+              validation: {
+                isRequired: false,
+              },
+            }),
+            summary: fields.text({
+              label: "Summary",
+              multiline: true,
+              description:
+                "Add one or two sentences describing the activity.",
+            }),
+          }),
+          {
+            label: "Research activity",
+            description:
+              "Use this for smaller studies or projects that do not need their own study page.",
+            itemLabel: (props) =>
+              props.fields.projectTitle.value || "New research activity",
           },
-        }),
+        ),
 
-        teachingSupervision: fields.text({
-          label: "Teaching and supervision",
-          description:
-            "Describe teaching, supervision and opportunities for prospective students. Leave blank if not relevant.",
-          multiline: true,
-          validation: {
-            isRequired: false,
+        professionalRoles: fields.array(
+          fields.object({
+            title: fields.text({
+              label: "Role or membership title",
+              description:
+                "For example Head of EDI, committee member or Fellow.",
+            }),
+            organisation: fields.text({
+              label: "Organisation",
+              description:
+                "For example Newcastle School of Pharmacy.",
+              validation: {
+                isRequired: false,
+              },
+            }),
+            type: fields.select({
+              label: "Type",
+              options: [
+                { label: "Leadership role", value: "leadership" },
+                { label: "Committee or advisory role", value: "committee" },
+                { label: "Professional membership or fellowship", value: "membership" },
+                { label: "Clinical role", value: "clinical" },
+                { label: "Editorial role", value: "editorial" },
+                { label: "Research network or collaboration", value: "research" },
+                { label: "Other", value: "other" },
+              ],
+              defaultValue: "other",
+            }),
+            startYear: fields.text({
+              label: "Start year (optional)",
+              validation: {
+                isRequired: false,
+              },
+            }),
+            endYear: fields.text({
+              label: "End year (optional)",
+              description: "Enter Present if the role is current.",
+              validation: {
+                isRequired: false,
+              },
+            }),
+          }),
+          {
+            label: "Professional roles and memberships",
+            description:
+              "Add each additional role, committee, fellowship, network or membership as a separate entry.",
+            itemLabel: (props) =>
+              props.fields.title.value || "New professional role",
           },
-        }),
+        ),
 
-        professionalRoles: fields.text({
-          label: "Professional roles and memberships",
-          description:
-            "Add relevant committees, networks, clinical roles, fellowships or professional memberships.",
-          multiline: true,
-          validation: {
-            isRequired: false,
+        teaching: fields.array(
+          fields.object({
+            course: fields.text({
+              label: "Course",
+              description:
+                "Enter the degree or programme name, for example Master of Public Health.",
+            }),
+            module: fields.text({
+              label: "Module",
+              description:
+                "Enter the module name if applicable. Leave blank for course-level teaching.",
+              validation: {
+                isRequired: false,
+              },
+            }),
+            level: fields.select({
+              label: "Level",
+              options: courseLevelOptions,
+              defaultValue: "other",
+            }),
+            fromYear: fields.select({
+              label: "From year",
+              options: profileYearOptions.slice(1),
+              defaultValue: String(currentProfileYear),
+            }),
+            toYear: fields.select({
+              label: "To year",
+              description: "Choose Present if the teaching is ongoing.",
+              options: profileYearOptions,
+              defaultValue: "present",
+            }),
+          }),
+          {
+            label: "Teaching",
+            description:
+              "Add each course and module as a separate teaching entry.",
+            itemLabel: (props) =>
+              props.fields.module.value ||
+              props.fields.course.value ||
+              "New teaching entry",
           },
-        }),
+        ),
+
+        supervision: fields.array(
+          fields.object({
+            studentName: fields.text({
+              label: "Student name",
+            }),
+            fromYear: fields.select({
+              label: "From year",
+              options: profileYearOptions.slice(1),
+              defaultValue: String(currentProfileYear),
+            }),
+            toYear: fields.select({
+              label: "To year",
+              description:
+                "Choose Present if the supervision is ongoing.",
+              options: profileYearOptions,
+              defaultValue: "present",
+            }),
+            qualification: fields.select({
+              label: "Qualification",
+              options: courseLevelOptions,
+              defaultValue: "phd",
+            }),
+            projectTitle: fields.text({
+              label: "Course / project title",
+              multiline: true,
+            }),
+          }),
+          {
+            label: "Supervision",
+            description:
+              "Add each supervised student as a separate entry. Use the controls to change their order.",
+            itemLabel: (props) =>
+              props.fields.studentName.value || "New supervision entry",
+          },
+        ),
+
+        methodsExpertise: fields.array(
+          fields.text({
+            label: "Skill or area of expertise",
+          }),
+          {
+            label: "Skills",
+            description:
+              "Add each research method, practical skill or area of expertise as a separate item.",
+            itemLabel: (props) => props.value || "New skill",
+          },
+        ),
 
         orcid: fields.text({
           label: "ORCID iD",
@@ -556,9 +755,9 @@ export default config({
     }),
 
     authors: fields.text({
-      label: "Authors",
+      label: "Other authors",
       description:
-        "For posters, enter the authors in the order shown on the poster.",
+        "Enter authors who are not members of HIT, in the order they should appear. Linked HIT team members are selected separately below and are displayed first as tags.",
       multiline: true,
       validation: {
         isRequired: false,

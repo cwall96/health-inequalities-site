@@ -136,7 +136,14 @@
 .content-people-links > div {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.4rem;
+}
+
+.output-author-names {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  white-space: pre-line;
 }
 
 .content-people-links a,
@@ -301,6 +308,158 @@
   line-height: 1.8;
 }
 
+.person-research-activity {
+  margin-top: 2.75rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.person-activity-list {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.person-activity-item {
+  display: grid;
+  grid-template-columns: 0.8rem minmax(0, 1fr);
+  align-items: start;
+  gap: 0.9rem;
+}
+
+.person-activity-item h3 {
+  color: var(--color-navy-900);
+  font-size: 1rem;
+}
+
+.person-activity-status {
+  width: 0.65rem;
+  height: 0.65rem;
+  margin-top: 0.3rem;
+  border-radius: 50%;
+}
+
+.person-activity-status-completed {
+  background: var(--color-cloud-400);
+}
+
+.person-activity-status-ongoing {
+  background: var(--color-red-700);
+  animation: person-activity-pulse 2s ease-out infinite;
+}
+
+.person-activity-meta {
+  margin-top: 0.2rem;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+}
+
+.person-activity-summary {
+  margin-top: 0.45rem;
+  color: var(--color-navy-800);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.person-activity-collaborators {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.65rem;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+}
+
+.person-activity-collaborators > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.person-activity-collaborators a,
+.person-activity-external {
+  display: inline-flex;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--color-lavender) 40%, white);
+  color: var(--color-navy-800);
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.person-activity-collaborators a:hover {
+  background: var(--color-lavender);
+  color: var(--color-navy-900);
+  text-decoration: none;
+}
+
+.person-structured-section {
+  margin-top: 1rem;
+}
+
+.person-profile-subsection {
+  margin-top: 1.5rem;
+}
+
+.person-profile-subsection > h3 {
+  color: var(--color-navy-900);
+  font-size: 1.05rem;
+}
+
+.person-record-list {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1.25rem;
+}
+
+.person-record {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 1rem;
+  border-radius: 0.7rem;
+  background: color-mix(in srgb, var(--color-lavender) 24%, white);
+  color: var(--color-navy-800);
+}
+
+.person-record h3,
+.person-record h4 {
+  color: var(--color-navy-900);
+  font-size: 1rem;
+}
+
+.person-record > p {
+  max-width: 30rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.person-record-meta {
+  margin-top: 0.25rem;
+  color: var(--color-muted);
+  font-size: 0.8rem;
+}
+
+.person-record-module {
+  margin-top: 0.25rem;
+  color: var(--color-navy-800);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.person-record-type {
+  flex: 0 0 auto;
+  padding: 0.3rem 0.65rem;
+  border-radius: 9999px;
+  background: var(--color-navy-700);
+  color: var(--color-surface);
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 .person-expertise {
   margin-top: 2.75rem;
   padding-top: 2rem;
@@ -458,6 +617,11 @@
 
   .person-profile-content {
     padding: 1.35rem;
+  }
+
+  .person-record {
+    flex-direction: column;
+    gap: 0.65rem;
   }
 
 }
@@ -2095,6 +2259,12 @@
   color: var(--color-navy-900);
 }
 
+.poster-team .poster-authors {
+  color: rgb(251 250 247 / 0.78);
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
 .poster-abstract-link {
   display: inline-flex;
   align-items: center;
@@ -2253,6 +2423,17 @@
   }
 }
 
+@keyframes person-activity-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgb(143 29 45 / 0.42);
+  }
+
+  70%,
+  100% {
+    box-shadow: 0 0 0 0.5rem rgb(143 29 45 / 0);
+  }
+}
+
 @keyframes scroll-nudge {
   0%,
   100% {
@@ -2346,6 +2527,10 @@
 
   .home-floating-marks {
     display: none;
+  }
+
+  .person-activity-status-ongoing {
+    animation: none;
   }
 
   .has-scroll-reveal [data-reveal] {

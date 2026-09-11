@@ -16,13 +16,18 @@ export async function getStaticPaths() {
 const { person } = Astro.props;
 
 const pageReader = createReader(process.cwd(), keystaticConfig);
-const [manualEntries, projectEntries, studyEntries, presentationEntries, recognitionEntries] = await Promise.all([
+const [manualEntries, projectEntries, studyEntries, presentationEntries, recognitionEntries, teamEntries] = await Promise.all([
   pageReader.collections.publications.all(),
   pageReader.collections.projects.all(),
   pageReader.collections.studies.all(),
   pageReader.collections.presentations.all(),
   pageReader.collections.recognition.all(),
+  pageReader.collections.team.all(),
 ]);
+
+const teamMemberNames = new Map(
+  teamEntries.map((member) => [member.slug, member.entry.name])
+);
 
 const manualPublications: Pub[] = manualEntries
   .filter((publication) => publication.entry.teamMembers?.includes(person.slug))
@@ -158,6 +163,42 @@ const researchInterests = (person.researchKeywords ?? "")
 const methodsAndExpertise = (person.methodsExpertise ?? [])
   .filter(Boolean) as string[];
 
+const qualificationLabels: Record<string, string> = {
+  phd: "PhD",
+  md: "MD",
+  ma: "MA",
+  msc: "MSc",
+  mpharm: "MPharm",
+  mph: "MPH",
+  ba: "BA",
+  bsc: "BSc",
+  mbbs: "MBBS",
+  undergraduate: "Other undergraduate",
+  postgraduate: "Other postgraduate",
+  other: "Other",
+};
+
+const professionalRoleTypeLabels: Record<string, string> = {
+  leadership: "Leadership role",
+  committee: "Committee or advisory role",
+  membership: "Professional membership or fellowship",
+  clinical: "Clinical role",
+  editorial: "Editorial role",
+  research: "Research network or collaboration",
+  other: "Other role",
+};
+
+const supervision = (person.supervision ?? []).filter(
+  (entry) => entry.studentName || entry.projectTitle
+);
+const teaching = (person.teaching ?? []).filter((entry) => entry.course);
+const researchActivities = (person.researchActivity ?? []).filter(
+  (entry) => entry.projectTitle
+);
+const professionalRoles = (person.professionalRoles ?? []).filter(
+  (entry) => entry.title
+);
+
 const orcidCandidate = String(person.orcid || person.identifier || "")
   .trim()
   .replace(/^https?:\/\/(?:www\.)?orcid\.org\//i, "");
@@ -167,9 +208,6 @@ const orcid = /^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/i.test(orcidCandidate)
 
 const profileSections = [
   { heading: "Research focus", copy: person.researchFocus },
-  { heading: "Impact and engagement", copy: person.impactEngagement },
-  { heading: "Teaching and supervision", copy: person.teachingSupervision },
-  { heading: "Professional roles and memberships", copy: person.professionalRoles },
 ].filter((section) => section.copy?.trim());
 
 const paragraphs = (copy: string) =>
@@ -233,7 +271,9 @@ export const prerender = true;
         </aside>
 
         <div class="person-profile-main">
-          <p class="eyebrow">{categoryLabels[displayCategory] ?? "Team member"}</p>
+          <p class="eyebrow">
+            {person.profileSubtitle?.trim() || categoryLabels[displayCategory] || "Team member"}
+          </p>
           <h1>{person.name}</h1>
           <p class="person-profile-role">{person.role}</p>
 
@@ -257,6 +297,156 @@ export const prerender = true;
                 </section>
               ))}
             </div>
+          )}
+
+          {researchActivities.length > 0 && (
+            <section class="person-research-activity" aria-labelledby="research-activity-heading">
+              <h2 id="research-activity-heading">Research activity</h2>
+              <ul class="person-activity-list">
+                {researchActivities.map((activity) => (
+                  <li class="person-activity-item">
+                    <span
+                      class:list={[
+                        "person-activity-status",
+                        activity.status === "completed"
+                          ? "person-activity-status-completed"
+                          : "person-activity-status-ongoing",
+                      ]}
+                      aria-hidden="true"
+                    ></span>
+                    <div>
+                      <h3>{activity.projectTitle}</h3>
+                      <p class="sr-only">
+                        {activity.status === "completed" ? "Completed" : "Ongoing"} research activity.
+                      </p>
+                      {(activity.year || activity.funder) && (
+                        <p class="person-activity-meta">
+                          {[activity.year, activity.funder].filter(Boolean).join(" · ")}
+                        </p>
+                      )}
+                      {activity.summary && <p class="person-activity-summary">{activity.summary}</p>}
+                      {((activity.teamCollaborators ?? []).filter(Boolean).length > 0 ||
+                        (activity.otherCollaborators ?? []).filter(Boolean).length > 0) && (
+                        <div class="person-activity-collaborators">
+                          <span>Collaborators:</span>
+                          <div>
+                            {(activity.teamCollaborators ?? []).filter(Boolean).map((slug) => (
+                              <a href={`/people/${slug}`}>
+                                {teamMemberNames.get(slug as string) ?? slug}
+                              </a>
+                            ))}
+                            {(activity.otherCollaborators ?? []).filter(Boolean).map((name) => (
+                              <span class="person-activity-external">{name}</span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {professionalRoles.length > 0 && (
+            <section class="person-profile-content person-structured-section" aria-labelledby="professional-roles-heading">
+              <h2 id="professional-roles-heading">Professional roles and memberships</h2>
+              <div class="person-record-list">
+                {professionalRoles.map((entry) => {
+                  const dates = [entry.startYear, entry.endYear]
+                    .filter(Boolean)
+                    .join("–");
+                  return (
+                    <article class="person-record">
+                      <div>
+                        <h3>{entry.title}</h3>
+                        {(entry.organisation || dates) && (
+                          <p class="person-record-meta">
+                            {[entry.organisation, dates].filter(Boolean).join(" · ")}
+                          </p>
+                        )}
+                      </div>
+                      <span class="person-record-type">
+                        {professionalRoleTypeLabels[entry.type] ?? "Other role"}
+                      </span>
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+          {(teaching.length > 0 || supervision.length > 0) && (
+            <section class="person-profile-content person-structured-section" aria-labelledby="teaching-supervision-heading">
+              <h2 id="teaching-supervision-heading">Teaching and supervision</h2>
+              {teaching.length > 0 && (
+                <div class="person-profile-subsection">
+                  <h3>Teaching</h3>
+                  <div class="person-record-list">
+                    {teaching.map((entry) => {
+                      const years = [entry.fromYear, entry.toYear]
+                        .filter(Boolean)
+                        .map((year) => year === "present" ? "Present" : year)
+                        .join("–");
+                      return (
+                        <article class="person-record">
+                          <div>
+                            <h4>{entry.course}</h4>
+                            {entry.module && (
+                              <p class="person-record-module">{entry.module}</p>
+                            )}
+                            <p class="person-record-meta">
+                              {qualificationLabels[entry.level] ?? entry.level}
+                              {years && <span> · {years}</span>}
+                            </p>
+                          </div>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              {supervision.length > 0 && (
+                <div class="person-profile-subsection">
+                  <h3>Supervision</h3>
+                  <div class="person-record-list">
+                    {supervision.map((entry) => (
+                      <article class="person-record">
+                        <div>
+                          <h4>{entry.studentName}</h4>
+                          <p class="person-record-meta">
+                            {qualificationLabels[entry.qualification] ?? entry.qualification}
+                            {(entry.fromYear || entry.toYear) && (
+                              <span>
+                                {" · "}
+                                {[entry.fromYear, entry.toYear]
+                                  .filter(Boolean)
+                                  .map((year) => year === "present" ? "Present" : year)
+                                  .join("–")}
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                        {entry.projectTitle && <p>{entry.projectTitle}</p>}
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </section>
+          )}
+
+          {methodsAndExpertise.length > 0 && (
+            <section class="person-expertise" aria-labelledby="expertise-heading">
+              <h2 id="expertise-heading">Skills</h2>
+              <div class="person-expertise-tags">
+                {methodsAndExpertise.map((item: string) => (
+                  <span class="person-expertise-tag">
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </section>
           )}
 
           {hasRelatedWork && (
@@ -286,19 +476,6 @@ export const prerender = true;
                       ))}
                     </ul>
                   </details>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {methodsAndExpertise.length > 0 && (
-            <section class="person-expertise" aria-labelledby="expertise-heading">
-              <h2 id="expertise-heading">Methods and expertise</h2>
-              <div class="person-expertise-tags">
-                {methodsAndExpertise.map((item: string) => (
-                  <span class="person-expertise-tag">
-                    {item}
-                  </span>
                 ))}
               </div>
             </section>

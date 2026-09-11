@@ -3,6 +3,17 @@
   "role": "Senior Lecturer in Public Health",
   "category": "staff",
   "email": "Laura.Woods@newcastle.ac.uk",
-  "bio": "Dr Laura Woods PhD is a Cancer Epidemiologist with a particular interest in social inequalities in cancer outcomes, particularly in relation to early diagnostic activity including screening. Laura completed her undergraduate degree in Human Sciences at Oxford University in 1999 after which she moved to the London School of Hygiene & Tropical Medicine to undertake an MSc in Medical Demography (2001) followed by a PhD in Epidemiology (\"International differences in breast cancer survival and 'cure' by social deprivation: a comparative study of England and Australia\", 2006).\n\nFollowing her doctorate Laura held a Non-Clinical CRUK Postdoctoral Fellowship at LSHTM during which she held other competitively-won funding enabling her to lead research into differentials in cancer outcomes over a period of 15 years. In March 2022 Laura moved to Newcastle University's Population Health Sciences Institute to take up a the role of Senior Lecturer in Public Health.",
+  "researchKeywords": "cancer epidemiology, cancer outcomes, screening, social inequalities",
+  "bio": "Dr Laura Woods, PhD is a cancer epidemiologist and Senior Lecturer in Public Health at Newcastle University's Population Health Sciences Institute.",
+  "researchFocus": "Laura studies social inequalities in cancer outcomes, particularly inequalities associated with early diagnosis and screening. Her doctoral research compared breast cancer survival and cure by social deprivation in England and Australia, and she has led research into differences in cancer outcomes for more than 15 years.",
+  "methodsExpertise": [
+    "Cancer epidemiology",
+    "Medical demography",
+    "Comparative research",
+    "Cancer survival analysis"
+  ],
+  "professionalRoles": [
+    { "title": "Former Postdoctoral Fellow", "organisation": "Cancer Research UK and London School of Hygiene and Tropical Medicine", "type": "research" }
+  ],
   "order": 0
 }

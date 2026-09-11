@@ -86,13 +86,6 @@ const formattedDate = poster?.date
               <h1 id="poster-title">{poster.title}</h1>
 
               <dl class="poster-details">
-                {poster.authors && (
-                  <div>
-                    <dt>Authors</dt>
-                    <dd class="poster-authors">{poster.authors}</dd>
-                  </div>
-                )}
-
                 {poster.venue && (
                   <div>
                     <dt>Conference presented at</dt>
@@ -108,13 +101,18 @@ const formattedDate = poster?.date
                 )}
               </dl>
 
-              {posterTeam.length > 0 && (
+              {(posterTeam.length > 0 || poster.authors) && (
                 <div class="poster-team">
-                  <h2>HIT team members</h2>
+                  <h2>Authors</h2>
                   <div class="content-people-links">
-                    {posterTeam.map((person) => (
-                      <a href={`/people/${person.slug}`}>{person.name}</a>
-                    ))}
+                    <div>
+                      {posterTeam.map((person) => (
+                        <a href={`/people/${person.slug}`}>{person.name}</a>
+                      ))}
+                      {poster.authors && (
+                        <span class="poster-authors">{poster.authors}</span>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
