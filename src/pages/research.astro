@@ -117,6 +117,16 @@ const statusLabel = {
                 </div>
               )}
 
+              {project.entry.website && (
+                <a
+                  href={project.entry.website}
+                  class="btn-secondary mt-5 inline-flex"
+                >
+                  {project.entry.websiteLabel?.trim() || "Find out more"}
+                  <span aria-hidden="true">→</span>
+                </a>
+              )}
+
               {project.document.length > 0 && (
                 <article class="article research-programme-content">
                   <DocumentRenderer document={project.document} />

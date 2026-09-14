@@ -41,14 +41,14 @@ const researchSectionLinks = [
 ];
 
 const engagementSectionLinks = [
-  { href: "/presentations#sharing-our-research", label: "Presentations & posters" },
-  { href: "/presentations#media-coverage", label: "Media coverage" },
   ...(impactItems.length > 0
     ? [{ href: "/presentations#public-policy-impact", label: "Public & policy impact" }]
     : []),
   ...(recognitionItems.length > 0
     ? [{ href: "/presentations#awards-recognition", label: "Awards & recognition" }]
     : []),
+  { href: "/presentations#sharing-our-research", label: "Presentations & posters" },
+  { href: "/presentations#media-coverage", label: "Media coverage" },
 ];
 
 const sectionLinksFor = (href: string) => {

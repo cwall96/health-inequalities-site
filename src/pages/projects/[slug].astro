@@ -96,6 +96,16 @@ const statusLabel = {
               </dl>
             )}
 
+            {project.website && (
+              <a
+                href={project.website}
+                class="btn-secondary mt-6 inline-flex"
+              >
+                {project.websiteLabel?.trim() || "Find out more"}
+                <span aria-hidden="true">→</span>
+              </a>
+            )}
+
             {project.coverImage && (
               <img
                 src={project.coverImage}

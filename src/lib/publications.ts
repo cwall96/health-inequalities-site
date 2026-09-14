@@ -25,6 +25,7 @@ export type Pub = {
   venue: string;
   citations: number;
   authors: string;
+  abstract?: string | null;
   url: string | null;
   teamMembers?: string[];
   researchThemes?: string[];
@@ -66,9 +67,21 @@ type Enrichment = {
   citations: number;
   venue: string;
   authors: string;
+  abstract: string | null;
   url: string | null;
   searchTerms: string[];
 };
+
+function openAlexAbstract(invertedIndex: Record<string, number[]> | null): string | null {
+  if (!invertedIndex) return null;
+
+  const words = Object.entries(invertedIndex)
+    .flatMap(([word, positions]) => positions.map((position) => ({ word, position })))
+    .sort((a, b) => a.position - b.position)
+    .map(({ word }) => word);
+
+  return words.length > 0 ? words.join(" ") : null;
+}
 
 function openAlexSearchTerms(work: any): string[] {
   const keywords = (work.keywords ?? [])
@@ -108,6 +121,7 @@ async function openAlexByDois(dois: string[]): Promise<Map<string, Enrichment>> 
             .map((a: any) => a.author?.display_name)
             .filter(Boolean)
             .join(", "),
+          abstract: openAlexAbstract(w.abstract_inverted_index),
           url: w.doi ?? null,
           searchTerms: openAlexSearchTerms(w),
         });
@@ -160,6 +174,7 @@ async function worksForOrcid(orcid: string): Promise<Pub[]> {
       venue: e?.venue || w.journal || "",
       citations: e?.citations ?? 0,
       authors: e?.authors ?? "",
+      abstract: e?.abstract ?? null,
       url: e?.url ?? (w.doi ? `https://doi.org/${w.doi}` : null),
       searchTerms: e?.searchTerms ?? [],
     };
@@ -197,6 +212,7 @@ async function worksForOpenAlexAuthor(id: string): Promise<Pub[]> {
             .map((a: any) => a.author?.display_name)
             .filter(Boolean)
             .join(", "),
+          abstract: openAlexAbstract(w.abstract_inverted_index),
           url: w.doi ?? w.primary_location?.landing_page_url ?? null,
           searchTerms: openAlexSearchTerms(w),
         })
@@ -249,6 +265,7 @@ export async function teamPublications(
       const preferred = better ? p : existing;
       byKey.set(key, {
         ...preferred,
+        abstract: preferred.abstract || existing.abstract || p.abstract || null,
         teamMembers: [
           ...new Set([
             ...(existing.teamMembers ?? []),

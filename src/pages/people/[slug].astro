@@ -64,58 +64,6 @@ const relatedImpacts = impactEntries.filter((impact) =>
 const relatedAwards = recognitionEntries.filter((award) =>
   award.entry.teamMembers?.includes(person.slug)
 );
-const hasRelatedWork =
-  relatedProjects.length > 0 ||
-  relatedStudies.length > 0 ||
-  relatedPresentations.length > 0 ||
-  relatedImpacts.length > 0 ||
-  relatedAwards.length > 0;
-
-const relatedWorkGroups = [
-  {
-    label: "Studies",
-    items: relatedStudies.map((study) => ({
-      title: study.entry.title,
-      summary: study.entry.peopleSummary,
-      href: `/studies/${study.slug}`,
-    })),
-  },
-  {
-    label: "Research programmes",
-    items: relatedProjects.map((project) => ({
-      title: project.entry.title,
-      summary: null,
-      href: `/research#project-${project.slug}`,
-    })),
-  },
-  {
-    label: "Posters, presentations and media",
-    items: relatedPresentations.map((presentation) => ({
-      title: presentation.entry.title,
-      summary: presentation.entry.peopleSummary,
-      href:
-        presentation.entry.section === "poster"
-          ? `/presentations/${presentation.slug}`
-          : presentation.entry.link || "/presentations",
-    })),
-  },
-  {
-    label: "Public and policy impact",
-    items: relatedImpacts.map((impact) => ({
-      title: impact.entry.title,
-      summary: impact.entry.summary,
-      href: `/presentations#impact-${impact.slug}`,
-    })),
-  },
-  {
-    label: "Awards and recognition",
-    items: relatedAwards.map((award) => ({
-      title: award.entry.title,
-      summary: null,
-      href: `/presentations#award-${award.slug}`,
-    })),
-  },
-].filter((group) => group.items.length > 0);
 
 const byYear = new Map<number, Pub[]>();
 for (const p of pubs) {
@@ -168,6 +116,20 @@ const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailCandidate)
   ? emailCandidate
   : null;
 
+const summaryName = String(person.name || "").trim();
+const fullDisplayName = String(person.displayName || "").trim();
+const namePosition = fullDisplayName.indexOf(summaryName);
+const summaryTitle = namePosition >= 0
+  ? fullDisplayName.slice(0, namePosition).replace(/[,\s]+$/, "").trim()
+  : "";
+const summaryHeading = [summaryTitle, summaryName].filter(Boolean).join(" ");
+const summaryCredentials = namePosition >= 0
+  ? fullDisplayName
+      .slice(namePosition + summaryName.length)
+      .replace(/^[,\s]+/, "")
+      .trim()
+  : "";
+
 const researchInterests = (person.researchKeywords ?? "")
   .split(",")
   .map((keyword: string) => keyword.trim())
@@ -192,13 +154,13 @@ const qualificationLabels: Record<string, string> = {
 };
 
 const professionalRoleTypeLabels: Record<string, string> = {
-  leadership: "Leadership role",
-  committee: "Committee or advisory role",
-  membership: "Professional membership or fellowship",
-  clinical: "Clinical role",
-  editorial: "Editorial role",
-  research: "Research network or collaboration",
-  other: "Other role",
+  leadership: "Leadership roles",
+  research: "Research networks and collaborations",
+  committee: "Committees and advisory roles",
+  membership: "Professional memberships and fellowships",
+  clinical: "Clinical roles",
+  editorial: "Editorial roles",
+  other: "Other roles",
 };
 
 const supervision = (person.supervision ?? []).filter(
@@ -211,6 +173,36 @@ const researchActivities = (person.researchActivity ?? []).filter(
 const professionalRoles = (person.professionalRoles ?? []).filter(
   (entry) => entry.title
 );
+
+const professionalRoleGroups = Object.keys(professionalRoleTypeLabels)
+  .map((type) => ({
+    heading: professionalRoleTypeLabels[type],
+    entries: professionalRoles.filter((entry) => (entry.type || "other") === type),
+  }))
+  .filter((group) => group.entries.length > 0);
+
+const outputTypes = [
+  { heading: "Posters", values: ["poster"] },
+  { heading: "Presentations", values: ["conference", "inquiry"] },
+  { heading: "Media coverage", values: ["media"] },
+];
+
+const activityOutputTypeLabels: Record<string, string> = {
+  poster: "Poster",
+  presentation: "Presentation",
+  publication: "Publication",
+  media: "Media coverage",
+  other: "Output",
+};
+
+const relatedOutputGroups = outputTypes
+  .map((group) => ({
+    heading: group.heading,
+    items: relatedPresentations.filter((presentation) =>
+      group.values.includes(presentation.entry.section)
+    ),
+  }))
+  .filter((group) => group.items.length > 0);
 
 const orcidCandidate = String(person.orcid || person.identifier || "")
   .trim()
@@ -228,6 +220,24 @@ const paragraphs = (copy: string) =>
 const overviewParagraphs = [person.bio, person.researchFocus]
   .filter((copy): copy is string => Boolean(copy?.trim()))
   .flatMap((copy) => paragraphs(copy));
+
+const hasResearchActivity =
+  relatedStudies.length > 0 ||
+  relatedProjects.length > 0 ||
+  researchActivities.length > 0;
+const hasImpactAndAwards = relatedImpacts.length > 0 || relatedAwards.length > 0;
+const hasTeachingAndSupervision = teaching.length > 0 || supervision.length > 0;
+
+const profileNavigation = [
+  { href: "#overview", label: "Overview", show: overviewParagraphs.length > 0 },
+  { href: "#research-activity", label: "Research activity", show: hasResearchActivity },
+  { href: "#impact-and-awards", label: "Impact and awards", show: hasImpactAndAwards },
+  { href: "#professional-roles", label: "Professional roles", show: professionalRoles.length > 0 },
+  { href: "#teaching-and-supervision", label: "Teaching and supervision", show: hasTeachingAndSupervision },
+  { href: "#skills", label: "Skills", show: methodsAndExpertise.length > 0 },
+  { href: "#posters-presentations-media", label: "Posters, presentations and media", show: relatedPresentations.length > 0 },
+  { href: "#publications", label: "Publications", show: true },
+].filter((item) => item.show);
 
 export const prerender = true;
 ---
@@ -249,13 +259,16 @@ export const prerender = true;
             )
           }
 
-          <h2 id="person-summary-heading">{person.displayName || person.name}</h2>
+          <h2 id="person-summary-heading">{summaryHeading}</h2>
+          {summaryCredentials && (
+            <p class="person-summary-credentials">{summaryCredentials}</p>
+          )}
 
           {(email || orcid) && <dl class="person-summary-details">
             {email && (
               <div>
                 <dt>Email</dt>
-                <dd><a href={`mailto:${email}`}>{email}</a></dd>
+                <dd><a class="person-summary-email" href={`mailto:${email}`}>{email}</a></dd>
               </div>
             )}
 
@@ -283,7 +296,7 @@ export const prerender = true;
           )}
         </aside>
 
-        <div class="person-profile-main">
+        <main class="person-profile-main">
           <p class="eyebrow">
             {person.profileSubtitle?.trim() || categoryLabels[displayCategory] || "Team member"}
           </p>
@@ -291,7 +304,7 @@ export const prerender = true;
           <p class="person-profile-role">{person.role}</p>
 
           {overviewParagraphs.length > 0 && (
-            <section class="person-profile-introduction" aria-labelledby="overview-heading">
+            <section id="overview" class="person-profile-introduction person-anchor-section" aria-labelledby="overview-heading">
               <h2 id="overview-heading">Overview</h2>
               <div class="person-profile-copy">
                 {overviewParagraphs.map((paragraph) => <p>{paragraph}</p>)}
@@ -299,145 +312,241 @@ export const prerender = true;
             </section>
           )}
 
-          {researchActivities.length > 0 && (
-            <section class="person-research-activity" aria-labelledby="research-activity-heading">
-              <h2 id="research-activity-heading">Research activity</h2>
-              <ul class="person-activity-list">
-                {researchActivities.map((activity) => (
-                  <li class="person-activity-item">
-                    <span
-                      class:list={[
-                        "person-activity-status",
-                        activity.status === "completed"
-                          ? "person-activity-status-completed"
-                          : "person-activity-status-ongoing",
-                      ]}
-                      aria-hidden="true"
-                    ></span>
-                    <div>
-                      <h3>{activity.projectTitle}</h3>
-                      <p class="sr-only">
-                        {activity.status === "completed" ? "Completed" : "Ongoing"} research activity.
-                      </p>
-                      {(activity.year || activity.funder) && (
-                        <p class="person-activity-meta">
-                          {[activity.year, activity.funder].filter(Boolean).join(" · ")}
-                        </p>
-                      )}
-                      {activity.summary && <p class="person-activity-summary">{activity.summary}</p>}
-                      {((activity.teamCollaborators ?? []).filter(Boolean).length > 0 ||
-                        (activity.otherCollaborators ?? []).filter(Boolean).length > 0) && (
-                        <div class="person-activity-collaborators">
-                          <span>Collaborators:</span>
-                          <div>
-                            {(activity.teamCollaborators ?? []).filter(Boolean).map((slug) => (
-                              <a href={`/people/${slug}`}>
-                                {teamMemberNames.get(slug as string) ?? slug}
-                              </a>
-                            ))}
-                            {(activity.otherCollaborators ?? []).filter(Boolean).map((name) => (
-                              <span class="person-activity-external">{name}</span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
+          {hasResearchActivity && (
+            <section id="research-activity" class="person-research-activity person-anchor-section" aria-labelledby="research-activity-heading">
+              <div class="person-section-heading-row">
+                <h2 id="research-activity-heading">Research activity</h2>
+                <ul class="person-activity-key" aria-label="Study status key">
+                  <li>
+                    <span class="person-activity-status person-activity-status-ongoing" aria-hidden="true"></span>
+                    Ongoing
                   </li>
-                ))}
-              </ul>
+                  <li>
+                    <span class="person-activity-status person-activity-status-completed" aria-hidden="true"></span>
+                    Completed
+                  </li>
+                </ul>
+              </div>
+
+              {relatedStudies.length > 0 && (
+                <div class="person-profile-subsection">
+                  <h3>Main studies</h3>
+                  <ul class="person-activity-list">
+                    {relatedStudies.map((study) => (
+                      <li class="person-activity-item">
+                        <span
+                          class:list={[
+                            "person-activity-status",
+                            study.entry.status === "completed"
+                              ? "person-activity-status-completed"
+                              : "person-activity-status-ongoing",
+                          ]}
+                          aria-hidden="true"
+                        ></span>
+                        <a class="person-resource-link" href={`/studies/${study.slug}`}>
+                          <span>
+                            <strong>{study.entry.title}</strong>
+                            {study.entry.peopleSummary && (
+                              <small>{study.entry.peopleSummary}</small>
+                            )}
+                          </span>
+                          <span class="person-resource-action">View study <span aria-hidden="true">→</span></span>
+                          <p class="sr-only">
+                            {study.entry.status === "completed" ? "Completed" : "Ongoing"} study.
+                          </p>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {relatedProjects.length > 0 && (
+                <div class="person-profile-subsection">
+                  <h3>Research programmes</h3>
+                  <ul class="person-compact-list">
+                    {relatedProjects.map((project) => (
+                      <li><a href={`/research#project-${project.slug}`}>{project.entry.title}</a></li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {researchActivities.length > 0 && (
+                <div class="person-profile-subsection">
+                  <h3>Other studies</h3>
+                  <ul class="person-activity-list">
+                    {researchActivities.map((activity) => (
+                      <li class="person-activity-item">
+                        <span
+                          class:list={[
+                            "person-activity-status",
+                            activity.status === "completed"
+                              ? "person-activity-status-completed"
+                              : "person-activity-status-ongoing",
+                          ]}
+                          aria-hidden="true"
+                        ></span>
+                        <div>
+                          <h4>{activity.projectTitle}</h4>
+                          <p class="sr-only">
+                            {activity.status === "completed" ? "Completed" : "Ongoing"} study.
+                          </p>
+                          {(activity.year || activity.funder) && (
+                            <p class="person-activity-meta">
+                              {[activity.year, activity.funder].filter(Boolean).join(" · ")}
+                            </p>
+                          )}
+                          {activity.summary && <p class="person-activity-summary">{activity.summary}</p>}
+                          {((activity.teamCollaborators ?? []).filter(Boolean).length > 0 ||
+                            (activity.otherCollaborators ?? []).filter(Boolean).length > 0) && (
+                            <div class="person-activity-collaborators">
+                              <span>Collaborators:</span>
+                              <div>
+                                {(activity.teamCollaborators ?? []).filter(Boolean).map((slug) => (
+                                  <a href={`/people/${slug}`}>
+                                    {teamMemberNames.get(slug as string) ?? slug}
+                                  </a>
+                                ))}
+                                {(activity.otherCollaborators ?? []).filter(Boolean).map((name) => (
+                                  <span class="person-activity-external">{name}</span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          {(activity.outputs ?? []).filter((output) => output.title && output.link).length > 0 && (
+                            <ul class="person-study-output-list" aria-label={`Outputs linked to ${activity.projectTitle}`}>
+                              {(activity.outputs ?? [])
+                                .filter((output) => output.title && output.link)
+                                .map((output) => (
+                                  <li>
+                                    <a href={output.link}>
+                                      <span>{activityOutputTypeLabels[output.type] ?? "Output"}: {output.title}</span>
+                                      <span aria-hidden="true">Open →</span>
+                                    </a>
+                                  </li>
+                                ))}
+                            </ul>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </section>
+          )}
+
+          {hasImpactAndAwards && (
+            <section id="impact-and-awards" class="person-profile-content person-compact-section person-anchor-section" aria-labelledby="impact-awards-heading">
+              <h2 id="impact-awards-heading">Impact and awards</h2>
+              {relatedImpacts.length > 0 && (
+                <div class="person-profile-subsection">
+                  <h3>Public and policy impact</h3>
+                  <ul class="person-compact-list">
+                    {relatedImpacts.map((impact) => (
+                      <li>
+                        <a href={`/presentations#impact-${impact.slug}`}><strong>{impact.entry.title}</strong></a>
+                        {impact.entry.summary && <span>{impact.entry.summary}</span>}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {relatedAwards.length > 0 && (
+                <div class="person-profile-subsection">
+                  <h3>Awards and recognition</h3>
+                  <ul class="person-compact-list">
+                    {relatedAwards.map((award) => (
+                      <li>
+                        <a href={`/presentations#award-${award.slug}`}><strong>{award.entry.title}</strong></a>
+                        <span>{[award.entry.awardingBody, award.entry.year].filter(Boolean).join(" · ")}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </section>
           )}
 
           {professionalRoles.length > 0 && (
-            <section class="person-profile-content person-structured-section" aria-labelledby="professional-roles-heading">
+            <section id="professional-roles" class="person-profile-content person-compact-section person-anchor-section" aria-labelledby="professional-roles-heading">
               <h2 id="professional-roles-heading">Professional roles and memberships</h2>
-              <div class="person-record-list">
-                {professionalRoles.map((entry) => {
-                  const dates = [entry.startYear, entry.endYear]
-                    .filter(Boolean)
-                    .join("–");
-                  return (
-                    <article class="person-record">
-                      <div>
-                        <h3>{entry.title}</h3>
-                        {(entry.organisation || dates) && (
-                          <p class="person-record-meta">
-                            {[entry.organisation, dates].filter(Boolean).join(" · ")}
-                          </p>
-                        )}
-                      </div>
-                      <span class="person-record-type">
-                        {professionalRoleTypeLabels[entry.type] ?? "Other role"}
-                      </span>
-                    </article>
-                  );
-                })}
-              </div>
+              {professionalRoleGroups.map((group) => (
+                <div class="person-profile-subsection">
+                  <h3>{group.heading}</h3>
+                  <ul class="person-compact-list">
+                    {group.entries.map((entry) => {
+                      const dates = [entry.startYear, entry.endYear].filter(Boolean).join("–");
+                      return (
+                        <li>
+                          <strong>{entry.title}</strong>
+                          {(entry.organisation || dates) && (
+                            <span>{[entry.organisation, dates].filter(Boolean).join(", ")}</span>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
             </section>
           )}
 
-          {(teaching.length > 0 || supervision.length > 0) && (
-            <section class="person-profile-content person-structured-section" aria-labelledby="teaching-supervision-heading">
+          {hasTeachingAndSupervision && (
+            <section id="teaching-and-supervision" class="person-profile-content person-compact-section person-anchor-section" aria-labelledby="teaching-supervision-heading">
               <h2 id="teaching-supervision-heading">Teaching and supervision</h2>
               {teaching.length > 0 && (
                 <div class="person-profile-subsection">
                   <h3>Teaching</h3>
-                  <div class="person-record-list">
+                  <ul class="person-compact-list">
                     {teaching.map((entry) => {
                       const years = [entry.fromYear, entry.toYear]
                         .filter(Boolean)
                         .map((year) => year === "present" ? "Present" : year)
                         .join("–");
                       return (
-                        <article class="person-record">
-                          <div>
-                            <h4>{entry.course}</h4>
-                            {entry.module && (
-                              <p class="person-record-module">{entry.module}</p>
-                            )}
-                            <p class="person-record-meta">
-                              {qualificationLabels[entry.level] ?? entry.level}
-                              {years && <span> · {years}</span>}
-                            </p>
-                          </div>
-                        </article>
+                        <li>
+                          <strong>{entry.course}</strong>
+                          <span>
+                            {[entry.module, qualificationLabels[entry.level] ?? entry.level, years]
+                              .filter(Boolean)
+                              .join(" · ")}
+                          </span>
+                        </li>
                       );
                     })}
-                  </div>
+                  </ul>
                 </div>
               )}
               {supervision.length > 0 && (
                 <div class="person-profile-subsection">
                   <h3>Supervision</h3>
-                  <div class="person-record-list">
-                    {supervision.map((entry) => (
-                      <article class="person-record">
-                        <div>
-                          <h4>{entry.studentName}</h4>
-                          <p class="person-record-meta">
-                            {qualificationLabels[entry.qualification] ?? entry.qualification}
-                            {(entry.fromYear || entry.toYear) && (
-                              <span>
-                                {" · "}
-                                {[entry.fromYear, entry.toYear]
-                                  .filter(Boolean)
-                                  .map((year) => year === "present" ? "Present" : year)
-                                  .join("–")}
-                              </span>
-                            )}
-                          </p>
-                        </div>
-                        {entry.projectTitle && <p>{entry.projectTitle}</p>}
-                      </article>
-                    ))}
-                  </div>
+                  <ul class="person-compact-list">
+                    {supervision.map((entry) => {
+                      const years = [entry.fromYear, entry.toYear]
+                        .filter(Boolean)
+                        .map((year) => year === "present" ? "Present" : year)
+                        .join("–");
+                      return (
+                        <li>
+                          <strong>{entry.studentName}</strong>
+                          <span>
+                            {[qualificationLabels[entry.qualification] ?? entry.qualification, entry.projectTitle, years]
+                              .filter(Boolean)
+                              .join(" · ")}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
               )}
             </section>
           )}
 
           {methodsAndExpertise.length > 0 && (
-            <section class="person-expertise" aria-labelledby="expertise-heading">
+            <section id="skills" class="person-expertise person-anchor-section" aria-labelledby="expertise-heading">
               <h2 id="expertise-heading">Skills</h2>
               <div class="person-expertise-tags">
                 {methodsAndExpertise.map((item: string) => (
@@ -449,71 +558,74 @@ export const prerender = true;
             </section>
           )}
 
-          {hasRelatedWork && (
-            <section class="person-related-work" aria-labelledby="related-work-heading">
-              <h2 id="related-work-heading">Related work</h2>
-              <p class="person-related-intro">
-                Open a category and follow a link to the full study or output page.
-              </p>
-              <div class="person-related-dropdowns">
-                {relatedWorkGroups.map((group, index) => (
-                  <details class="person-related-dropdown" open={index === 0}>
-                    <summary>
-                      <span>{group.label}</span>
-                      <span>{group.items.length}</span>
-                    </summary>
-                    <ul>
-                      {group.items.map((item) => (
-                        <li>
-                          <a href={item.href}>
-                            <span>
-                              <strong>{item.title}</strong>
-                              {item.summary && <small>{item.summary}</small>}
-                            </span>
-                            <span aria-hidden="true">→</span>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                ))}
-              </div>
+          {relatedPresentations.length > 0 && (
+            <section id="posters-presentations-media" class="person-profile-content person-compact-section person-anchor-section" aria-labelledby="outputs-heading">
+              <h2 id="outputs-heading">Posters, presentations and media</h2>
+              {relatedOutputGroups.map((group) => (
+                <div class="person-profile-subsection">
+                  <h3>{group.heading}</h3>
+                  <ul class="person-resource-list">
+                    {group.items.map((item) => (
+                      <li>
+                        <a class="person-resource-link" href={item.entry.section === "poster" ? `/presentations/${item.slug}` : item.entry.link || "/presentations"}>
+                          <span>
+                            <strong>{item.entry.title}</strong>
+                            {item.entry.peopleSummary && <small>{item.entry.peopleSummary}</small>}
+                          </span>
+                          <span class="person-resource-action">View details <span aria-hidden="true">→</span></span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </section>
           )}
 
-      <section class="person-publications" aria-labelledby="publications-heading">
-      <h2 id="publications-heading">Publications</h2>
-      {
-        pubs.length === 0 ? (
-          <p class="mt-3 text-muted">No publications found for this person yet.</p>
-        ) : (
-          <div class="mt-6">
-            {years.map((year) => (
-              <div class="mb-6">
-                <p class="mb-2 text-xs tracking-wide text-cloud-400">{year || "Undated"}</p>
-                {byYear.get(year)!.map((p) => (
-                  <div class="flex items-start justify-between gap-4 border-t border-line py-3">
-                    <div>
-                      <p class="leading-6 text-ink">{p.title}</p>
-                      <p class="text-sm text-muted">
-                        {[p.venue].filter(Boolean).join(" · ")}
-                        {p.citations > 0 && <span> · {p.citations} citations</span>}
-                      </p>
+          <section id="publications" class="person-publications person-anchor-section" aria-labelledby="publications-heading">
+            <h2 id="publications-heading">Publications</h2>
+            {
+              pubs.length === 0 ? (
+                <p class="mt-3 text-muted">No publications found for this person yet.</p>
+              ) : (
+                <div class="mt-6">
+                  {years.map((year) => (
+                    <div class="mb-6">
+                      <p class="mb-2 text-xs tracking-wide text-cloud-400">{year || "Undated"}</p>
+                      {byYear.get(year)!.map((p) => (
+                        <div class="flex items-start justify-between gap-4 border-t border-line py-3">
+                          <div>
+                            <p class="leading-6 text-ink">{p.title}</p>
+                            <p class="text-sm text-muted">
+                              {[p.venue].filter(Boolean).join(" · ")}
+                              {p.citations > 0 && <span> · {p.citations} citations</span>}
+                            </p>
+                          </div>
+                          {p.url && (
+                            <a href={p.url} aria-label="Open publication">
+                              <i class="ti ti-external-link text-lg text-muted" aria-hidden="true"></i>
+                            </a>
+                          )}
+                        </div>
+                      ))}
                     </div>
-                    {p.url && (
-                      <a href={p.url} aria-label="Open publication">
-                        <i class="ti ti-external-link text-lg text-muted" aria-hidden="true"></i>
-                      </a>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        )
-      }
-      </section>
-        </div>
+                  ))}
+                </div>
+              )
+            }
+          </section>
+        </main>
+
+        <aside class="person-profile-navigation">
+          <nav aria-label="Profile sections">
+            <p>On this page</p>
+            <ol>
+              {profileNavigation.map((item) => (
+                <li><a href={item.href}>{item.label}</a></li>
+              ))}
+            </ol>
+          </nav>
+        </aside>
       </div>
     </div>
   </section>

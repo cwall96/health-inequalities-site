@@ -238,6 +238,16 @@ export default config({
           },
         }),
 
+        featuredPublicationAbstract: fields.text({
+          label: "Publication spotlight abstract (optional override)",
+          description:
+            "The abstract is normally imported automatically from OpenAlex. Use this only when no abstract is available or when you have an authorised alternative version.",
+          multiline: true,
+          validation: {
+            isRequired: false,
+          },
+        }),
+
         hiddenDois: fields.array(
           fields.text({
             label: "DOI",
@@ -462,13 +472,45 @@ export default config({
               description:
                 "Add one or two sentences describing the activity.",
             }),
+            outputs: fields.array(
+              fields.object({
+                title: fields.text({
+                  label: "Output title",
+                  description:
+                    "Use the title of the poster, presentation, publication or other output.",
+                }),
+                type: fields.select({
+                  label: "Output type",
+                  options: [
+                    { label: "Poster", value: "poster" },
+                    { label: "Presentation", value: "presentation" },
+                    { label: "Publication", value: "publication" },
+                    { label: "Media coverage", value: "media" },
+                    { label: "Other output", value: "other" },
+                  ],
+                  defaultValue: "publication",
+                }),
+                link: fields.text({
+                  label: "Output link",
+                  description:
+                    "Paste the website address for the output. This can be a page on this website or an external publication page.",
+                }),
+              }),
+              {
+                label: "Linked outputs",
+                description:
+                  "Add any posters, presentations, publications, media coverage or other outputs connected to this smaller study.",
+                itemLabel: (props) =>
+                  props.fields.title.value || "New linked output",
+              },
+            ),
           }),
           {
-            label: "Research activity",
+            label: "Other studies",
             description:
-              "Use this for smaller studies or projects that do not need their own study page.",
+              "Use this for smaller studies or projects that do not need their own study page. They appear under Other studies within Research activity; linked study pages appear above them as Main studies.",
             itemLabel: (props) =>
-              props.fields.projectTitle.value || "New research activity",
+              props.fields.projectTitle.value || "New smaller study",
           },
         ),
 
@@ -517,7 +559,7 @@ export default config({
           {
             label: "Professional roles and memberships",
             description:
-              "Add each additional role, committee, fellowship, network or membership as a separate entry.",
+              "Add each role as a short entry. The profile automatically groups these into compact bullet lists, including a Research networks and collaborations subheading.",
             itemLabel: (props) =>
               props.fields.title.value || "New professional role",
           },
@@ -558,7 +600,7 @@ export default config({
           {
             label: "Teaching",
             description:
-              "Add each course and module as a separate teaching entry.",
+              "Add each course and module as a separate entry. They appear as compact bullet points under Teaching.",
             itemLabel: (props) =>
               props.fields.module.value ||
               props.fields.course.value ||
@@ -596,7 +638,7 @@ export default config({
           {
             label: "Supervision",
             description:
-              "Add each supervised student as a separate entry. Use the controls to change their order.",
+              "Add each supervised student as a separate entry. They appear as compact bullet points under Supervision; use the controls to change their order.",
             itemLabel: (props) =>
               props.fields.studentName.value || "New supervision entry",
           },
@@ -687,6 +729,16 @@ export default config({
 
         venue: fields.text({
           label: "Journal / venue",
+        }),
+
+        abstract: fields.text({
+          label: "Abstract",
+          multiline: true,
+          description:
+            "Optional. Add the publication abstract if this manual record may be used in the publication spotlight.",
+          validation: {
+            isRequired: false,
+          },
         }),
 
         url: fields.url({
@@ -1088,6 +1140,24 @@ export default config({
           },
         }),
 
+        website: fields.url({
+          label: "Project link",
+          description:
+            "Optional. Paste a link to the project website or another page with further information.",
+          validation: {
+            isRequired: false,
+          },
+        }),
+
+        websiteLabel: fields.text({
+          label: "Project link wording",
+          description:
+            "Optional. For example, Visit the project website or Find out more. If left blank, the website will use Find out more.",
+          validation: {
+            isRequired: false,
+          },
+        }),
+
         teamMembers: fields.array(
           fields.relationship({
             label: "Team member",
@@ -1162,19 +1232,42 @@ export default config({
         }),
 
         highlights: fields.array(
-          fields.text({
-            label: "Highlight",
-            multiline: true,
+          fields.object({
+            icon: fields.select({
+              label: "Icon",
+              options: [
+                { label: "Overview", value: "eye" },
+                { label: "Comparison", value: "arrows-diff" },
+                { label: "Data", value: "chart-bar" },
+                { label: "Interviews or discussion", value: "messages" },
+                { label: "People", value: "users" },
+                { label: "Place", value: "map-pin" },
+                { label: "Time or dates", value: "calendar" },
+                { label: "Aim or target", value: "target" },
+              ],
+              defaultValue: "eye",
+            }),
+            title: fields.text({
+              label: "Short heading",
+              description: "For example Data analysis, Interviews or Study setting.",
+            }),
+            text: fields.text({
+              label: "Short explanation",
+              multiline: true,
+              description: "Keep this concise—ideally one short sentence.",
+            }),
           }),
           {
             label: "Study at a glance",
             description:
-              "Add up to three short points summarising the most important features of the study.",
+              "Add up to four concise icon-led facts. These appear as tiles rather than bullet points.",
             validation: {
               length: {
-                max: 3,
+                max: 4,
               },
             },
+            itemLabel: (props) =>
+              props.fields.title.value || "New at-a-glance fact",
           },
         ),
 
@@ -1194,7 +1287,7 @@ export default config({
           {
             heading: fields.text({
               label: "Section heading",
-              defaultValue: "Why this study matters",
+              defaultValue: "What is this study?",
             }),
             body: fields.text({
               label: "Section text",
@@ -1204,7 +1297,7 @@ export default config({
             }),
           },
           {
-            label: "Why this study matters",
+            label: "What is this study?",
           },
         ),
 
@@ -1212,7 +1305,7 @@ export default config({
           {
             heading: fields.text({
               label: "Section heading",
-              defaultValue: "What we are doing",
+              defaultValue: "What are we doing?",
             }),
             body: fields.text({
               label: "Section text",
@@ -1222,7 +1315,28 @@ export default config({
             }),
           },
           {
-            label: "What we are doing",
+            label: "What are we doing?",
+          },
+        ),
+
+        contribution: fields.object(
+          {
+            heading: fields.text({
+              label: "Section heading",
+              defaultValue: "What this study adds",
+            }),
+            body: fields.text({
+              label: "Section text",
+              multiline: true,
+              description:
+                "Explain what new evidence, understanding or perspective the study is expected to contribute.",
+              validation: {
+                isRequired: false,
+              },
+            }),
+          },
+          {
+            label: "What this study adds",
           },
         ),
 

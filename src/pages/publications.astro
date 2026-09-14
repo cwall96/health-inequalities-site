@@ -35,6 +35,7 @@ const manual: Pub[] = manualEntries.map((m) => ({
   venue: m.entry.venue ?? "",
   citations: 0,
   authors: m.entry.authors ?? "",
+  abstract: m.entry.abstract?.trim() || null,
   url: m.entry.url ?? null,
   teamMembers: (m.entry.teamMembers ?? []).filter(Boolean) as string[],
   researchThemes: (m.entry.researchThemes ?? []).filter(Boolean) as string[],
@@ -110,6 +111,10 @@ const spotlightPublication =
 const spotlightSummary =
   settings?.featuredPublicationSummary?.trim() ||
   "Selected from the Health Inequalities Team’s published research.";
+const spotlightAbstract =
+  settings?.featuredPublicationAbstract?.trim() ||
+  spotlightPublication?.abstract?.trim() ||
+  "";
 
 const byYear = new Map<number, Pub[]>();
 for (const p of pubs) {
@@ -144,6 +149,12 @@ export const prerender = true;
             <p class="publication-spotlight-summary">{spotlightSummary}</p>
             {spotlightPublication.authors && (
               <p class="publication-spotlight-authors">{spotlightPublication.authors}</p>
+            )}
+            {spotlightAbstract && (
+              <div class="publication-spotlight-abstract">
+                <h3>Abstract</h3>
+                <p>{spotlightAbstract}</p>
+              </div>
             )}
             {((spotlightPublication.teamMembers?.length ?? 0) > 0 ||
               (spotlightPublication.researchThemes?.length ?? 0) > 0) && (

@@ -26,12 +26,20 @@ const initials = name
   .join("");
 
 const cardEmail = email?.trim() || "";
+const nameFontSize =
+  name.length > 19
+    ? "0.9rem"
+    : name.length > 16
+      ? "1rem"
+      : "1.125rem";
 const emailFontSize =
   cardEmail.length > 34
-    ? "0.6rem"
-    : cardEmail.length > 29
-      ? "0.65rem"
-      : "0.7rem";
+    ? "0.55rem"
+    : cardEmail.length > 31
+      ? "0.6rem"
+      : cardEmail.length > 29
+        ? "0.64rem"
+        : "0.68rem";
 ---
 
 <a
@@ -58,7 +66,10 @@ const emailFontSize =
   }
 
   <div class="flex flex-1 flex-col p-4">
-    <h2 class="text-xl text-ink">
+    <h2
+      class="whitespace-nowrap tracking-[-0.025em] text-ink"
+      style={`font-size: ${nameFontSize}`}
+    >
       {name}
     </h2>
 

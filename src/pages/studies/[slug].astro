@@ -38,7 +38,9 @@ const paragraphs = (value = "") =>
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
 
-const highlights = study?.highlights?.filter((highlight) => highlight.trim()) ?? [];
+const highlights = (study?.highlights ?? []).filter(
+  (highlight) => highlight.title?.trim() || highlight.text?.trim()
+);
 
 const structuredSections = study
   ? [
@@ -55,6 +57,12 @@ const structuredSections = study
         accent: false,
       },
       {
+        id: "what-this-study-adds",
+        heading: study.contribution?.heading,
+        body: study.contribution?.body,
+        accent: false,
+      },
+      {
         id: "impact-and-outputs",
         heading: study.impact?.heading,
         body: study.impact?.body,
@@ -62,6 +70,13 @@ const structuredSections = study
       },
     ].filter((section) => section.body?.trim())
   : [];
+
+const introductorySection = structuredSections.find(
+  (section) => section.id === "why-this-study-matters"
+);
+const remainingSections = structuredSections.filter(
+  (section) => section.id !== "why-this-study-matters"
+);
 
 const studyStages = [
   { value: "protocol", label: "Protocol" },
@@ -134,14 +149,22 @@ const relatedOutputs = study?.relatedOutputs ?? [];
           <div class="container-page max-w-7xl">
             {highlights.length > 0 && (
               <section class="study-highlights" aria-labelledby="study-highlights-heading">
-                <p class="eyebrow">Key points</p>
-                <h2 id="study-highlights-heading" class="mt-2">Study at a glance</h2>
+                <div class="study-highlights-heading">
+                  <i class="ti ti-eye" aria-hidden="true"></i>
+                  <h2 id="study-highlights-heading">Study at a glance</h2>
+                </div>
 
-                <ul class="study-highlight-list">
+                <div class="study-highlight-grid">
                   {highlights.map((highlight) => (
-                    <li>{highlight}</li>
+                    <article class="study-highlight-item">
+                      <i class={`ti ti-${highlight.icon}`} aria-hidden="true"></i>
+                      <div>
+                        <h3>{highlight.title}</h3>
+                        {highlight.text && <p>{highlight.text}</p>}
+                      </div>
+                    </article>
                   ))}
-                </ul>
+                </div>
               </section>
             )}
 
@@ -187,7 +210,21 @@ const relatedOutputs = study?.relatedOutputs ?? [];
               </aside>
 
               <main class="study-page-main">
-                {structuredSections.map((section) => (
+                {introductorySection && (
+                  <section
+                    id={introductorySection.id}
+                    class="study-content-section study-introduction-section"
+                  >
+                    <h2>{introductorySection.heading}</h2>
+                    <div class="study-section-copy">
+                      {paragraphs(introductorySection.body).map((paragraph) => (
+                        <p>{paragraph}</p>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {remainingSections.map((section) => (
                   <section
                     id={section.id}
                     class:list={[
