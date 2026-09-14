@@ -2,34 +2,83 @@
   "name": "Clare Bambra",
   "displayName": "Professor Clare Bambra PhD, FMedSci, FAcSS, HonFPH, Leopoldina",
   "role": "Professor of Public Health",
-  "category": "staff",
+  "category": "lead",
+  "email": "clare.bambra@newcastle.ac.uk",
   "researchKeywords": "north-south health divide, place and health",
   "bio": "Clare Bambra, PhD, FMedSci, FAcSS, HonFPH, Leopoldina, is Professor of Public Health. Her work focuses on understanding and reducing health inequalities, and she has published more than 300 books and articles.",
   "researchFocus": "Clare leads major research collaborations on health inequalities, including a Wellcome Trust-funded project examining the north-south health divide. Her international work includes health equity, place-based solutions and inequalities in access to infectious disease interventions.",
+  "researchActivity": [],
+  "professionalRoles": [
+    {
+      "title": "Fellow",
+      "organisation": "Academy of Medical Sciences",
+      "type": "membership"
+    },
+    {
+      "title": "Fellow",
+      "organisation": "German National Academy of Sciences Leopoldina",
+      "type": "membership"
+    },
+    {
+      "title": "Fellow",
+      "organisation": "Academy of Social Sciences",
+      "type": "membership"
+    },
+    {
+      "title": "Honorary Fellow",
+      "organisation": "UK Faculty of Public Health",
+      "type": "membership"
+    },
+    {
+      "title": "Senior Investigator",
+      "organisation": "NIHR",
+      "type": "research"
+    },
+    {
+      "title": "Member",
+      "organisation": "Advisory Committee on Resource Allocation",
+      "type": "committee"
+    },
+    {
+      "title": "Member",
+      "organisation": "WHO Europe Scientific Advisory Group on Health Equity",
+      "type": "committee"
+    },
+    {
+      "title": "Senior Investigator",
+      "organisation": "CHAIN",
+      "type": "research"
+    },
+    {
+      "title": "Associate Investigator",
+      "organisation": "Australian Centre for Research Excellence on Shaping Markets for Health Equity",
+      "type": "research"
+    },
+    {
+      "title": "Co-chair, International Advisory Group",
+      "organisation": "InDiE Consortium",
+      "type": "leadership"
+    }
+  ],
   "teaching": [
     {
       "course": "MPharm",
       "module": "Public health projects",
-      "level": "mpharm"
+      "level": "mpharm",
+      "fromYear": "2026",
+      "toYear": "present"
     },
     {
       "course": "Master of Public Health",
       "module": "Health inequalities",
-      "level": "mph"
+      "level": "mph",
+      "fromYear": "2026",
+      "toYear": "present"
     }
   ],
-  "professionalRoles": [
-    { "title": "Fellow", "organisation": "Academy of Medical Sciences", "type": "membership" },
-    { "title": "Fellow", "organisation": "German National Academy of Sciences Leopoldina", "type": "membership" },
-    { "title": "Fellow", "organisation": "Academy of Social Sciences", "type": "membership" },
-    { "title": "Honorary Fellow", "organisation": "UK Faculty of Public Health", "type": "membership" },
-    { "title": "Senior Investigator", "organisation": "NIHR", "type": "research" },
-    { "title": "Member", "organisation": "Advisory Committee on Resource Allocation", "type": "committee" },
-    { "title": "Member", "organisation": "WHO Europe Scientific Advisory Group on Health Equity", "type": "committee" },
-    { "title": "Senior Investigator", "organisation": "CHAIN", "type": "research" },
-    { "title": "Associate Investigator", "organisation": "Australian Centre for Research Excellence on Shaping Markets for Health Equity", "type": "research" },
-    { "title": "Co-chair, International Advisory Group", "organisation": "InDiE Consortium", "type": "leadership" }
-  ],
+  "supervision": [],
+  "methodsExpertise": [],
+  "orcid": "0000-0002-1294-6851",
   "identifier": "0000-0002-1294-6851",
   "order": 0
 }
