@@ -219,15 +219,15 @@ const orcid = /^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/i.test(orcidCandidate)
   ? orcidCandidate.toUpperCase()
   : null;
 
-const profileSections = [
-  { heading: "Research focus", copy: person.researchFocus },
-].filter((section) => section.copy?.trim());
-
 const paragraphs = (copy: string) =>
   copy
     .split(/\n\s*\n/)
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
+
+const overviewParagraphs = [person.bio, person.researchFocus]
+  .filter((copy): copy is string => Boolean(copy?.trim()))
+  .flatMap((copy) => paragraphs(copy));
 
 export const prerender = true;
 ---
@@ -290,26 +290,13 @@ export const prerender = true;
           <h1>{person.name}</h1>
           <p class="person-profile-role">{person.role}</p>
 
-          {person.bio && (
-            <section class="person-profile-introduction" aria-labelledby="profile-heading">
-              <h2 id="profile-heading">Profile</h2>
+          {overviewParagraphs.length > 0 && (
+            <section class="person-profile-introduction" aria-labelledby="overview-heading">
+              <h2 id="overview-heading">Overview</h2>
               <div class="person-profile-copy">
-                {paragraphs(person.bio).map((paragraph) => <p>{paragraph}</p>)}
+                {overviewParagraphs.map((paragraph) => <p>{paragraph}</p>)}
               </div>
             </section>
-          )}
-
-          {profileSections.length > 0 && (
-            <div class="person-profile-sections">
-              {profileSections.map((section, index) => (
-                <section class="person-profile-content" aria-labelledby={`profile-section-${index}`}>
-                  <h2 id={`profile-section-${index}`}>{section.heading}</h2>
-                  <div class="person-profile-copy">
-                    {paragraphs(section.copy).map((paragraph) => <p>{paragraph}</p>)}
-                  </div>
-                </section>
-              ))}
-            </div>
           )}
 
           {researchActivities.length > 0 && (

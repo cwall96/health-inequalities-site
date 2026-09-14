@@ -391,16 +391,16 @@ export default config({
         }),
 
         bio: fields.text({
-          label: "Profile summary",
+          label: "Overview — profile summary",
           description:
-            "Write two or three sentences introducing the person and their work. This appears near the top of their profile.",
+            "Write two or three sentences introducing the person and their work. This appears at the start of the Overview section.",
           multiline: true,
         }),
 
         researchFocus: fields.text({
-          label: "Research focus",
+          label: "Overview — research detail (optional)",
           description:
-            "What topics, populations or health inequalities does this person study?",
+            "Add more detail about the topics or populations this person studies. This is displayed in the same Overview section, not as a separate box.",
           multiline: true,
           validation: {
             isRequired: false,
