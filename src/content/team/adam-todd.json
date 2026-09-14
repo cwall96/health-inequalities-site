@@ -1,42 +1,150 @@
 {
   "name": "Adam Todd",
   "role": "Professor of Pharmaceutical Public Health",
-  "category": "staff",
+  "category": "senior",
   "email": "adam.todd@newcastle.ac.uk",
   "researchKeywords": "pharmaceutical public health, deprescribing, palliative care",
   "bio": "Adam Todd is Professor of Pharmaceutical Public Health and Deputy Head of the School of Pharmacy at Newcastle University. He is a qualified pharmacist and leads an interdisciplinary programme of research spanning pharmacy, public health and health inequalities.",
   "researchFocus": "Adam applies pharmaceutical knowledge to prevent disease, prolong life, promote health and reduce health inequalities across different populations. His work includes deprescribing, palliative care and public health interventions delivered through community pharmacy.",
+  "researchActivity": [],
+  "professionalRoles": [
+    {
+      "title": "Fellow",
+      "organisation": "Royal Pharmaceutical Society of Great Britain",
+      "type": "membership"
+    },
+    {
+      "title": "Senior Fellow",
+      "organisation": "Higher Education Academy",
+      "type": "membership"
+    },
+    {
+      "title": "Member",
+      "organisation": "CHAIN",
+      "type": "research"
+    },
+    {
+      "title": "Steering group member",
+      "organisation": "English Deprescribing Network",
+      "type": "committee"
+    },
+    {
+      "title": "Chair, Scientific Advisory Panel",
+      "organisation": "Pharmacy Research UK and NIHR Research for Patient Benefit Yorkshire and North East",
+      "type": "leadership"
+    },
+    {
+      "title": "Committee member",
+      "organisation": "NIHR HTA Prioritisation Committee",
+      "type": "committee"
+    },
+    {
+      "title": "Panel member",
+      "organisation": "General Pharmaceutical Council Accreditation and Recognition Panel",
+      "type": "committee"
+    }
+  ],
+  "teaching": [
+    {
+      "course": "MPharm programme",
+      "level": "mpharm",
+      "fromYear": "2026",
+      "toYear": "present"
+    }
+  ],
+  "supervision": [
+    {
+      "studentName": "Rayah Asiri",
+      "fromYear": "2026",
+      "toYear": "present",
+      "qualification": "phd",
+      "projectTitle": "Challenges of medication adherence in minority ethnic communities"
+    },
+    {
+      "studentName": "Janine Beezer",
+      "fromYear": "2026",
+      "toYear": "present",
+      "qualification": "phd",
+      "projectTitle": "Relationships between polypharmacy and adverse outcomes in people with heart failure"
+    },
+    {
+      "studentName": "Nathania Bestwick",
+      "fromYear": "2026",
+      "toYear": "present",
+      "qualification": "phd",
+      "projectTitle": "Inequalities in multiple long-term conditions for people with cancer"
+    },
+    {
+      "studentName": "Maguy El Hajj",
+      "fromYear": "2026",
+      "toYear": "present",
+      "qualification": "phd",
+      "projectTitle": "Challenges of delivering medication safety initiatives in community pharmacy settings"
+    },
+    {
+      "studentName": "Katie Elliott",
+      "fromYear": "2026",
+      "toYear": "present",
+      "qualification": "phd",
+      "projectTitle": "The relationship between mental health conditions and treatment receipt among older people with cancer"
+    },
+    {
+      "studentName": "Hilary Shepherd Holding",
+      "fromYear": "2026",
+      "toYear": "present",
+      "qualification": "phd",
+      "projectTitle": "The interplay between multimorbidity and polypharmacy among older people"
+    },
+    {
+      "studentName": "Anum Iqbal",
+      "fromYear": "2026",
+      "toYear": "2025",
+      "qualification": "phd",
+      "projectTitle": "Socioeconomic inequalities in polypharmacy among older people"
+    },
+    {
+      "studentName": "Tania Jones",
+      "fromYear": "2026",
+      "toYear": "present",
+      "qualification": "phd",
+      "projectTitle": "Developing and evaluating a novel opioid deprescribing intervention in primary care"
+    },
+    {
+      "studentName": "Radin Karimi",
+      "fromYear": "2026",
+      "toYear": "present",
+      "qualification": "phd",
+      "projectTitle": "Polypharmacy and medication safety for people using home-care services"
+    },
+    {
+      "studentName": "Amber Sacre",
+      "fromYear": "2024",
+      "toYear": "present",
+      "qualification": "phd",
+      "projectTitle": "Socioeconomic inequalities in vaccination"
+    },
+    {
+      "studentName": "Emily Shaw",
+      "fromYear": "2026",
+      "toYear": "present",
+      "qualification": "phd",
+      "projectTitle": "Inequalities in outcomes for people using immunological, biological and precision therapies"
+    },
+    {
+      "studentName": "Rajeev Shrestha",
+      "fromYear": "2026",
+      "toYear": "present",
+      "qualification": "phd",
+      "projectTitle": "Polypharmacy and patient-safety challenges for people using palliative and end-of-life care services"
+    }
+  ],
   "methodsExpertise": [
     "Social science methods",
     "Public health research",
     "Clinical research",
     "Epidemiology"
   ],
-  "teaching": [
-    { "course": "MPharm programme", "level": "mpharm" }
-  ],
-  "supervision": [
-    { "studentName": "Rayah Asiri", "toYear": "present", "qualification": "phd", "projectTitle": "Challenges of medication adherence in minority ethnic communities" },
-    { "studentName": "Janine Beezer", "toYear": "present", "qualification": "phd", "projectTitle": "Relationships between polypharmacy and adverse outcomes in people with heart failure" },
-    { "studentName": "Nathania Bestwick", "toYear": "present", "qualification": "phd", "projectTitle": "Inequalities in multiple long-term conditions for people with cancer" },
-    { "studentName": "Maguy El Hajj", "toYear": "present", "qualification": "phd", "projectTitle": "Challenges of delivering medication safety initiatives in community pharmacy settings" },
-    { "studentName": "Katie Elliott", "toYear": "present", "qualification": "phd", "projectTitle": "The relationship between mental health conditions and treatment receipt among older people with cancer" },
-    { "studentName": "Hilary Shepherd Holding", "toYear": "present", "qualification": "phd", "projectTitle": "The interplay between multimorbidity and polypharmacy among older people" },
-    { "studentName": "Anum Iqbal", "toYear": "present", "qualification": "phd", "projectTitle": "Socioeconomic inequalities in polypharmacy among older people" },
-    { "studentName": "Tania Jones", "toYear": "present", "qualification": "phd", "projectTitle": "Developing and evaluating a novel opioid deprescribing intervention in primary care" },
-    { "studentName": "Radin Karimi", "toYear": "present", "qualification": "phd", "projectTitle": "Polypharmacy and medication safety for people using home-care services" },
-    { "studentName": "Amber Sacre", "toYear": "present", "qualification": "phd", "projectTitle": "Socioeconomic inequalities in vaccination" },
-    { "studentName": "Emily Shaw", "toYear": "present", "qualification": "phd", "projectTitle": "Inequalities in outcomes for people using immunological, biological and precision therapies" },
-    { "studentName": "Rajeev Shrestha", "toYear": "present", "qualification": "phd", "projectTitle": "Polypharmacy and patient-safety challenges for people using palliative and end-of-life care services" }
-  ],
-  "professionalRoles": [
-    { "title": "Fellow", "organisation": "Royal Pharmaceutical Society of Great Britain", "type": "membership" },
-    { "title": "Senior Fellow", "organisation": "Higher Education Academy", "type": "membership" },
-    { "title": "Member", "organisation": "CHAIN", "type": "research" },
-    { "title": "Steering group member", "organisation": "English Deprescribing Network", "type": "committee" },
-    { "title": "Chair, Scientific Advisory Panel", "organisation": "Pharmacy Research UK and NIHR Research for Patient Benefit Yorkshire and North East", "type": "leadership" },
-    { "title": "Committee member", "organisation": "NIHR HTA Prioritisation Committee", "type": "committee" },
-    { "title": "Panel member", "organisation": "General Pharmaceutical Council Accreditation and Recognition Panel", "type": "committee" }
-  ],
+  "orcid": "0000-0003-1496-9341",
+  "identifier": "0000-0003-1496-9341",
   "order": 0
 }
