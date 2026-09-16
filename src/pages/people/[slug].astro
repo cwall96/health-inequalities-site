@@ -72,6 +72,9 @@ for (const p of pubs) {
   byYear.get(y)!.push(p);
 }
 const years = [...byYear.keys()].sort((a, b) => b - a);
+const profilePublicationPageSize = 20;
+const profilePublicationPageCount = Math.ceil(pubs.length / profilePublicationPageSize);
+const firstProfilePublicationPage = new Set(pubs.slice(0, profilePublicationPageSize));
 
 const initials = person.name
   .split(" ")
@@ -582,18 +585,35 @@ export const prerender = true;
             </section>
           )}
 
-          <section id="publications" class="person-publications person-anchor-section" aria-labelledby="publications-heading">
+          <section
+            id="publications"
+            class="person-publications person-anchor-section"
+            aria-labelledby="publications-heading"
+            data-profile-publications
+          >
             <h2 id="publications-heading">Publications</h2>
             {
               pubs.length === 0 ? (
                 <p class="mt-3 text-muted">No publications found for this person yet.</p>
               ) : (
                 <div class="mt-6">
+                  <p class="mb-5 text-sm text-muted" aria-live="polite" data-profile-publication-count>
+                    Showing 1–{Math.min(profilePublicationPageSize, pubs.length)} of {pubs.length} publications
+                  </p>
+                  <div data-profile-publication-list>
                   {years.map((year) => (
-                    <div class="mb-6">
+                    <div
+                      class="mb-6"
+                      data-profile-year-group
+                      hidden={!byYear.get(year)!.some((publication) => firstProfilePublicationPage.has(publication))}
+                    >
                       <p class="mb-2 text-xs tracking-wide text-cloud-400">{year || "Undated"}</p>
                       {byYear.get(year)!.map((p) => (
-                        <div class="flex items-start justify-between gap-4 border-t border-line py-3">
+                        <div
+                          class="flex items-start justify-between gap-4 border-t border-line py-3"
+                          data-profile-publication
+                          hidden={!firstProfilePublicationPage.has(p)}
+                        >
                           <div>
                             <p class="leading-6 text-ink">{p.title}</p>
                             <p class="text-sm text-muted">
@@ -610,6 +630,35 @@ export const prerender = true;
                       ))}
                     </div>
                   ))}
+                  </div>
+
+                  <nav
+                    class="publication-pagination"
+                    aria-label={`${person.name} publication pages`}
+                    data-profile-publication-pagination
+                    hidden={profilePublicationPageCount <= 1}
+                  >
+                    <button type="button" class="publication-page-direction" data-profile-page-previous disabled>
+                      <span aria-hidden="true">←</span> Previous
+                    </button>
+                    <div class="publication-page-numbers">
+                      {Array.from({ length: profilePublicationPageCount }, (_, index) => index + 1).map((page) => (
+                        <button
+                          type="button"
+                          class:list={["publication-page-number", { "is-active": page === 1 }]}
+                          data-profile-page-number={String(page)}
+                          hidden={page > 3 && page < profilePublicationPageCount}
+                          aria-current={page === 1 ? "page" : undefined}
+                          aria-label={`Page ${page}`}
+                        >
+                          {page}
+                        </button>
+                      ))}
+                    </div>
+                    <button type="button" class="publication-page-direction" data-profile-page-next>
+                      Next <span aria-hidden="true">→</span>
+                    </button>
+                  </nav>
                 </div>
               )
             }
@@ -629,4 +678,60 @@ export const prerender = true;
       </div>
     </div>
   </section>
+
+  <script>
+    const publicationSection = document.querySelector<HTMLElement>("[data-profile-publications]");
+
+    if (publicationSection) {
+      const publications = [...publicationSection.querySelectorAll<HTMLElement>("[data-profile-publication]")];
+      const yearGroups = [...publicationSection.querySelectorAll<HTMLElement>("[data-profile-year-group]")];
+      const count = publicationSection.querySelector<HTMLElement>("[data-profile-publication-count]");
+      const pagination = publicationSection.querySelector<HTMLElement>("[data-profile-publication-pagination]");
+      const pageButtons = [...publicationSection.querySelectorAll<HTMLButtonElement>("[data-profile-page-number]")];
+      const previousButton = publicationSection.querySelector<HTMLButtonElement>("[data-profile-page-previous]");
+      const nextButton = publicationSection.querySelector<HTMLButtonElement>("[data-profile-page-next]");
+      const publicationList = publicationSection.querySelector<HTMLElement>("[data-profile-publication-list]");
+      const pageSize = 20;
+      const pageCount = Math.max(1, Math.ceil(publications.length / pageSize));
+      let currentPage = 1;
+
+      const showPage = (page: number, moveFocus = false) => {
+        currentPage = Math.min(Math.max(page, 1), pageCount);
+        const firstIndex = (currentPage - 1) * pageSize;
+        const lastIndex = Math.min(firstIndex + pageSize, publications.length);
+
+        publications.forEach((publication, index) => {
+          publication.hidden = index < firstIndex || index >= lastIndex;
+        });
+        yearGroups.forEach((group) => {
+          group.hidden = !group.querySelector("[data-profile-publication]:not([hidden])");
+        });
+
+        if (count) count.textContent = `Showing ${firstIndex + 1}–${lastIndex} of ${publications.length} publications`;
+        if (pagination) pagination.hidden = publications.length <= pageSize;
+        if (previousButton) previousButton.disabled = currentPage === 1;
+        if (nextButton) nextButton.disabled = currentPage === pageCount;
+        pageButtons.forEach((button) => {
+          const page = Number(button.dataset.profilePageNumber);
+          const isActive = page === currentPage;
+          const isUsefulPage =
+            page === 1 ||
+            page === pageCount ||
+            Math.abs(page - currentPage) <= 1;
+          button.hidden = !isUsefulPage;
+          button.classList.toggle("is-active", isActive);
+          if (isActive) button.setAttribute("aria-current", "page");
+          else button.removeAttribute("aria-current");
+        });
+
+        if (moveFocus) publicationList?.scrollIntoView({ behavior: "smooth", block: "start" });
+      };
+
+      pageButtons.forEach((button) => button.addEventListener("click", () => {
+        showPage(Number(button.dataset.profilePageNumber), true);
+      }));
+      previousButton?.addEventListener("click", () => showPage(currentPage - 1, true));
+      nextButton?.addEventListener("click", () => showPage(currentPage + 1, true));
+    }
+  </script>
 </Layout>

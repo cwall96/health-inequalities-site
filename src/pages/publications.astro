@@ -127,6 +127,19 @@ const years = [...byYear.keys()].sort((a, b) => b - a);
 const journals = [...new Set(pubs.map((p) => p.venue.trim()).filter(Boolean))]
   .sort((a, b) => a.localeCompare(b));
 
+const publicationPageSize = 40;
+const publicationPageCount = Math.ceil(pubs.length / publicationPageSize);
+const firstPublicationPage = new Set(pubs.slice(0, publicationPageSize));
+const publicationPageGroupStart = (page: number) =>
+  page <= 5 ? 1 : 6 + Math.floor((page - 6) / 6) * 6;
+const publicationPageGroups: Array<{ start: number; end: number }> = [];
+if (publicationPageCount > 0) {
+  publicationPageGroups.push({ start: 1, end: Math.min(5, publicationPageCount) });
+  for (let start = 6; start <= publicationPageCount; start += 6) {
+    publicationPageGroups.push({ start, end: Math.min(start + 5, publicationPageCount) });
+  }
+}
+
 export const prerender = true;
 ---
 
@@ -147,15 +160,6 @@ export const prerender = true;
             </p>
             <h2 id="publication-spotlight-title">{spotlightPublication.title}</h2>
             <p class="publication-spotlight-summary">{spotlightSummary}</p>
-            {spotlightPublication.authors && (
-              <p class="publication-spotlight-authors">{spotlightPublication.authors}</p>
-            )}
-            {spotlightAbstract && (
-              <div class="publication-spotlight-abstract">
-                <h3>Abstract</h3>
-                <p>{spotlightAbstract}</p>
-              </div>
-            )}
             {((spotlightPublication.teamMembers?.length ?? 0) > 0 ||
               (spotlightPublication.researchThemes?.length ?? 0) > 0) && (
               <div class="publication-spotlight-tags">
@@ -216,6 +220,13 @@ export const prerender = true;
               )}
             </dl>
           </aside>
+
+          {spotlightAbstract && (
+            <div class="publication-spotlight-abstract">
+              <h3>Abstract</h3>
+              <p>{spotlightAbstract}</p>
+            </div>
+          )}
         </article>
       )}
 
@@ -264,17 +275,65 @@ export const prerender = true;
             </form>
 
             <p class="mt-5 text-sm text-muted" aria-live="polite" data-publication-count>
-              Showing {pubs.length} publication{pubs.length === 1 ? "" : "s"}
+              Showing 1–{Math.min(publicationPageSize, pubs.length)} of {pubs.length} publications
             </p>
 
-            <div class="mt-8 max-w-4xl">
+            <nav
+              class="publication-pagination publication-pagination-top"
+              aria-label="Publication pages above results"
+              data-publication-pagination
+              hidden={publicationPageCount <= 1}
+            >
+              <button type="button" class="publication-page-direction" data-page-previous disabled>
+                <span aria-hidden="true">←</span> Previous
+              </button>
+              <div class="publication-page-numbers">
+                {Array.from({ length: publicationPageCount }, (_, index) => index + 1).map((page) => (
+                  <button
+                    type="button"
+                    class:list={["publication-page-number", { "is-active": page === 1 }]}
+                    data-page-number={String(page)}
+                    data-page-group-start={String(publicationPageGroupStart(page))}
+                    style={`order: ${page}`}
+                    hidden={publicationPageGroupStart(page) !== 1}
+                    aria-current={page === 1 ? "page" : undefined}
+                    aria-label={`Page ${page}`}
+                  >
+                    {page}
+                  </button>
+                ))}
+                {publicationPageGroups.map((group) => (
+                  <button
+                    type="button"
+                    class="publication-page-range"
+                    data-page-group={String(group.start)}
+                    data-page-group-end={String(group.end)}
+                    style={`order: ${group.start}`}
+                    hidden={group.start === 1}
+                    aria-label={`Show pages ${group.start} to ${group.end}`}
+                  >
+                    {group.start}–{group.end}
+                  </button>
+                ))}
+              </div>
+              <button type="button" class="publication-page-direction" data-page-next>
+                Next <span aria-hidden="true">→</span>
+              </button>
+            </nav>
+
+            <div class="publication-list mt-8 max-w-4xl">
             {years.map((year) => (
-              <div class="mb-8" data-year-group>
+              <div
+                class="mb-8"
+                data-year-group
+                hidden={!byYear.get(year)!.some((publication) => firstPublicationPage.has(publication))}
+              >
                 <p class="mb-2 text-xs tracking-wide text-cloud-400">{year || "Undated"}</p>
                 {byYear.get(year)!.map((p) => (
                   <article
                     class="flex items-start justify-between gap-4 border-t border-line py-4"
                     data-publication
+                    hidden={!firstPublicationPage.has(p)}
                     data-year={String(p.year ?? 0)}
                     data-team-members={JSON.stringify(p.teamMembers ?? [])}
                     data-themes={JSON.stringify(p.researchThemes ?? [])}
@@ -310,6 +369,49 @@ export const prerender = true;
             ))}
             </div>
 
+            <nav
+              class="publication-pagination publication-pagination-bottom"
+              aria-label="Publication pages below results"
+              data-publication-pagination
+              hidden={publicationPageCount <= 1}
+            >
+              <button type="button" class="publication-page-direction" data-page-previous disabled>
+                <span aria-hidden="true">←</span> Previous
+              </button>
+              <div class="publication-page-numbers">
+                {Array.from({ length: publicationPageCount }, (_, index) => index + 1).map((page) => (
+                  <button
+                    type="button"
+                    class:list={["publication-page-number", { "is-active": page === 1 }]}
+                    data-page-number={String(page)}
+                    data-page-group-start={String(publicationPageGroupStart(page))}
+                    style={`order: ${page}`}
+                    hidden={publicationPageGroupStart(page) !== 1}
+                    aria-current={page === 1 ? "page" : undefined}
+                    aria-label={`Page ${page}`}
+                  >
+                    {page}
+                  </button>
+                ))}
+                {publicationPageGroups.map((group) => (
+                  <button
+                    type="button"
+                    class="publication-page-range"
+                    data-page-group={String(group.start)}
+                    data-page-group-end={String(group.end)}
+                    style={`order: ${group.start}`}
+                    hidden={group.start === 1}
+                    aria-label={`Show pages ${group.start} to ${group.end}`}
+                  >
+                    {group.start}–{group.end}
+                  </button>
+                ))}
+              </div>
+              <button type="button" class="publication-page-direction" data-page-next>
+                Next <span aria-hidden="true">→</span>
+              </button>
+            </nav>
+
             <p class="filter-empty" data-filter-empty hidden>
               No publications match those filters. Try clearing one or more selections.
             </p>
@@ -329,41 +431,123 @@ export const prerender = true;
       const count = filterPanel.querySelector<HTMLElement>("[data-publication-count]");
       const empty = filterPanel.querySelector<HTMLElement>("[data-filter-empty]");
       const reset = filterPanel.querySelector<HTMLButtonElement>("[data-filter-reset]");
+      const paginations = [...filterPanel.querySelectorAll<HTMLElement>("[data-publication-pagination]")];
+      const pageButtons = [...filterPanel.querySelectorAll<HTMLButtonElement>("[data-page-number]")];
+      const pageRangeButtons = [...filterPanel.querySelectorAll<HTMLButtonElement>("[data-page-group]")];
+      const previousButtons = [...filterPanel.querySelectorAll<HTMLButtonElement>("[data-page-previous]")];
+      const nextButtons = [...filterPanel.querySelectorAll<HTMLButtonElement>("[data-page-next]")];
+      const publicationList = filterPanel.querySelector<HTMLElement>(".publication-list");
+      const pageSize = 40;
+      let currentPage = 1;
+      let expandedGroupStart = 1;
 
-      const applyFilters = () => {
+      const groupStartForPage = (page: number) =>
+        page <= 5 ? 1 : 6 + Math.floor((page - 6) / 6) * 6;
+
+      const applyFilters = (resetPage = false, moveFocus = false) => {
+        if (resetPage) {
+          currentPage = 1;
+          expandedGroupStart = 1;
+        }
         const year = filterPanel.querySelector<HTMLSelectElement>("[data-filter='year']")?.value ?? "";
         const person = filterPanel.querySelector<HTMLSelectElement>("[data-filter='person']")?.value ?? "";
         const theme = filterPanel.querySelector<HTMLSelectElement>("[data-filter='theme']")?.value ?? "";
         const journal = filterPanel.querySelector<HTMLInputElement>("[data-filter='journal']")?.value.trim().toLowerCase() ?? "";
-        let visible = 0;
-
-        publications.forEach((publication) => {
+        const matches = publications.filter((publication) => {
           const teamMembers = JSON.parse(publication.dataset.teamMembers ?? "[]") as string[];
           const themes = JSON.parse(publication.dataset.themes ?? "[]") as string[];
-          const matches =
+          return (
             (!year || publication.dataset.year === year) &&
             (!person || teamMembers.includes(person)) &&
             (!theme || themes.includes(theme)) &&
-            (!journal || publication.dataset.journal?.includes(journal));
+            (!journal || publication.dataset.journal?.includes(journal))
+          );
+        });
 
-          publication.hidden = !matches;
-          if (matches) visible += 1;
+        const pageCount = Math.max(1, Math.ceil(matches.length / pageSize));
+        currentPage = Math.min(currentPage, pageCount);
+        if (expandedGroupStart > pageCount) {
+          expandedGroupStart = groupStartForPage(currentPage);
+        }
+        const firstIndex = (currentPage - 1) * pageSize;
+        const visiblePublications = new Set(matches.slice(firstIndex, firstIndex + pageSize));
+        publications.forEach((publication) => {
+          publication.hidden = !visiblePublications.has(publication);
         });
 
         yearGroups.forEach((group) => {
           group.hidden = !group.querySelector("[data-publication]:not([hidden])");
         });
 
-        if (count) count.textContent = `Showing ${visible} publication${visible === 1 ? "" : "s"}`;
-        if (empty) empty.hidden = visible !== 0;
+        if (count) {
+          const firstShown = matches.length === 0 ? 0 : firstIndex + 1;
+          const lastShown = Math.min(firstIndex + pageSize, matches.length);
+          count.textContent = matches.length === 0
+            ? "Showing 0 publications"
+            : `Showing ${firstShown}–${lastShown} of ${matches.length} publications`;
+        }
+        if (empty) empty.hidden = matches.length !== 0;
+        paginations.forEach((pagination) => {
+          pagination.hidden = matches.length <= pageSize;
+        });
+        previousButtons.forEach((button) => {
+          button.disabled = currentPage === 1;
+        });
+        nextButtons.forEach((button) => {
+          button.disabled = currentPage === pageCount;
+        });
+
+        pageButtons.forEach((button) => {
+          const page = Number(button.dataset.pageNumber);
+          const isActive = page === currentPage;
+          const groupStart = Number(button.dataset.pageGroupStart);
+          button.hidden = page > pageCount || groupStart !== expandedGroupStart;
+          button.classList.toggle("is-active", isActive);
+          if (isActive) button.setAttribute("aria-current", "page");
+          else button.removeAttribute("aria-current");
+        });
+
+        pageRangeButtons.forEach((button) => {
+          const groupStart = Number(button.dataset.pageGroup);
+          const originalEnd = Number(button.dataset.pageGroupEnd);
+          const groupEnd = Math.min(originalEnd, pageCount);
+          button.hidden = groupStart > pageCount || groupStart === expandedGroupStart;
+          button.textContent = groupStart === groupEnd
+            ? String(groupStart)
+            : `${groupStart}–${groupEnd}`;
+          button.setAttribute("aria-label", `Show pages ${groupStart} to ${groupEnd}`);
+        });
+
+        if (moveFocus) publicationList?.scrollIntoView({ behavior: "smooth", block: "start" });
       };
 
-      controls.forEach((control) => control.addEventListener("input", applyFilters));
+      controls.forEach((control) => control.addEventListener("input", () => applyFilters(true)));
       reset?.addEventListener("click", () => {
         controls.forEach((control) => (control.value = ""));
-        applyFilters();
+        applyFilters(true);
         controls[0]?.focus();
       });
+
+      pageButtons.forEach((button) => button.addEventListener("click", () => {
+        currentPage = Number(button.dataset.pageNumber);
+        expandedGroupStart = groupStartForPage(currentPage);
+        applyFilters(false, true);
+      }));
+      pageRangeButtons.forEach((button) => button.addEventListener("click", () => {
+        expandedGroupStart = Number(button.dataset.pageGroup);
+        currentPage = expandedGroupStart;
+        applyFilters(false, true);
+      }));
+      previousButtons.forEach((button) => button.addEventListener("click", () => {
+        currentPage = Math.max(1, currentPage - 1);
+        expandedGroupStart = groupStartForPage(currentPage);
+        applyFilters(false, true);
+      }));
+      nextButtons.forEach((button) => button.addEventListener("click", () => {
+        currentPage += 1;
+        expandedGroupStart = groupStartForPage(currentPage);
+        applyFilters(false, true);
+      }));
     }
   </script>
 </Layout>

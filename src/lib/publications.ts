@@ -18,6 +18,8 @@ const KEEP_TYPES = new Set([
   "article", "review", "book-chapter", "book", "report", "preprint", "dissertation",
 ]);
 
+const publicationRequestCache = new Map<string, Promise<Pub[]>>();
+
 export type Pub = {
   title: string;
   year: number | null;
@@ -223,7 +225,16 @@ async function worksForOpenAlexAuthor(id: string): Promise<Pub[]> {
 }
 
 async function worksFor(id: string): Promise<Pub[]> {
-  return isOrcid(id) ? worksForOrcid(bareOrcid(id)) : worksForOpenAlexAuthor(id);
+  const cacheKey = id.trim().toLowerCase();
+  const cached = publicationRequestCache.get(cacheKey);
+  if (cached) return cached;
+
+  const request = isOrcid(id)
+    ? worksForOrcid(bareOrcid(id))
+    : worksForOpenAlexAuthor(id);
+  publicationRequestCache.set(cacheKey, request);
+
+  return request;
 }
 
 /* ---------- aggregate the whole team ---------- */
