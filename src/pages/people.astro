@@ -98,7 +98,7 @@ export const prerender = true;
         ) : (
           <>
             <!-- Right-aligned page introduction -->
-<div class="page-intro page-intro-burgundy ml-auto max-w-2xl text-right">
+<div class="page-intro page-intro-burgundy ml-auto max-w-2xl text-right" data-reveal>
   <p class="eyebrow">The team</p>
   <h1 class="mt-3">Meet the team</h1>
 
@@ -117,7 +117,7 @@ export const prerender = true;
                     <div
                       class="grid gap-7 lg:grid-cols-[10rem_minmax(0,1fr)] lg:gap-10"
                     >
-                      <div>
+                      <div data-reveal>
                         <h2
                           id="team-lead-heading"
                           class="text-2xl text-ink"
@@ -148,6 +148,7 @@ export const prerender = true;
                         <!-- Ridley Building picture card -->
                         <div
                           class="h-full overflow-hidden rounded-2xl border border-line bg-white shadow-card lg:col-span-3"
+                          data-reveal-row
                         >
                           <img
                             src="/images/ridley.png"
@@ -187,7 +188,7 @@ export const prerender = true;
                       <div
                         class="grid gap-7 lg:grid-cols-[10rem_minmax(0,1fr)] lg:gap-10"
                       >
-                        <div>
+                        <div data-reveal>
                           <h2
                             id={`${group.value}-heading`}
                             class="text-2xl text-ink"

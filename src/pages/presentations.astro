@@ -51,7 +51,7 @@ export const prerender = true;
 <Layout title="Engagement and Impact — Health Inequalities Team">
   <section class="section page-intro-section">
     <div class="mx-auto w-full max-w-7xl px-6">
-      <div class="page-intro presentation-page-intro ml-auto max-w-2xl text-right">
+      <div class="page-intro presentation-page-intro ml-auto max-w-2xl text-right" data-reveal>
         <h1 class="mt-3">Engagement &amp; Impact</h1>
 
         <p class="page-intro-copy mt-4 text-lg leading-8">
@@ -76,7 +76,7 @@ export const prerender = true;
 
       {impacts.length > 0 && (
         <section id="public-policy-impact" class="engagement-section impact-feature-section mt-14">
-          <div class="engagement-section-heading">
+          <div class="engagement-section-heading" data-reveal>
             <span class="engagement-section-icon impact-section-icon" aria-hidden="true">
               <svg viewBox="0 0 32 32">
                 <path d="M6 25V14m8 11V9m8 16V5" />
@@ -95,7 +95,7 @@ export const prerender = true;
 
           <div class="impact-story-grid mt-7">
             {impacts.map((impact, index) => (
-              <article class="impact-story-card" id={`impact-${impact.slug}`}>
+              <article class="impact-story-card" id={`impact-${impact.slug}`} data-reveal-row>
                 <div class="impact-story-media">
                   {impact.entry.image ? (
                     <img src={impact.entry.image} alt="" class="impact-story-image" />
@@ -151,7 +151,7 @@ export const prerender = true;
       {recognition.length > 0 && (
         <section id="awards-recognition" class="recognition-feature-section recognition-full-width recognition-priority-section">
           <div class="container-page">
-            <div class="engagement-section-heading">
+            <div class="engagement-section-heading" data-reveal>
               <span class="engagement-section-icon recognition-section-icon" aria-hidden="true">
                 <svg viewBox="0 0 32 32">
                   <path d="M10 4h12v7a6 6 0 0 1-12 0V4Z" />
@@ -169,7 +169,7 @@ export const prerender = true;
 
             <div class="recognition-list mt-7">
               {recognition.map((item, index) => (
-                <article class="recognition-item" id={`award-${item.slug}`}>
+                <article class="recognition-item" id={`award-${item.slug}`} data-reveal-row>
                   <div class="recognition-card-top">
                     <span class={`recognition-icon recognition-icon-${(index % 3) + 1}`} aria-hidden="true">
                       {index % 3 === 0 ? (
@@ -224,10 +224,12 @@ export const prerender = true;
         <div class="engagement-sections">
           {sharingItems.length > 0 && (
             <section id="sharing-our-research" class="engagement-section" data-output-section>
+              <div data-reveal>
               <h2>Sharing our research</h2>
               <p class="mt-4 max-w-2xl leading-7 text-muted">
                 Presentations and posters through which the team shares emerging methods, findings and ideas.
               </p>
+              </div>
 
               <div class="engagement-card-grid mt-9">
                 {sharingItems.map((item) => (
@@ -249,10 +251,12 @@ export const prerender = true;
 
           {mediaItems.length > 0 && (
             <section id="media-coverage" class="engagement-section" data-output-section>
+              <div data-reveal>
               <h2>Media coverage</h2>
               <p class="mt-4 max-w-2xl leading-7 text-muted">
                 Selected media contributions and coverage involving members of the Health Inequalities Team.
               </p>
+              </div>
 
               <div class="engagement-card-grid mt-9">
                 {mediaItems.map((item) => (
@@ -275,7 +279,7 @@ export const prerender = true;
         </div>
 
         {items.length > 0 && (
-          <aside class="output-year-filter" aria-labelledby="output-year-heading">
+          <aside class="output-year-filter" aria-labelledby="output-year-heading" data-reveal>
             <p class="eyebrow">Filter the gallery</p>
             <h2 id="output-year-heading" class="mt-2 text-xl">Output year</h2>
 

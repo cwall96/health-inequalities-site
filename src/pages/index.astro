@@ -190,41 +190,53 @@ export const prerender = true;
   aria-labelledby="highlight-heading"
   data-reveal
 >
-  <h2
-    id="highlight-heading"
-    class="text-2xl text-navy-900"
-  >
-    {highlightHeading}
-  </h2>
+  <div class="highlight-heading">
+    <span class="highlight-heading-icon" aria-hidden="true">
+      <i class="ti ti-sparkles"></i>
+    </span>
+
+    <div>
+      <p class="highlight-kicker">Team snapshot</p>
+      <h2 id="highlight-heading">
+        {highlightHeading}
+      </h2>
+    </div>
+  </div>
 
   <div class="highlight-stats">
     <div class="highlight-stat">
-      <strong data-count-up={memberCount}>
-        {formatNumber(memberCount)}
-      </strong>
-
-      <span>
-        team members
+      <span class="highlight-stat-icon" aria-hidden="true">
+        <i class="ti ti-users"></i>
+      </span>
+      <span class="highlight-stat-copy">
+        <strong data-count-up={memberCount}>
+          {formatNumber(memberCount)}
+        </strong>
+        <span>team members</span>
       </span>
     </div>
 
     <div class="highlight-stat">
-      <strong data-count-up={publicationCount}>
-        {formatNumber(publicationCount)}
-      </strong>
-
-      <span>
-        publications
+      <span class="highlight-stat-icon" aria-hidden="true">
+        <i class="ti ti-books"></i>
+      </span>
+      <span class="highlight-stat-copy">
+        <strong data-count-up={publicationCount}>
+          {formatNumber(publicationCount)}
+        </strong>
+        <span>publications</span>
       </span>
     </div>
 
     <div class="highlight-stat">
-      <strong data-count-up={citationCount}>
-        {formatNumber(citationCount)}
-      </strong>
-
-      <span>
-        citations
+      <span class="highlight-stat-icon" aria-hidden="true">
+        <i class="ti ti-quote"></i>
+      </span>
+      <span class="highlight-stat-copy">
+        <strong data-count-up={citationCount}>
+          {formatNumber(citationCount)}
+        </strong>
+        <span>citations</span>
       </span>
     </div>
   </div>
@@ -235,18 +247,24 @@ export const prerender = true;
 
   {latestNews.length > 0 && (
     <div class="highlight-news">
-      <h3>What's New?</h3>
+      <h3>
+        <i class="ti ti-bolt" aria-hidden="true"></i>
+        What's New?
+      </h3>
 
       <ul>
         {latestNews.map((post) => (
           <li>
             <a href={`/news/${post.slug}`}>
-              <span>{post.entry.title}</span>
-              {post.entry.publishedDate && (
-                <time datetime={post.entry.publishedDate}>
-                  {formatNewsDate(post.entry.publishedDate)}
-                </time>
-              )}
+              <span class="highlight-news-copy">
+                <span>{post.entry.title}</span>
+                {post.entry.publishedDate && (
+                  <time datetime={post.entry.publishedDate}>
+                    {formatNewsDate(post.entry.publishedDate)}
+                  </time>
+                )}
+              </span>
+              <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
             </a>
           </li>
         ))}
@@ -443,35 +461,6 @@ export const prerender = true;
     counters.forEach(animateCounter);
   }
 
-  const revealItems =
-    document.querySelectorAll<HTMLElement>("[data-reveal]");
-
-  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
-    revealItems.forEach((item) => {
-      item.classList.add("is-revealed");
-    });
-  } else {
-    document.documentElement.classList.add("has-scroll-reveal");
-
-    const revealObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-
-          entry.target.classList.add("is-revealed");
-          revealObserver.unobserve(entry.target);
-        });
-      },
-      {
-        threshold: 0.12,
-        rootMargin: "0px 0px -10% 0px",
-      }
-    );
-
-    revealItems.forEach((item) => {
-      revealObserver.observe(item);
-    });
-  }
 </script>
 
   </div>

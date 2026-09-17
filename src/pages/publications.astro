@@ -115,6 +115,23 @@ const spotlightAbstract =
   settings?.featuredPublicationAbstract?.trim() ||
   spotlightPublication?.abstract?.trim() ||
   "";
+const spotlightTeamMembers = (spotlightPublication?.teamMembers ?? []).flatMap(
+  (slug) => {
+    const name = teamBySlug.get(slug);
+    return name ? [{ slug, name }] : [];
+  }
+);
+const spotlightTeamNames = new Set(
+  spotlightTeamMembers.map((person) => person.name.trim().toLocaleLowerCase("en-GB"))
+);
+const spotlightOtherAuthors = (spotlightPublication?.authors ?? "")
+  .split(",")
+  .map((author) => author.trim())
+  .filter(
+    (author) =>
+      author && !spotlightTeamNames.has(author.toLocaleLowerCase("en-GB"))
+  )
+  .join(", ");
 
 const byYear = new Map<number, Pub[]>();
 for (const p of pubs) {
@@ -160,13 +177,8 @@ export const prerender = true;
             </p>
             <h2 id="publication-spotlight-title">{spotlightPublication.title}</h2>
             <p class="publication-spotlight-summary">{spotlightSummary}</p>
-            {((spotlightPublication.teamMembers?.length ?? 0) > 0 ||
-              (spotlightPublication.researchThemes?.length ?? 0) > 0) && (
+            {(spotlightPublication.researchThemes?.length ?? 0) > 0 && (
               <div class="publication-spotlight-tags">
-                {(spotlightPublication.teamMembers ?? []).map((slug) => {
-                  const name = teamBySlug.get(slug);
-                  return name ? <a href={`/people/${slug}`}>{name}</a> : null;
-                })}
                 {(spotlightPublication.researchThemes ?? []).map((slug) => {
                   const name = themeBySlug.get(slug);
                   return name ? <span>{name}</span> : null;
@@ -200,6 +212,21 @@ export const prerender = true;
               </div>
             )}
             <dl>
+              {(spotlightTeamMembers.length > 0 || spotlightOtherAuthors) && (
+                <div class="publication-spotlight-authors-row">
+                  <dt>Authors</dt>
+                  <dd>
+                    <span class="publication-spotlight-author-list">
+                      {spotlightTeamMembers.map((person) => (
+                        <a href={`/people/${person.slug}`}>{person.name}</a>
+                      ))}
+                      {spotlightOtherAuthors && (
+                        <span>{spotlightOtherAuthors}</span>
+                      )}
+                    </span>
+                  </dd>
+                </div>
+              )}
               {spotlightPublication.year && (
                 <div>
                   <dt>Published</dt>

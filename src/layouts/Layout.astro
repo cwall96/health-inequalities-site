@@ -39,5 +39,67 @@ const {
       <slot />
     </main>
     <Footer />
+
+    <script>
+      const revealItems =
+        document.querySelectorAll<HTMLElement>("[data-reveal]");
+      const revealRowItems =
+        document.querySelectorAll<HTMLElement>("[data-reveal-row]");
+      const revealReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+
+      if (revealReducedMotion || !("IntersectionObserver" in window)) {
+        revealItems.forEach((item) => item.classList.add("is-revealed"));
+        revealRowItems.forEach((item) => item.classList.add("is-revealed"));
+      } else if (revealItems.length > 0 || revealRowItems.length > 0) {
+        document.documentElement.classList.add("has-scroll-reveal");
+
+        const revealObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+
+              entry.target.classList.add("is-revealed");
+              revealObserver.unobserve(entry.target);
+            });
+          },
+          {
+            threshold: 0.1,
+            rootMargin: "0px 0px -7% 0px",
+          }
+        );
+
+        revealItems.forEach((item) => revealObserver.observe(item));
+
+        const rowRevealObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+
+              const item = entry.target as HTMLElement;
+              const rowTop = item.offsetTop;
+              const siblings = item.parentElement
+                ? [...item.parentElement.querySelectorAll<HTMLElement>("[data-reveal-row]")]
+                : [item];
+              const row = siblings.filter(
+                (sibling) => Math.abs(sibling.offsetTop - rowTop) < 3
+              );
+
+              row.forEach((rowItem) => {
+                rowItem.classList.add("is-revealed");
+                rowRevealObserver.unobserve(rowItem);
+              });
+            });
+          },
+          {
+            threshold: 0.08,
+            rootMargin: "0px 0px -5% 0px",
+          }
+        );
+
+        revealRowItems.forEach((item) => rowRevealObserver.observe(item));
+      }
+    </script>
   </body>
 </html>

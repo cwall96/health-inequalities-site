@@ -252,6 +252,7 @@ const statusLabel = {
     const themeButtons = [...document.querySelectorAll<HTMLButtonElement>("[data-theme-filter]")];
     const studyCards = [...document.querySelectorAll<HTMLElement>("[data-study-card]")];
     const emptyMessage = document.querySelector<HTMLElement>("[data-study-filter-empty]");
+    const studyReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     themeButtons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -262,7 +263,23 @@ const statusLabel = {
           const cardThemes = JSON.parse(card.dataset.studyThemes ?? "[]") as string[];
           const matches = !selectedTheme || cardThemes.includes(selectedTheme);
           card.hidden = !matches;
-          if (matches) visible += 1;
+
+          if (matches) {
+            card.classList.remove("is-filter-entering");
+            card.style.setProperty("--study-filter-index", String(visible));
+
+            if (!studyReducedMotion) {
+              void card.offsetWidth;
+              card.classList.add("is-filter-entering");
+              card.addEventListener(
+                "animationend",
+                () => card.classList.remove("is-filter-entering"),
+                { once: true }
+              );
+            }
+
+            visible += 1;
+          }
         });
 
         themeButtons.forEach((themeButton) => {
