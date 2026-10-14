@@ -2,14 +2,38 @@
   "name": "Viviana Albani",
   "role": "Senior Research Associate",
   "category": "staff",
+  "photo": "/images/team/viviana-albani/photo.jpg",
+  "email": "viviana.albani@newcastle.ac.uk",
   "researchKeywords": "quantitative health inequalities, vulnerable populations, children and older people, diet and health",
   "bio": "Viviana Albani is a Research Associate in the Public Health and Health Inequalities theme of the Population Health Sciences Institute. Her background includes a PhD on children's and adolescents' fruit and vegetable consumption, an MSc in Food Economics and Marketing, and an undergraduate degree in Economics.",
   "researchFocus": "Viviana applies quantitative methods to describe, explain and reduce health inequalities. She is particularly interested in vulnerable population groups, including children and the very old, and in biomarkers and large health and lifestyle datasets.",
+  "researchActivity": [],
+  "professionalRoles": [
+    {
+      "title": "Equality, Diversity and Inclusion Deputy Co-Lead",
+      "organisation": "Population Health Sciences Institute, Newcastle University",
+      "type": "leadership"
+    },
+    {
+      "title": "Member",
+      "organisation": "Fuse, the Centre for Translational Research in Public Health",
+      "type": "research"
+    },
+    {
+      "title": "Programme Coordinator",
+      "organisation": "Health Inequalities Programme NIHR SPHR",
+      "type": "leadership"
+    }
+  ],
+  "teaching": [],
+  "supervision": [],
   "methodsExpertise": [
     "Quantitative methods",
     "Large dataset analysis",
     "Biomarkers in social research",
     "Food economics"
   ],
+  "orcid": "0000-0001-9584-7631",
+  "identifier": "0000-0001-9584-7631",
   "order": 0
 }
