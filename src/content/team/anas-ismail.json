@@ -1,11 +1,25 @@
 {
   "name": "Anas Ismail",
+  "displayName": "Dr Anas Ismail, MD, MSc",
   "role": "PhD Student",
   "category": "phd",
+  "photo": "/images/team/anas-ismail/photo.png",
   "email": "A.M.S.Ismail2@newcastle.ac.uk",
   "researchKeywords": "Palestinian health, health systems, medical referrals, health policy",
   "bio": "Anas Ismail is a Palestinian doctor and PhD student at Newcastle University. Before beginning his PhD, he worked with the Alliance for Health Policy and Systems Research at the World Health Organization.",
   "researchFocus": "Anas's doctoral research explores the health and social impact of outside medical referrals of Palestinian patients to Egypt and Jordan.",
+  "researchActivity": [
+    {
+      "projectTitle": "Doctoral Research",
+      "teamCollaborators": [],
+      "otherCollaborators": [],
+      "year": 2025,
+      "status": "ongoing",
+      "funder": "ESRC",
+      "summary": "Explores the health and social impacts of outside medical referrals of Palestinian patients evacuated from Gaza",
+      "outputs": []
+    }
+  ],
   "professionalRoles": [
     {
       "title": "Former team member",
@@ -13,5 +27,19 @@
       "type": "research"
     }
   ],
+  "teaching": [
+    {
+      "course": "Psychology",
+      "module": "Research Methods and Data Analysis",
+      "level": "bsc",
+      "fromYear": "2026",
+      "toYear": "present"
+    }
+  ],
+  "supervision": [],
+  "methodsExpertise": [],
+  "orcid": "0000-0003-1912-660X",
+  "googleScholarUrl": "https://scholar.google.com/citations?user=wiSi1_EAAAAJ&hl=en",
+  "identifier": "0000-0003-1912-660X",
   "order": 0
 }
