@@ -9,6 +9,7 @@ export const prerender = true;
 
 const reader = createReader(process.cwd(), keystaticConfig);
 const siteContent = await reader.singletons.home.read();
+const researchThemes = siteContent?.homepageResearchThemes ?? [];
 const team = await reader.collections.team.all();
 const teamBySlug = new Map(team.map((person) => [person.slug, person.entry.name]));
 const linkedPeople = (slugs: readonly (string | null)[] = []) =>
@@ -65,11 +66,58 @@ const statusLabel = {
         Explore the Health Inequalities Team’s research programmes and studies.
       </p>
       <nav class="mt-7 flex flex-wrap gap-3" aria-label="On this page">
+        {researchThemes.length > 0 && (
+          <a class="rounded-full border border-white/40 px-4 py-2 text-white hover:bg-white/15" href="#research-themes">Research themes</a>
+        )}
         <a class="rounded-full border border-white/40 px-4 py-2 text-white hover:bg-white/15" href="#research-programmes">Research programmes</a>
         <a class="rounded-full border border-white/40 px-4 py-2 text-white hover:bg-white/15" href="#studies-heading">Studies</a>
       </nav>
     </div>
   </section>
+
+  {researchThemes.length > 0 && (
+    <section id="research-themes" class="section scroll-mt-24 bg-navy-50" aria-labelledby="research-themes-heading">
+      <div class="container-page">
+        <h2 id="research-themes-heading">Our research themes</h2>
+        <ul class="mt-8 grid gap-6 md:grid-cols-2">
+          {researchThemes.map(({ title, description, lead, leadProfile, teamMembers }, index) => {
+            const members = [...new Set(teamMembers)].flatMap((slug) => {
+              const name = slug && teamBySlug.get(slug);
+              return slug && name && slug !== leadProfile ? [{ slug, name }] : [];
+            });
+
+            return (
+              <li class="rounded-xl border border-line border-t-4 border-t-red-700 bg-white p-6 shadow-card sm:p-8">
+                <span aria-hidden="true" class="inline-flex size-11 items-center justify-center rounded-full bg-red-700 font-semibold text-white">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 class="mt-4">{title}</h3>
+                <p class="mt-3 leading-7 text-ink">{description}</p>
+                {lead && (
+                  <p class="mt-5 border-t border-line pt-4 text-sm">
+                    <strong>Lead</strong>{" · "}
+                    {leadProfile && teamBySlug.has(leadProfile) ? (
+                      <a class="text-navy-800 underline" href={`/people/${leadProfile}`}>{lead}</a>
+                    ) : lead}
+                  </p>
+                )}
+                {members.length > 0 && (
+                  <div class="mt-4">
+                    <p class="text-sm font-semibold">HIT team members</p>
+                    <ul class="mt-2 flex flex-wrap gap-2">
+                      {members.map(({ slug, name }) => (
+                        <li><a class="chip underline" href={`/people/${slug}`}>{name}</a></li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  )}
 
   <section id="research-programmes" class="section" aria-labelledby="research-programmes-heading">
     <div class="container-page">
@@ -139,7 +187,7 @@ const statusLabel = {
         Discover the studies through which we investigate and address health inequalities.
       </p>
 
-      <div id="research-themes" class="mt-8 grid scroll-mt-24 gap-4 rounded-xl bg-navy-900 p-5 sm:p-6">
+      <div id="study-theme-filters" class="mt-8 grid scroll-mt-24 gap-4 rounded-xl bg-navy-900 p-5 sm:p-6">
         <div>
           <p class="eyebrow studies-eyebrow">Research themes</p>
           <h2 class="mt-3 text-2xl text-white">Explore studies by theme</h2>
@@ -171,50 +219,53 @@ const statusLabel = {
             Studies will appear here when they are added in Keystatic.
           </p>
         ) : (
-          <div class="mt-8 divide-y divide-line" data-study-grid>
+          <div class="mt-8 space-y-5" data-study-grid>
             {studies.map((study, index) => (
               <article
                 id={`study-${study.slug}`}
-                class="scroll-mt-24 py-8"
+                class="scroll-mt-24 rounded-xl border border-line border-l-4 border-l-red-700 bg-white p-5 sm:p-7"
                 data-study-card
                 data-study-themes={JSON.stringify(study.entry.researchThemes ?? [])}
               >
-                <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-12">
+                <div class="grid items-start gap-6 md:grid-cols-[minmax(0,1fr)_12rem] lg:gap-12">
                   <div>
                     <p class="eyebrow">
                       {[statusLabel[study.entry.status], study.entry.timeframe].filter(Boolean).join(" · ")}
                     </p>
                     <h3 class="mt-3 text-3xl">{study.entry.title}</h3>
-                    <p class="mt-3 text-base leading-7 text-muted">{study.entry.summary}</p>
+                    <p class="mt-3 text-base leading-7 text-muted">{study.entry.peopleSummary || study.entry.summary}</p>
                     <div class="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted">
                       {study.entry.lead && <span>Led by {study.entry.lead}</span>}
                       {study.entry.funder && <span>Funded by {study.entry.funder}</span>}
                     </div>
-                    <aside class="study-timeline mt-6 max-w-xs" aria-labelledby={`study-progress-${study.slug}`}>
-                      <h4 id={`study-progress-${study.slug}`} class="eyebrow">Study timeline</h4>
-                      <StudyTimeline currentStage={study.entry.currentStage} />
-                    </aside>
-                  </div>
-                  <div class="max-w-3xl space-y-5">
-                    {[study.entry.whyItMatters, study.entry.approach, study.entry.contribution, study.entry.impact].map((section) => (
-                      section?.body && (
-                        <div>
-                          <h4 class="text-lg font-semibold">{section.heading}</h4>
-                          {section.body.split(/\n\s*\n/).map((paragraph) => (
-                            <p class="mt-2 whitespace-pre-line leading-7 text-ink">{paragraph}</p>
-                          ))}
-                        </div>
-                      )
-                    ))}
-                    {studyDocuments[index].length > 0 && (
-                      <div class="article">
-                        <DocumentRenderer document={studyDocuments[index]} />
+                    <details class="mt-5 rounded-lg border border-line p-4">
+                      <summary class="cursor-pointer font-semibold text-navy-900">More about {study.entry.title}</summary>
+                      <div class="mt-4 space-y-5">
+                        {[study.entry.whyItMatters, study.entry.approach, study.entry.contribution, study.entry.impact].map((section) => (
+                          section?.body && (
+                            <div>
+                              <h4 class="text-lg font-semibold">{section.heading}</h4>
+                              {section.body.split(/\n\s*\n/).map((paragraph) => (
+                                <p class="mt-2 whitespace-pre-line leading-7 text-ink">{paragraph}</p>
+                              ))}
+                            </div>
+                          )
+                        ))}
+                        {studyDocuments[index].length > 0 && (
+                          <div class="article">
+                            <DocumentRenderer document={studyDocuments[index]} />
+                          </div>
+                        )}
+                        {study.entry.externalLink && (
+                          <a class="inline-block text-navy-800 underline" href={study.entry.externalLink}>Study website</a>
+                        )}
                       </div>
-                    )}
-                    {study.entry.externalLink && (
-                      <a class="inline-block text-navy-800 underline" href={study.entry.externalLink}>Study website</a>
-                    )}
+                    </details>
                   </div>
+                  <aside class="study-timeline study-timeline-compact max-w-56" aria-labelledby={`study-progress-${study.slug}`}>
+                    <h4 id={`study-progress-${study.slug}`} class="eyebrow">Study timeline</h4>
+                    <StudyTimeline currentStage={study.entry.currentStage} />
+                  </aside>
                 </div>
               </article>
             ))}
@@ -273,3 +324,19 @@ const statusLabel = {
     });
   </script>
 </Layout>
+
+<style>
+  .study-timeline-compact {
+    padding: 0.75rem;
+    box-shadow: none;
+  }
+
+  .study-timeline-compact :global(.study-timeline-list) {
+    margin-top: 0.6rem;
+  }
+
+  .study-timeline-compact :global(.study-timeline-step:not(:last-child)) {
+    min-height: 1.5rem;
+    padding-bottom: 0.25rem;
+  }
+</style>
