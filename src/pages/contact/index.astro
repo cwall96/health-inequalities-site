@@ -1,0 +1,35 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+export const prerender = true;
+---
+<Layout title="Contact us — Health Inequalities Team">
+  <section class="section">
+    <div class="container-page max-w-3xl">
+      <h1>Contact us</h1>
+      <p class="mt-4 text-muted">
+        Use this form to contact the Health Inequalities Team about our research, collaborations or website.
+      </p>
+      <form name="hit-contact" method="POST" action="/contact/thanks/" data-netlify="true" netlify-honeypot="bot-field" class="mt-8 grid gap-5">
+        <input type="hidden" name="form-name" value="hit-contact" />
+        <p hidden><label>Leave this field blank <input name="bot-field" /></label></p>
+        <label class="grid gap-2 font-medium">
+          Name
+          <input class="rounded-md border border-line bg-white px-4 py-3" name="name" autocomplete="name" maxlength="120" required />
+        </label>
+        <label class="grid gap-2 font-medium">
+          Email address
+          <input class="rounded-md border border-line bg-white px-4 py-3" type="email" name="email" autocomplete="email" maxlength="254" required />
+        </label>
+        <label class="grid gap-2 font-medium">
+          Message
+          <textarea class="rounded-md border border-line bg-white px-4 py-3" name="message" rows="6" maxlength="5000" required></textarea>
+        </label>
+        <div><button type="submit" class="btn-primary">Send message</button></div>
+      </form>
+      <p class="mt-6 text-sm text-muted">
+        You can also email <a class="underline" href="mailto:victoria.morgan@newcastle.ac.uk">victoria.morgan@newcastle.ac.uk</a>.
+      </p>
+    </div>
+  </section>
+</Layout>

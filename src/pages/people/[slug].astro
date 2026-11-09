@@ -360,7 +360,7 @@ export const prerender = true;
                           ]}
                           aria-hidden="true"
                         ></span>
-                        <a class="person-resource-link" href={`/studies/${study.slug}`}>
+                        <a class="person-resource-link" href={`/research#study-${study.slug}`}>
                           <span>
                             <strong>{study.entry.title}</strong>
                             {study.entry.peopleSummary && (
@@ -492,8 +492,15 @@ export const prerender = true;
                   <ul class="person-compact-list">
                     {relatedAwards.map((award) => (
                       <li>
-                        <a href={`/presentations#award-${award.slug}`}><strong>{award.entry.title}</strong></a>
+                        {award.entry.link ? (
+                          <a href={award.entry.link}><strong>{award.entry.title}</strong></a>
+                        ) : (
+                          <strong>{award.entry.title}</strong>
+                        )}
                         <span>{[award.entry.awardingBody, [award.entry.month, award.entry.year].filter(Boolean).join(" ")].filter(Boolean).join(" · ")}</span>
+                        {award.entry.image && (
+                          <img src={award.entry.image} alt={award.entry.title} class="mt-3 w-full max-w-xs rounded-lg" loading="lazy" />
+                        )}
                       </li>
                     ))}
                   </ul>

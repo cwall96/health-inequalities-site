@@ -1121,6 +1121,12 @@ export default config({
           },
         }),
 
+        image: fields.image({
+          label: "Award photo",
+          directory: "public/images/recognition",
+          publicPath: "/images/recognition/",
+        }),
+
         link: fields.url({
           label: "Supporting link",
           validation: {

@@ -22,7 +22,6 @@ const themeEntries = (await reader.collections.researchThemes.all()).sort(
     (a.entry.order ?? 0) - (b.entry.order ?? 0) ||
     a.entry.name.localeCompare(b.entry.name)
 );
-const themeBySlug = new Map(themeEntries.map((theme) => [theme.slug, theme.entry.name]));
 
 const projects = (await reader.collections.projects.all()).sort(
   (a, b) =>
@@ -37,11 +36,13 @@ const projectsWithContent = await Promise.all(
   }))
 );
 
-const studies = (await reader.collections.studies.all()).sort(
+const studies = (await reader.collections.studies.all()).filter(({ slug }) => slug !== "study-2").sort(
   (a, b) =>
     (a.entry.order ?? 0) - (b.entry.order ?? 0) ||
     a.entry.title.localeCompare(b.entry.title)
 );
+
+const studyDocuments = await Promise.all(studies.map((study) => study.entry.content()));
 
 const usedThemeSlugs = new Set(
   studies.flatMap((study) => study.entry.researchThemes ?? []).filter(Boolean)
@@ -185,59 +186,43 @@ const statusLabel = {
             Studies will appear here when they are added in Keystatic.
           </p>
         ) : (
-          <div class="mt-10 grid gap-6 md:grid-cols-2" data-study-grid>
-            {studies.map((study) => {
-              const href = study.entry.externalLink || `/studies/${study.slug}`;
-              const isExternal = Boolean(study.entry.externalLink);
-              const studyThemes = (study.entry.researchThemes ?? [])
-                .filter(Boolean)
-                .flatMap((slug) => {
-                  const name = themeBySlug.get(slug);
-                  return name ? [{ slug, name }] : [];
-                });
-
-              return (
-                <a
-                  href={href}
-                  target={isExternal ? "_blank" : undefined}
-                  rel={isExternal ? "noopener noreferrer" : undefined}
-                  class="study-card group"
-                  data-study-card
-                  data-study-themes={JSON.stringify(studyThemes.map((theme) => theme.slug))}
-                >
-                  {study.entry.coverImage && (
-                    <img
-                      src={study.entry.coverImage}
-                      alt=""
-                      class="study-card-image"
-                    />
-                  )}
-
-                  <div class="study-card-content">
-                    <div class="flex flex-wrap items-center gap-3 text-xs text-navy-800">
-                      <span class="study-status">{statusLabel[study.entry.status]}</span>
-                      {study.entry.timeframe && <span>{study.entry.timeframe}</span>}
+          <div class="mt-8 divide-y divide-white/25" data-study-grid>
+            {studies.map((study, index) => (
+              <article
+                id={`study-${study.slug}`}
+                class="scroll-mt-24 py-8"
+                data-study-card
+                data-study-themes={JSON.stringify(study.entry.researchThemes ?? [])}
+              >
+                <p class="text-sm text-white/75">
+                  {[statusLabel[study.entry.status], study.entry.timeframe].filter(Boolean).join(" · ")}
+                </p>
+                <h3 class="mt-2 text-2xl text-white">{study.entry.title}</h3>
+                <p class="mt-3 max-w-3xl text-lg text-white">{study.entry.summary}</p>
+                <div class="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/85">
+                  {study.entry.lead && <span>Led by {study.entry.lead}</span>}
+                  {study.entry.funder && <span>Funded by {study.entry.funder}</span>}
+                </div>
+                {[study.entry.whyItMatters, study.entry.approach, study.entry.contribution, study.entry.impact].map((section) => (
+                  section?.body && (
+                    <div class="mt-5 max-w-3xl">
+                      <h4 class="text-white">{section.heading}</h4>
+                      {section.body.split(/\n\s*\n/).map((paragraph) => (
+                        <p class="mt-2 whitespace-pre-line leading-7 text-white/85">{paragraph}</p>
+                      ))}
                     </div>
-
-                    <h3 class="mt-4 text-xl text-navy-900">{study.entry.title}</h3>
-                    <p class="mt-3 flex-1 leading-7 text-navy-800">{study.entry.summary}</p>
-
-                    {studyThemes.length > 0 && (
-                      <div class="study-theme-tags" aria-label="Research themes">
-                        {studyThemes.map((theme) => <span>{theme.name}</span>)}
-                      </div>
-                    )}
-
-                    <span class="mt-6 inline-flex items-center gap-2 text-sm font-medium text-navy-900">
-                      View study
-                      <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M5 12h14m0 0-5-5m5 5-5 5" />
-                      </svg>
-                    </span>
+                  )
+                ))}
+                {studyDocuments[index].length > 0 && (
+                  <div class="article mt-5 max-w-3xl text-white [&_a]:text-white [&_h2]:text-white [&_p]:text-white">
+                    <DocumentRenderer document={studyDocuments[index]} />
                   </div>
-                </a>
-              );
-            })}
+                )}
+                {study.entry.externalLink && (
+                  <a class="mt-4 inline-block text-white underline" href={study.entry.externalLink}>Study website</a>
+                )}
+              </article>
+            ))}
           </div>
         )
       }
