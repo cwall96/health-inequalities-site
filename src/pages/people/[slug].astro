@@ -413,6 +413,17 @@ export const prerender = true;
                             </p>
                           )}
                           {activity.summary && <p class="person-activity-summary">{activity.summary}</p>}
+                          {activity.moreInformationUrl && /^https?:\/\//i.test(activity.moreInformationUrl) && (
+                            <p class="person-activity-summary">
+                              <a
+                                class="underline"
+                                href={activity.moreInformationUrl}
+                                aria-label={`Click for more information about ${activity.projectTitle}`}
+                              >
+                                Click for more information
+                              </a>
+                            </p>
+                          )}
                           {((activity.teamCollaborators ?? []).filter(Boolean).length > 0 ||
                             (activity.otherCollaborators ?? []).filter(Boolean).length > 0) && (
                             <div class="person-activity-collaborators">

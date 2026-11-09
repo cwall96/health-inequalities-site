@@ -491,8 +491,11 @@ export default config({
             summary: fields.text({
               label: "Summary",
               multiline: true,
-              description:
-                "Add one or two sentences describing the activity.",
+              description: "Optional. Add one or two sentences describing the study.",
+            }),
+            moreInformationUrl: fields.url({
+              label: "More information URL",
+              description: "Optional. Paste the full website address to show a ‘Click for more information’ link.",
             }),
             outputs: fields.array(
               fields.object({
