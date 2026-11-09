@@ -1,4 +1,5 @@
 ---
+import { DocumentRenderer } from "@keystatic/core/renderer";
 import { createReader } from "@keystatic/core/reader";
 import keystaticConfig from "../../keystatic.config";
 import Layout from "../layouts/Layout.astro";
@@ -93,14 +94,7 @@ const aboutHeading =
   home?.aboutHeading ||
   "Understanding and reducing health inequalities";
 
-const aboutBody =
-  home?.aboutBody ||
-  "The Health Inequalities Team is based in the Population Health Sciences Institute at Newcastle University.";
-
-const paragraphs = aboutBody
-  .split(/\n\s*\n/)
-  .map((paragraph) => paragraph.trim())
-  .filter(Boolean);
+const aboutDocument = home ? await home.aboutBody() : [];
 
 const highlightHeading =
   home?.highlightHeading ||
@@ -287,12 +281,12 @@ export const prerender = true;
           {aboutHeading}
         </h2>
 
-        <div class="mt-6 space-y-4 leading-7 text-ink">
-          {
-            paragraphs.map((paragraph) => (
-              <p>{paragraph}</p>
-            ))
-          }
+        <div class="mt-6 space-y-4 leading-7 text-ink [&_a]:underline">
+          {aboutDocument.length ? (
+            <DocumentRenderer document={aboutDocument} />
+          ) : (
+            <p>The Health Inequalities Team is based in the Population Health Sciences Institute at Newcastle University.</p>
+          )}
         </div>
 
         <div class="mt-8 flex flex-wrap gap-3">
