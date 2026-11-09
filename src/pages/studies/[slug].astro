@@ -2,6 +2,7 @@
 import { createReader } from "@keystatic/core/reader";
 import { DocumentRenderer } from "@keystatic/core/renderer";
 import keystaticConfig from "../../../keystatic.config";
+import StudyTimeline from "../../components/StudyTimeline.astro";
 import Layout from "../../layouts/Layout.astro";
 
 export const prerender = true;
@@ -76,21 +77,6 @@ const introductorySection = structuredSections.find(
 );
 const remainingSections = structuredSections.filter(
   (section) => section.id !== "why-this-study-matters"
-);
-
-const studyStages = [
-  { value: "protocol", label: "Protocol" },
-  { value: "ethical-approval", label: "Ethical approval" },
-  { value: "study-setup", label: "Study set-up" },
-  { value: "data-collection", label: "Data collection" },
-  { value: "data-analysis", label: "Data analysis" },
-  { value: "dissemination", label: "Dissemination" },
-  { value: "concluded", label: "Concluded" },
-] as const;
-
-const currentStageIndex = Math.max(
-  0,
-  studyStages.findIndex((stage) => stage.value === study?.currentStage)
 );
 
 const outputTypeLabel = {
@@ -173,23 +159,7 @@ const relatedOutputs = study?.relatedOutputs ?? [];
                 <p class="eyebrow">Research progress</p>
                 <h2 id="study-timeline-heading" class="mt-2 text-xl">Study timeline</h2>
 
-                <ol class="study-timeline-list">
-                  {studyStages.map((stage, index) => (
-                    <li
-                      class:list={[
-                        "study-timeline-step",
-                        {
-                          "is-complete": index < currentStageIndex,
-                          "is-current": index === currentStageIndex,
-                        },
-                      ]}
-                      aria-current={index === currentStageIndex ? "step" : undefined}
-                    >
-                      <span class="study-timeline-marker" aria-hidden="true"></span>
-                      <span>{stage.label}</span>
-                    </li>
-                  ))}
-                </ol>
+                <StudyTimeline currentStage={study.currentStage} />
 
                 <div class="study-related-outputs">
                   <h3>Related outputs</h3>

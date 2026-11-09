@@ -2,6 +2,7 @@
 import { createReader } from "@keystatic/core/reader";
 import { DocumentRenderer } from "@keystatic/core/renderer";
 import keystaticConfig from "../../keystatic.config";
+import StudyTimeline from "../components/StudyTimeline.astro";
 import Layout from "../layouts/Layout.astro";
 
 export const prerender = true;
@@ -197,6 +198,10 @@ const statusLabel = {
                       {study.entry.lead && <span>Led by {study.entry.lead}</span>}
                       {study.entry.funder && <span>Funded by {study.entry.funder}</span>}
                     </div>
+                    <aside class="study-timeline mt-6 max-w-xs" aria-labelledby={`study-progress-${study.slug}`}>
+                      <h4 id={`study-progress-${study.slug}`} class="eyebrow">Study timeline</h4>
+                      <StudyTimeline currentStage={study.entry.currentStage} />
+                    </aside>
                   </div>
                   <div class="max-w-3xl space-y-5">
                     {[study.entry.whyItMatters, study.entry.approach, study.entry.contribution, study.entry.impact].map((section) => (
