@@ -1,5 +1,4 @@
 ---
-import { DocumentRenderer } from "@keystatic/core/renderer";
 import { createReader } from "@keystatic/core/reader";
 import keystaticConfig from "../../keystatic.config";
 import Layout from "../layouts/Layout.astro";
@@ -94,7 +93,14 @@ const aboutHeading =
   home?.aboutHeading ||
   "Understanding and reducing health inequalities";
 
-const aboutDocument = home ? await home.aboutBody() : [];
+const aboutBody =
+  home?.aboutBody ||
+  "The Health Inequalities Team is based in the Population Health Sciences Institute at Newcastle University.";
+
+const paragraphs = aboutBody
+  .split(/\n\s*\n/)
+  .map((paragraph) => paragraph.trim())
+  .filter(Boolean);
 
 const highlightHeading =
   home?.highlightHeading ||
@@ -282,11 +288,20 @@ export const prerender = true;
         </h2>
 
         <div class="mt-6 space-y-4 leading-7 text-ink [&_a]:underline">
-          {aboutDocument.length ? (
-            <DocumentRenderer document={aboutDocument} />
-          ) : (
-            <p>The Health Inequalities Team is based in the Population Health Sciences Institute at Newcastle University.</p>
-          )}
+          {
+            paragraphs.map((paragraph) => (
+              <p>
+                {paragraph.split(/\[([^\]\n]+)\]\((https?:\/\/[^\s()]+)\)/g).map(
+                  (part, index, parts) => {
+                    if (index % 3 === 1) {
+                      return <a href={parts[index + 1]}>{part}</a>;
+                    }
+                    if (index % 3 === 0) return part;
+                  },
+                )}
+              </p>
+            ))
+          }
         </div>
 
         <div class="mt-8 flex flex-wrap gap-3">
@@ -333,7 +348,16 @@ export const prerender = true;
           <div class="inequalities-definition-copy">
             {
               splitParagraphs(inequalitiesDefinition).map((paragraph) => (
-                <p>{paragraph}</p>
+                <p>
+                {paragraph.split(/\[([^\]\n]+)\]\((https?:\/\/[^\s()]+)\)/g).map(
+                  (part, index, parts) => {
+                    if (index % 3 === 1) {
+                      return <a href={parts[index + 1]}>{part}</a>;
+                    }
+                    if (index % 3 === 0) return part;
+                  },
+                )}
+              </p>
               ))
             }
           </div>
@@ -359,7 +383,16 @@ export const prerender = true;
 
               <div class="inequalities-theory-copy">
                 {splitParagraphs(subsection.body).map((paragraph) => (
-                  <p>{paragraph}</p>
+                  <p>
+                {paragraph.split(/\[([^\]\n]+)\]\((https?:\/\/[^\s()]+)\)/g).map(
+                  (part, index, parts) => {
+                    if (index % 3 === 1) {
+                      return <a href={parts[index + 1]}>{part}</a>;
+                    }
+                    if (index % 3 === 0) return part;
+                  },
+                )}
+              </p>
                 ))}
               </div>
 
