@@ -8,17 +8,12 @@ import {
   type Pub,
 } from "../lib/publications";
 
-const researchThemes = [
-  { title: "Criminal Justice and Health", lead: "Dr Stephanie Scott" },
-  { title: "Healthcare Inequalities", lead: "Dr Sarah Sowden" },
-  { title: "Regional Health Inequalities", lead: "Professor Clare Bambra" },
-  { title: "Politics of Health", lead: "Dr Courtney McNamara" },
-];
-
 const reader = createReader(process.cwd(), keystaticConfig);
 
 const home = await reader.singletons.home.read();
 const team = await reader.collections.team.all();
+const researchThemes = home?.homepageResearchThemes ?? [];
+const teamBySlug = new Map(team.map(({ slug, entry }) => [slug, entry.name]));
 const manualEntries =
   await reader.collections.publications.all();
 const latestNews = (await reader.collections.news.all())
@@ -325,19 +320,49 @@ export const prerender = true;
     </div>
   </section>
 
-  <section class="section" aria-labelledby="research-themes-heading">
-    <div class="container-page">
-      <h2 id="research-themes-heading">Our research themes</h2>
-      <ul class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {researchThemes.map(({ title, lead }) => (
-          <li class="rounded-lg border border-line bg-white p-5">
-            <h3>{title}</h3>
-            <p class="mt-2 text-muted">Lead · {lead}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
+  {researchThemes.length > 0 && (
+    <section class="section bg-navy-50" aria-labelledby="research-themes-heading">
+      <div class="container-page">
+        <h2 id="research-themes-heading">Our research themes</h2>
+        <ul class="mt-8 grid gap-6 md:grid-cols-2">
+          {researchThemes.map(({ title, description, lead, leadProfile, teamMembers }, index) => {
+            const members = [...new Set(teamMembers)].flatMap((slug) => {
+              const name = slug && teamBySlug.get(slug);
+              return slug && name && slug !== leadProfile ? [{ slug, name }] : [];
+            });
+
+            return (
+              <li class="rounded-xl border border-line border-t-4 border-t-red-700 bg-white p-6 shadow-card sm:p-8">
+                <span aria-hidden="true" class="inline-flex size-11 items-center justify-center rounded-full bg-red-700 font-semibold text-white">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 class="mt-4">{title}</h3>
+                <p class="mt-3 leading-7 text-ink">{description}</p>
+                {lead && (
+                  <p class="mt-5 border-t border-line pt-4 text-sm">
+                    <strong>Lead</strong>{" · "}
+                    {leadProfile && teamBySlug.has(leadProfile) ? (
+                      <a class="text-navy-800 underline" href={`/people/${leadProfile}`}>{lead}</a>
+                    ) : lead}
+                  </p>
+                )}
+                {members.length > 0 && (
+                  <div class="mt-4">
+                    <p class="text-sm font-semibold">HIT team members</p>
+                    <ul class="mt-2 flex flex-wrap gap-2">
+                      {members.map(({ slug, name }) => (
+                        <li><a class="chip underline" href={`/people/${slug}`}>{name}</a></li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  )}
 
   <section
     id="what-are-health-inequalities"

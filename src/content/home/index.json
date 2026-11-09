@@ -25,6 +25,36 @@
     ]
   },
   "aboutHeading": "Understanding and reducing health inequalities",
+  "homepageResearchThemes": [
+    {
+      "title": "Criminal Justice and Health",
+      "description": "This theme examines how contact with the criminal justice system shapes health and wellbeing. It explores experiences of stigma, marginalisation and health inequalities among people and families affected by the justice system.",
+      "lead": "Dr Stephanie Scott",
+      "leadProfile": "steph-scott",
+      "teamMembers": []
+    },
+    {
+      "title": "Healthcare Inequalities",
+      "description": "This theme examines who can access healthcare and how experiences of care vary across communities. It explores how primary care and wider health services can better meet the needs of people in underserved communities.",
+      "lead": "Dr Sarah Sowden",
+      "leadProfile": "sarah-sowden",
+      "teamMembers": []
+    },
+    {
+      "title": "Regional Health Inequalities",
+      "description": "This theme investigates why health and life expectancy differ between places, including between the North and South of England. It examines how social and economic conditions shape these differences and how policy can reduce them.",
+      "lead": "Professor Clare Bambra",
+      "leadProfile": "clare-bambra",
+      "teamMembers": []
+    },
+    {
+      "title": "Politics of Health",
+      "description": "This theme investigates how political decisions and economic policies shape health and health inequalities. It examines issues such as international trade and labour markets to understand who benefits and who bears the health costs.",
+      "lead": "Dr Courtney McNamara",
+      "leadProfile": "courtney-mcnamara",
+      "teamMembers": []
+    }
+  ],
   "aboutBody": "The Health Inequalities Team is based in the Population Health Sciences Institute at Newcastle University. We research why health outcomes differ so sharply between places and social groups, and what policy can do to close those gaps, across the social, economic, and political determinants of health.\n\nWe are an interdisciplinary team of social scientists, epidemiologists, geographers, economists, anthropologists, and clinical researchers. We use our range of expertise and a variety of methodological approaches to understand and explore health and care inequalities.\n\nAmong many national and international collaborators, we most closely work with the [Newcastle PSRC](https://psrc-ncl.nihr.ac.uk/), [NENC ARC](https://arc-nenc.nihr.ac.uk/), and [Health Equity North](https://www.healthequitynorth.co.uk/), to champion health inequalities research in the North of England.\n\nThe team is led by Clare Bambra, Professor of Public Health. Clare is a Fellow of the Academy of Medical Sciences, a member of the German National Academy of Sciences (Leopoldina), an NIHR Senior Investigator, and a founding co-Director of [Health Equity North](https://www.healthequitynorth.co.uk/).",
   "highlightHeading": "HIT Highlights",
   "citationFallback": 22669,
