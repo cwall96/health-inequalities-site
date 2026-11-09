@@ -444,6 +444,10 @@ export default config({
             projectTitle: fields.text({
               label: "Project title",
             }),
+            studyRole: fields.text({
+              label: "Role in this study",
+              description: "Optional. Enter the role of the person whose profile you are editing, for example Principal investigator or Co-investigator.",
+            }),
             teamCollaborators: fields.array(
               fields.relationship({
                 label: "HIT collaborator",

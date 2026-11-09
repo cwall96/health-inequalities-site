@@ -404,6 +404,11 @@ export const prerender = true;
                         ></span>
                         <div>
                           <h4>{activity.projectTitle}</h4>
+                          {activity.studyRole?.trim() && (
+                            <p class="person-activity-meta">
+                              <strong>Role</strong>{" · "}{activity.studyRole.trim()}
+                            </p>
+                          )}
                           <p class="sr-only">
                             {activity.status === "completed" ? "Completed" : "Ongoing"} study.
                           </p>
