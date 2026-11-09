@@ -8,7 +8,21 @@
   "researchKeywords": "quantitative health inequalities, vulnerable populations, children and older people, diet and health",
   "bio": "Viviana Albani is a Research Associate in the Public Health and Health Inequalities theme of the Population Health Sciences Institute. Her background includes a PhD on children's and adolescents' fruit and vegetable consumption, an MSc in Food Economics and Marketing, and an undergraduate degree in Economics.",
   "researchFocus": "Viviana applies quantitative methods to describe, explain and reduce health inequalities. She is particularly interested in vulnerable population groups, including children and the very old, and in biomarkers and large health and lifestyle datasets.",
-  "researchActivity": [],
+  "researchActivity": [
+    {
+      "projectTitle": "Investigating the health inequalities impact of national policies aiming to promote local economic growth in disadvantaged places.",
+      "teamCollaborators": [
+        "clare-bambra"
+      ],
+      "otherCollaborators": [
+        "Katie Fahy (co-lead), John Wildman, Dan Holman, Ben Barr, Jennie Popay"
+      ],
+      "year": 2024,
+      "status": "ongoing",
+      "funder": "NIHR SPHR-HIP-GROWTH (£325,675.86)",
+      "outputs": []
+    }
+  ],
   "professionalRoles": [
     {
       "title": "Equality, Diversity and Inclusion Deputy Co-Lead",
