@@ -678,6 +678,14 @@ export default config({
           },
         ),
 
+        mentorship: fields.array(
+          fields.text({ label: "Group or programme" }),
+          {
+            label: "Supervision and mentorship groups",
+            itemLabel: (props) => props.value || "New group",
+          },
+        ),
+
         methodsExpertise: fields.array(
           fields.text({
             label: "Skill or area of expertise",

@@ -1,17 +1,17 @@
 {
   "name": "Sarah Sowden",
-  "role": "Senior Clinical Lecturer",
+  "role": "Senior Clinical Lecturer & Honorary Consultant in Public Health",
   "category": "senior",
   "photo": "/images/team/sarah-sowden/photo.jpg",
   "email": "sarah.sowden@ncl.ac.uk",
   "researchKeywords": "health and care inequalities, Deep End primary care, public health workforce, research capacity",
   "bio": "Dr Sarah Sowden, MA(Oxf), MPH, PhD, FFPH, FHEA is a Clinical Senior Lecturer and Honorary Consultant in Public Health. Her work combines research leadership, workforce development and system-wide collaboration to improve health and care equity.",
-  "researchFocus": "Sarah leads research focused on reducing health and care inequalities. Her Deep End and UNFAIR programmes examine inequalities in healthcare and support collaboration across research, practice and health systems.",
+  "researchFocus": "Sarah leads research focused on reducing health and care inequalities. Her Deep End programme and UNFAIR study examine what works to improve health and care equity and support collaboration across research, practice and health systems.",
   "researchActivity": [],
   "professionalRoles": [
     {
       "title": "Deputy Director",
-      "organisation": "NIHR Research Support Service Specialist Centre for Public Health",
+      "organisation": "NIHR Research Support Service Specialist Centre for Public Health, Newcastle University",
       "type": "leadership"
     },
     {
@@ -20,7 +20,7 @@
       "type": "leadership"
     },
     {
-      "title": "Co-lead, Public Health Pillar",
+      "title": "Deputy Director and Co-lead, Public Health Pillar",
       "organisation": "Newcastle Health Research Partnership Academy",
       "type": "leadership"
     },
@@ -35,48 +35,126 @@
       "type": "committee"
     },
     {
-      "title": "Honorary Consultant in Public Health",
-      "organisation": "Office for Health Improvement and Disparities",
-      "type": "clinical"
+      "title": "Independent advisory committee member",
+      "organisation": "NIHR Mental Health Research Group, Keele University",
+      "type": "committee"
     },
     {
-      "title": "Co-lead",
-      "organisation": "National platform for public health research capacity",
-      "type": "leadership"
+      "title": "Strategic oversight group member",
+      "organisation": "Health Equity Evidence Centre",
+      "type": "committee"
+    },
+    {
+      "title": "Advisory group member",
+      "organisation": "NHS England Core20+ Collaborative",
+      "type": "committee"
+    },
+    {
+      "title": "Registered Specialist",
+      "organisation": "UK Public Health Register",
+      "type": "membership",
+      "startYear": "2019",
+      "endYear": "Present"
+    },
+    {
+      "title": "Fellow",
+      "organisation": "Faculty of Public Health",
+      "type": "membership",
+      "startYear": "2019",
+      "endYear": "Present"
+    },
+    {
+      "title": "Fellow",
+      "organisation": "Higher Education Academy",
+      "type": "membership",
+      "startYear": "2018",
+      "endYear": "Present"
+    },
+    {
+      "title": "Affiliate member",
+      "organisation": "Chartered Institute of Environmental Health",
+      "type": "membership",
+      "startYear": "2023",
+      "endYear": "Present"
+    },
+    {
+      "title": "Affiliate (AfCGI)",
+      "organisation": "City and Guilds of London Institute, Institute for Leadership and Management",
+      "type": "membership",
+      "startYear": "2025",
+      "endYear": "Present"
+    },
+    {
+      "title": "Member",
+      "organisation": "Society for Social Medicine and Population Health",
+      "type": "membership",
+      "startYear": "2020",
+      "endYear": "Present"
+    },
+    {
+      "title": "Member",
+      "organisation": "European Public Health Association",
+      "type": "membership",
+      "startYear": "2020",
+      "endYear": "Present"
+    },
+    {
+      "title": "Consultant in Public Health",
+      "organisation": "Office for Health Improvement and Disparities North East",
+      "type": "clinical"
     }
   ],
   "teaching": [
     {
       "course": "Master of Public Health",
-      "module": "Health Protection",
-      "level": "mph",
-      "fromYear": "2026",
-      "toYear": "present"
+      "module": "Health Protection module leader",
+      "level": "mph"
     },
     {
       "course": "Master of Public Health",
       "module": "Advanced Social Determinants of Health",
-      "level": "mph",
-      "fromYear": "2026",
-      "toYear": "present"
+      "level": "mph"
     },
     {
       "course": "Master of Public Health",
       "module": "Principles of Public Health",
-      "level": "mph",
-      "fromYear": "2026",
-      "toYear": "present"
+      "level": "mph"
     },
     {
-      "course": "Public health workforce development",
-      "level": "other",
-      "fromYear": "2026",
-      "toYear": "present"
+      "course": "Master of Public Health",
+      "module": "Dissertation supervisor",
+      "level": "mph"
+    },
+    {
+      "course": "Master of Public Health",
+      "module": "Academic advisor",
+      "level": "mph"
+    },
+    {
+      "course": "Master in Pharmacy (MPharm)",
+      "module": "Stage 4 supervisor",
+      "level": "other"
+    },
+    {
+      "course": "Psychology BSc",
+      "module": "Academic advisor",
+      "level": "bsc"
     }
   ],
   "supervision": [],
   "methodsExpertise": [],
   "orcid": "0000-0001-9359-3463",
   "identifier": "0000-0001-9359-3463",
-  "order": 0
+  "order": 0,
+  "mentorship": [
+    "Intercalating medical students",
+    "Specialised Foundation Programme",
+    "Public Health Registrars",
+    "Public Health Consultants (Deep End fellowship)",
+    "NIHR Academic Clinical Fellows (Public Health)",
+    "NIHR Healthcare Professional internships",
+    "NIHR INSIGHT award holders",
+    "NIHR Academy personal award holders (pre-doctoral, doctoral and postdoctoral)",
+    "NIHR ARC and NIHR PSRC doctoral students"
+  ]
 }

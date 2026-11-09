@@ -237,7 +237,8 @@ const hasResearchActivity =
   relatedProjects.length > 0 ||
   researchActivities.length > 0;
 const hasImpactAndAwards = relatedImpacts.length > 0 || relatedAwards.length > 0;
-const hasTeachingAndSupervision = teaching.length > 0 || supervision.length > 0;
+const mentorship = (person.mentorship ?? []).filter(Boolean);
+const hasTeachingAndSupervision = teaching.length > 0 || supervision.length > 0 || mentorship.length > 0;
 
 const profileNavigation = [
   { href: "#overview", label: "Overview", show: overviewParagraphs.length > 0 },
@@ -548,6 +549,14 @@ export const prerender = true;
                         </li>
                       );
                     })}
+                  </ul>
+                </div>
+              )}
+              {mentorship.length > 0 && (
+                <div class="person-profile-subsection">
+                  <h3>Supervision and mentorship</h3>
+                  <ul class="person-compact-list">
+                    {mentorship.map((group) => <li>{group}</li>)}
                   </ul>
                 </div>
               )}
