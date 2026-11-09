@@ -56,99 +56,97 @@ const statusLabel = {
 ---
 
 <Layout title="Research — Health Inequalities Team">
-  <section class="section page-intro-section">
-    <div class="container-page max-w-5xl">
-<div class="page-intro max-w-2xl">
-  <h1>Our research</h1>
-
-  <p class="page-intro-copy mt-5 leading-7">
-    Explore the Health Inequalities Team's research programmes and studies.
-  </p>
-</div>
-
-<div
-  id="research-programmes"
-  class="mt-12 grid gap-10 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16"
->
-  <div>
-    <p class="eyebrow">Research programmes</p>
-
-    <p class="mt-5 leading-7 text-muted">
-      {
-        siteContent?.projectDescription ||
-          "Add your project description in Keystatic."
-      }
-    </p>
-  </div>
-
-  <div>
-    {
-      projectsWithContent.length === 0 ? (
-        <p class="text-muted">No research programmes have been added yet.</p>
-      ) : (
-        <div class="research-programme-list">
-          {projectsWithContent.map((project) => (
-            <article class="research-programme" id={`project-${project.slug}`}>
-              <div class="flex flex-wrap items-center gap-3 text-sm">
-                <span class={`project-status project-status-${project.entry.status}`}>
-                  {statusLabel[project.entry.status]}
-                </span>
-                {project.entry.timeframe && <span class="text-muted">{project.entry.timeframe}</span>}
-              </div>
-
-              <h2 class="mt-4 text-2xl">{project.entry.title}</h2>
-              <p class="mt-4 leading-7 text-ink">{project.entry.summary}</p>
-
-              {(project.entry.lead || project.entry.funder) && (
-                <p class="mt-4 text-sm leading-6 text-muted">
-                  {[project.entry.lead && `Led by ${project.entry.lead}`, project.entry.funder && `Funded by ${project.entry.funder}`]
-                    .filter(Boolean)
-                    .join(" · ")}
-                </p>
-              )}
-
-              {linkedPeople(project.entry.teamMembers).length > 0 && (
-                <div class="content-people-links">
-                  <span>Project team</span>
-                  <div>
-                    {linkedPeople(project.entry.teamMembers).map((person) => (
-                      <a href={`/people/${person.slug}`}>{person.name}</a>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {project.entry.website && (
-                <a
-                  href={project.entry.website}
-                  class="btn-secondary mt-5 inline-flex"
-                >
-                  {project.entry.websiteLabel?.trim() || "Find out more"}
-                  <span aria-hidden="true">→</span>
-                </a>
-              )}
-
-              {project.document.length > 0 && (
-                <article class="article research-programme-content">
-                  <DocumentRenderer document={project.document} />
-                </article>
-              )}
-            </article>
-          ))}
-        </div>
-      )
-    }
-  </div>
-</div>
-
+  <section class="section bg-navy-900">
+    <div class="container-page">
+      <p class="eyebrow text-lavender">Health Inequalities Team</p>
+      <h1 class="mt-3 text-white">Our research</h1>
+      <p class="mt-5 max-w-2xl text-lg leading-8 text-white/85">
+        Explore the Health Inequalities Team’s research programmes and studies.
+      </p>
+      <nav class="mt-7 flex flex-wrap gap-3" aria-label="On this page">
+        <a class="rounded-full border border-white/40 px-4 py-2 text-white hover:bg-white/15" href="#research-programmes">Research programmes</a>
+        <a class="rounded-full border border-white/40 px-4 py-2 text-white hover:bg-white/15" href="#studies-heading">Studies</a>
+      </nav>
     </div>
   </section>
 
-  <section
-    class="studies-section on-dark"
-    aria-labelledby="studies-heading">
+  <section id="research-programmes" class="section" aria-labelledby="research-programmes-heading">
     <div class="container-page">
-      <div id="research-themes" class="research-theme-filter">
+      <h2 id="research-programmes-heading">Research programmes</h2>
+      {siteContent?.projectDescription && (
+        <p class="mt-4 max-w-3xl leading-7 text-muted">{siteContent.projectDescription}</p>
+      )}
+
+      <div class="mt-8">
+      {
+        projectsWithContent.length === 0 ? (
+          <p class="text-muted">No research programmes have been added yet.</p>
+        ) : (
+          <div class="grid gap-6 lg:grid-cols-2">
+            {projectsWithContent.map((project) => (
+              <article class="scroll-mt-24 rounded-xl border border-line border-t-4 border-t-red-700 bg-white p-6 shadow-card sm:p-8" id={`project-${project.slug}`}>
+                <div class="flex flex-wrap items-center gap-3 text-sm">
+                  <span class={`project-status project-status-${project.entry.status}`}>
+                    {statusLabel[project.entry.status]}
+                  </span>
+                  {project.entry.timeframe && <span class="text-muted">{project.entry.timeframe}</span>}
+                </div>
+
+                <h3 class="mt-4 text-2xl">{project.entry.title}</h3>
+                <p class="mt-4 leading-7 text-ink">{project.entry.summary}</p>
+
+                {(project.entry.lead || project.entry.funder) && (
+                  <p class="mt-4 text-sm leading-6 text-muted">
+                    {[project.entry.lead && `Led by ${project.entry.lead}`, project.entry.funder && `Funded by ${project.entry.funder}`]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </p>
+                )}
+
+                {linkedPeople(project.entry.teamMembers).length > 0 && (
+                  <div class="content-people-links">
+                    <span>Project team</span>
+                    <div>
+                      {linkedPeople(project.entry.teamMembers).map((person) => (
+                        <a href={`/people/${person.slug}`}>{person.name}</a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {project.entry.website && (
+                  <a
+                    href={project.entry.website}
+                    class="btn-secondary mt-5 inline-flex"
+                  >
+                    {project.entry.websiteLabel?.trim() || "Find out more"}
+                    <span aria-hidden="true">→</span>
+                  </a>
+                )}
+
+                {project.document.length > 0 && (
+                  <div class="article research-programme-content">
+                    <DocumentRenderer document={project.document} />
+                  </div>
+                )}
+              </article>
+            ))}
+          </div>
+        )
+      }
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-navy-50" aria-labelledby="studies-heading">
+    <div class="container-page">
+      <p class="eyebrow">Our work in depth</p>
+      <h2 id="studies-heading" class="mt-3 scroll-mt-24">Studies</h2>
+      <p class="mt-4 max-w-2xl leading-7 text-muted">
+        Discover the studies through which we investigate and address health inequalities.
+      </p>
+
+      <div id="research-themes" class="mt-8 grid scroll-mt-24 gap-4 rounded-xl bg-navy-900 p-5 sm:p-6">
         <div>
           <p class="eyebrow studies-eyebrow">Research themes</p>
           <h2 class="mt-3 text-2xl text-white">Explore studies by theme</h2>
@@ -174,19 +172,13 @@ const statusLabel = {
         </div>
       </div>
 
-      <p class="eyebrow studies-eyebrow">Our work in depth</p>
-      <h2 id="studies-heading" class="mt-3">Studies</h2>
-      <p class="mt-4 max-w-2xl leading-7 text-white/75">
-        Discover the studies through which we investigate and address health inequalities.
-      </p>
-
       {
         studies.length === 0 ? (
-          <p class="mt-10 text-white/75">
+          <p class="mt-10 text-muted">
             Studies will appear here when they are added in Keystatic.
           </p>
         ) : (
-          <div class="mt-8 divide-y divide-white/25" data-study-grid>
+          <div class="mt-8 divide-y divide-line" data-study-grid>
             {studies.map((study, index) => (
               <article
                 id={`study-${study.slug}`}
@@ -194,40 +186,46 @@ const statusLabel = {
                 data-study-card
                 data-study-themes={JSON.stringify(study.entry.researchThemes ?? [])}
               >
-                <p class="text-sm text-white/75">
-                  {[statusLabel[study.entry.status], study.entry.timeframe].filter(Boolean).join(" · ")}
-                </p>
-                <h3 class="mt-2 text-2xl text-white">{study.entry.title}</h3>
-                <p class="mt-3 max-w-3xl text-lg text-white">{study.entry.summary}</p>
-                <div class="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/85">
-                  {study.entry.lead && <span>Led by {study.entry.lead}</span>}
-                  {study.entry.funder && <span>Funded by {study.entry.funder}</span>}
-                </div>
-                {[study.entry.whyItMatters, study.entry.approach, study.entry.contribution, study.entry.impact].map((section) => (
-                  section?.body && (
-                    <div class="mt-5 max-w-3xl">
-                      <h4 class="text-white">{section.heading}</h4>
-                      {section.body.split(/\n\s*\n/).map((paragraph) => (
-                        <p class="mt-2 whitespace-pre-line leading-7 text-white/85">{paragraph}</p>
-                      ))}
+                <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-12">
+                  <div>
+                    <p class="eyebrow">
+                      {[statusLabel[study.entry.status], study.entry.timeframe].filter(Boolean).join(" · ")}
+                    </p>
+                    <h3 class="mt-3 text-3xl">{study.entry.title}</h3>
+                    <p class="mt-3 text-base leading-7 text-muted">{study.entry.summary}</p>
+                    <div class="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted">
+                      {study.entry.lead && <span>Led by {study.entry.lead}</span>}
+                      {study.entry.funder && <span>Funded by {study.entry.funder}</span>}
                     </div>
-                  )
-                ))}
-                {studyDocuments[index].length > 0 && (
-                  <div class="article mt-5 max-w-3xl text-white [&_a]:text-white [&_h2]:text-white [&_p]:text-white">
-                    <DocumentRenderer document={studyDocuments[index]} />
                   </div>
-                )}
-                {study.entry.externalLink && (
-                  <a class="mt-4 inline-block text-white underline" href={study.entry.externalLink}>Study website</a>
-                )}
+                  <div class="max-w-3xl space-y-5">
+                    {[study.entry.whyItMatters, study.entry.approach, study.entry.contribution, study.entry.impact].map((section) => (
+                      section?.body && (
+                        <div>
+                          <h4 class="text-lg font-semibold">{section.heading}</h4>
+                          {section.body.split(/\n\s*\n/).map((paragraph) => (
+                            <p class="mt-2 whitespace-pre-line leading-7 text-ink">{paragraph}</p>
+                          ))}
+                        </div>
+                      )
+                    ))}
+                    {studyDocuments[index].length > 0 && (
+                      <div class="article">
+                        <DocumentRenderer document={studyDocuments[index]} />
+                      </div>
+                    )}
+                    {study.entry.externalLink && (
+                      <a class="inline-block text-navy-800 underline" href={study.entry.externalLink}>Study website</a>
+                    )}
+                  </div>
+                </div>
               </article>
             ))}
           </div>
         )
       }
 
-      <p class="study-filter-empty" data-study-filter-empty hidden>
+      <p class="mt-6 text-muted" data-study-filter-empty hidden>
         No studies are currently assigned to this research theme.
       </p>
     </div>
