@@ -1,6 +1,7 @@
 {
   "name": "Sarah Sowden",
-  "role": "Senior Clinical Lecturer & Honorary Consultant in Public Health",
+  "role": "Senior Clinical Lecturer",
+  "secondaryRole": "Honorary Consultant in Public Health",
   "category": "senior",
   "photo": "/images/team/sarah-sowden/photo.jpg",
   "email": "sarah.sowden@ncl.ac.uk",
@@ -108,44 +109,54 @@
     {
       "course": "Master of Public Health",
       "module": "Health Protection module leader",
-      "level": "mph"
+      "level": "mph",
+      "fromYear": "2026",
+      "toYear": "present"
     },
     {
       "course": "Master of Public Health",
       "module": "Advanced Social Determinants of Health",
-      "level": "mph"
+      "level": "mph",
+      "fromYear": "2026",
+      "toYear": "present"
     },
     {
       "course": "Master of Public Health",
       "module": "Principles of Public Health",
-      "level": "mph"
+      "level": "mph",
+      "fromYear": "2026",
+      "toYear": "present"
     },
     {
       "course": "Master of Public Health",
       "module": "Dissertation supervisor",
-      "level": "mph"
+      "level": "mph",
+      "fromYear": "2026",
+      "toYear": "present"
     },
     {
       "course": "Master of Public Health",
       "module": "Academic advisor",
-      "level": "mph"
+      "level": "mph",
+      "fromYear": "2026",
+      "toYear": "present"
     },
     {
       "course": "Master in Pharmacy (MPharm)",
       "module": "Stage 4 supervisor",
-      "level": "other"
+      "level": "other",
+      "fromYear": "2026",
+      "toYear": "present"
     },
     {
       "course": "Psychology BSc",
       "module": "Academic advisor",
-      "level": "bsc"
+      "level": "bsc",
+      "fromYear": "2026",
+      "toYear": "present"
     }
   ],
   "supervision": [],
-  "methodsExpertise": [],
-  "orcid": "0000-0001-9359-3463",
-  "identifier": "0000-0001-9359-3463",
-  "order": 0,
   "mentorship": [
     "Intercalating medical students",
     "Specialised Foundation Programme",
@@ -156,5 +167,11 @@
     "NIHR INSIGHT award holders",
     "NIHR Academy personal award holders (pre-doctoral, doctoral and postdoctoral)",
     "NIHR ARC and NIHR PSRC doctoral students"
-  ]
+  ],
+  "methodsExpertise": [],
+  "orcid": "0000-0001-9359-3463",
+  "universityProfileUrl": "https://www.ncl.ac.uk/medical-sciences/people/profile/sarahsowden.html",
+  "googleScholarUrl": "https://scholar.google.co.uk/citations?user=OI_dKTcAAAAJ&hl=en",
+  "identifier": "0000-0001-9359-3463",
+  "order": 0
 }
