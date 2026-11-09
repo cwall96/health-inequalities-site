@@ -321,9 +321,9 @@ export const prerender = true;
   </section>
 
   {researchThemes.length > 0 && (
-    <section class="section bg-navy-50" aria-labelledby="research-themes-heading">
+    <section class="section bg-navy-900" aria-labelledby="research-themes-heading">
       <div class="container-page">
-        <h2 id="research-themes-heading">Our research themes</h2>
+        <h2 id="research-themes-heading" class="text-white">Our research themes</h2>
         <ul class="mt-8 grid gap-6 md:grid-cols-2">
           {researchThemes.map(({ title, description, lead, leadProfile, teamMembers }, index) => {
             const members = [...new Set(teamMembers)].flatMap((slug) => {
