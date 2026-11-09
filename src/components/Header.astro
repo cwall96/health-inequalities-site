@@ -1,11 +1,5 @@
 ---
-import { createReader } from "@keystatic/core/reader";
-import keystaticConfig from "../../keystatic.config";
-
 const path = Astro.url.pathname;
-const reader = createReader(process.cwd(), keystaticConfig);
-
-const impactItems = await reader.collections.impacts.all();
 
 const links = [
   { href: "/", label: "Home" },
@@ -37,11 +31,7 @@ const researchSectionLinks = [
 ];
 
 const engagementSectionLinks = [
-  ...(impactItems.length > 0
-    ? [{ href: "/presentations#public-policy-impact", label: "Case studies" }]
-    : []),
-  { href: "/presentations#sharing-our-research", label: "Presentations & posters" },
-  { href: "/presentations#media-coverage", label: "Media coverage" },
+  { href: "/presentations#impact-highlights", label: "Impact highlights" },
   { href: "/presentations#publications", label: "Publications" },
 ];
 

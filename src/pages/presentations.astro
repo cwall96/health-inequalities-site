@@ -3,7 +3,6 @@ import { createReader } from "@keystatic/core/reader";
 import keystaticConfig from "../../keystatic.config";
 import Layout from "../layouts/Layout.astro";
 import ResearchPublications from "../components/ResearchPublications.astro";
-import PresentationCard from "../components/PresentationCard.astro";
 
 const reader = createReader(process.cwd(), keystaticConfig);
 const team = await reader.collections.team.all();
@@ -15,13 +14,6 @@ const linkedPeople = (slugs: readonly (string | null)[] = []) =>
     return name ? [{ slug, name }] : [];
   });
 
-const items = (await reader.collections.presentations.all()).sort(
-  (a, b) => (b.entry.date ?? "").localeCompare(a.entry.date ?? "")
-);
-
-const sharingItems = items.filter((item) => item.entry.section !== "media");
-const mediaItems = items.filter((item) => item.entry.section === "media");
-
 const impacts = (await reader.collections.impacts.all()).sort(
   (a, b) =>
     (a.entry.order ?? 0) - (b.entry.order ?? 0) ||
@@ -29,18 +21,6 @@ const impacts = (await reader.collections.impacts.all()).sort(
 );
 
 const deepEndCommendation = await reader.collections.recognition.read("deep-end-nihr-impact-award-commendation");
-
-const itemYear = (date?: string | null) => date?.slice(0, 4) || "undated";
-const years = [...new Set(items.map((item) => itemYear(item.entry.date)))].sort(
-  (a, b) => {
-    if (a === "undated") return 1;
-    if (b === "undated") return -1;
-    return b.localeCompare(a);
-  }
-);
-
-const itemsInYear = (year: string) =>
-  items.filter((item) => itemYear(item.entry.date) === year).length;
 
 export const prerender = true;
 ---
@@ -52,245 +32,111 @@ export const prerender = true;
         <h1 class="mt-3">Public engagement</h1>
 
         <p class="page-intro-copy mt-4 text-lg leading-8">
-          Highlights from the Health Inequalities Team’s work with communities, practitioners and policymakers, alongside selected presentations, posters and media coverage.
+          Explore the impact of the Health Inequalities Team’s work with communities, practitioners and policymakers, and browse our publications.
         </p>
 
-        <div class="mt-6 flex flex-wrap justify-end gap-x-6 gap-y-3 text-sm text-navy-800">
-          <span class="inline-flex items-center gap-2">
-            <span class="h-3 w-3 rounded-full bg-red-700" aria-hidden="true"></span>
-            Presentations
-          </span>
-          <span class="inline-flex items-center gap-2">
-            <span class="h-3 w-3 rounded-full border border-navy-900/20 bg-lavender" aria-hidden="true"></span>
-            Posters
-          </span>
-          <span class="inline-flex items-center gap-2">
-            <span class="h-3 w-3 rounded-full bg-navy-700" aria-hidden="true"></span>
-            Media coverage
-          </span>
-        </div>
         <a href="#publications" class="btn-secondary mt-6 inline-flex">
           Browse publications <span aria-hidden="true">↓</span>
         </a>
       </div>
 
-      {impacts.length > 0 && (
-        <section id="public-policy-impact" class="engagement-section impact-feature-section mt-14">
-          <div class="engagement-section-heading" data-reveal>
-            <span class="engagement-section-icon impact-section-icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32">
-                <path d="M6 25V14m8 11V9m8 16V5" />
-                <path d="m5 10 7-5 6 3 8-5" />
-                <path d="m21 3 5 .1-.8 4.9" />
-              </svg>
-            </span>
-            <div>
-              <p class="eyebrow">Beyond academia</p>
-              <h2>Three public engagement case studies</h2>
-              <p class="mt-3 max-w-2xl leading-7 text-muted">
-                We’ve selected three case studies that show how team members share evidence, work with partners and inform decisions beyond academia.
-              </p>
+      <section id="impact-highlights" class="mt-12 scroll-mt-24" aria-labelledby="impact-highlights-heading">
+        <h2 id="impact-highlights-heading">Impact highlights</h2>
+        {impacts.length > 0 && (
+          <div id="public-policy-impact" class="engagement-section impact-feature-section mt-6">
+            <div class="engagement-section-heading" data-reveal>
+              <span class="engagement-section-icon impact-section-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32">
+                  <path d="M6 25V14m8 11V9m8 16V5" />
+                  <path d="m5 10 7-5 6 3 8-5" />
+                  <path d="m21 3 5 .1-.8 4.9" />
+                </svg>
+              </span>
+              <div>
+                <p class="eyebrow">Beyond academia</p>
+                <h3 class="text-2xl">Three public engagement case studies</h3>
+                <p class="mt-3 max-w-2xl leading-7 text-muted">
+                  We’ve selected three case studies that show how team members share evidence, work with partners and inform decisions beyond academia.
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div class="impact-story-grid mt-7">
-            {impacts.map((impact, index) => (
-              <article class="impact-story-card" id={`impact-${impact.slug}`} data-reveal-row>
-                <div class="impact-story-media">
-                  {impact.entry.image ? (
-                    <img src={impact.entry.image} alt="" class="impact-story-image" />
-                  ) : (
-                    <div class="impact-story-placeholder" aria-hidden="true">
-                      <svg viewBox="0 0 48 48">
-                        <path d="M9 38V22m10 16V15m10 23V9m10 29V5" />
-                        <path d="m8 15 10-7 9 4 12-8" />
-                      </svg>
-                    </div>
-                  )}
-                  <span class="impact-story-number" aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <div class="impact-story-content">
-                  <div class="flex flex-wrap items-center justify-between gap-3 text-sm">
-                    <span class="impact-year">{impact.entry.year}</span>
-                    {impact.entry.relatedWork && <span class="text-muted">{impact.entry.relatedWork}</span>}
-                  </div>
-                  <h3>{impact.entry.title}</h3>
-                  <p class="impact-story-summary">{impact.entry.summary}</p>
-                  {linkedPeople(impact.entry.teamMembers).length > 0 && (
-                    <div class="content-people-links">
-                      <span>Team</span>
-                      <div>
-                        {linkedPeople(impact.entry.teamMembers).map((person) => (
-                          <a href={`/people/${person.slug}`}>{person.name}</a>
-                        ))}
+            <div class="impact-story-grid mt-7">
+              {impacts.map((impact, index) => (
+                <article class="impact-story-card" id={`impact-${impact.slug}`} data-reveal-row>
+                  <div class="impact-story-media">
+                    {impact.entry.image ? (
+                      <img src={impact.entry.image} alt="" class="impact-story-image" />
+                    ) : (
+                      <div class="impact-story-placeholder" aria-hidden="true">
+                        <svg viewBox="0 0 48 48">
+                          <path d="M9 38V22m10 16V15m10 23V9m10 29V5" />
+                          <path d="m8 15 10-7 9 4 12-8" />
+                        </svg>
                       </div>
+                    )}
+                    <span class="impact-story-number" aria-hidden="true">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+                  <div class="impact-story-content">
+                    <div class="flex flex-wrap items-center justify-between gap-3 text-sm">
+                      <span class="impact-year">{impact.entry.year}</span>
+                      {impact.entry.relatedWork && <span class="text-muted">{impact.entry.relatedWork}</span>}
                     </div>
-                  )}
-                  {impact.entry.evidence && (
-                    <div class="impact-evidence">
-                      <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="m5 12 4 4L19 6" />
-                      </svg>
-                      <p><strong>Evidence:</strong> {impact.entry.evidence}</p>
-                    </div>
-                  )}
-                  {impact.entry.link && (
-                    <a href={impact.entry.link} class="impact-supporting-link" target="_blank" rel="noopener noreferrer">
-                      View supporting evidence <span aria-hidden="true">↗</span>
-                    </a>
-                  )}
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {deepEndCommendation && (
-        <section id="impact-highlights" class="mt-12 scroll-mt-24" aria-labelledby="impact-highlights-heading">
-          <h2 id="impact-highlights-heading">Impact highlights</h2>
-          <article class="mt-5 grid items-center gap-6 rounded-xl border border-line bg-navy-50 p-6 sm:grid-cols-[10rem_minmax(0,1fr)] sm:p-8">
-            {deepEndCommendation.image && (
-              <img src={deepEndCommendation.image} alt="The Deep End Research Team’s 2026 NIHR Impact Prize commendation trophy" class="w-full max-w-40 rounded-lg" loading="lazy" />
-            )}
-            <div>
-              <p class="eyebrow">{deepEndCommendation.recipient}</p>
-              <h3 class="mt-2 text-2xl">{deepEndCommendation.title}</h3>
-              {deepEndCommendation.description && <p class="mt-3 max-w-2xl leading-7 text-muted">{deepEndCommendation.description}</p>}
-              {deepEndCommendation.link && (
-                <a class="impact-supporting-link mt-4 inline-block" href={deepEndCommendation.link}>Read the NIHR announcement <span aria-hidden="true">→</span></a>
-              )}
-            </div>
-          </article>
-        </section>
-      )}
-
-      <div class="output-gallery-layout mt-14" data-output-filters>
-        <div class="engagement-sections">
-          {sharingItems.length > 0 && (
-            <section id="sharing-our-research" class="engagement-section" data-output-section>
-              <div data-reveal>
-              <h2>Sharing our research</h2>
-              <p class="mt-4 max-w-2xl leading-7 text-muted">
-                Presentations and posters through which the team shares emerging methods, findings and ideas.
-              </p>
-              </div>
-
-              <div class="engagement-card-grid mt-9">
-                {sharingItems.map((item) => (
-                  <PresentationCard
-                    title={item.entry.title}
-                    section={item.entry.section ?? "conference"}
-                    date={item.entry.date}
-                    venue={item.entry.venue}
-                    authors={item.entry.authors}
-                    link={item.entry.link}
-                    coverImage={item.entry.coverImage}
-                    teamMembers={linkedPeople(item.entry.teamMembers)}
-                    detailHref={item.entry.section === "poster" ? `/presentations/${item.slug}` : null}
-                  />
-                ))}
-              </div>
-            </section>
-          )}
-
-          {mediaItems.length > 0 && (
-            <section id="media-coverage" class="engagement-section" data-output-section>
-              <div data-reveal>
-              <h2>Media coverage</h2>
-              <p class="mt-4 max-w-2xl leading-7 text-muted">
-                Selected media contributions and coverage involving members of the Health Inequalities Team.
-              </p>
-              </div>
-
-              <div class="engagement-card-grid mt-9">
-                {mediaItems.map((item) => (
-                  <PresentationCard
-                    title={item.entry.title}
-                    section={item.entry.section ?? "media"}
-                    date={item.entry.date}
-                    venue={item.entry.venue}
-                    authors={item.entry.authors}
-                    link={item.entry.link}
-                    coverImage={item.entry.coverImage}
-                    teamMembers={linkedPeople(item.entry.teamMembers)}
-                    detailHref={null}
-                  />
-                ))}
-              </div>
-            </section>
-          )}
-
-        </div>
-
-        {items.length > 0 && (
-          <aside class="output-year-filter" aria-labelledby="output-year-heading" data-reveal>
-            <p class="eyebrow">Filter the gallery</p>
-            <h2 id="output-year-heading" class="mt-2 text-xl">Output year</h2>
-
-            <div class="output-year-options">
-              <button type="button" class="output-year-button is-active" data-year-filter="" aria-pressed="true">
-                <span>All years</span>
-                <span>{items.length}</span>
-              </button>
-              {years.map((year) => (
-                <button type="button" class="output-year-button" data-year-filter={year} aria-pressed="false">
-                  <span>{year === "undated" ? "Undated" : year}</span>
-                  <span>{itemsInYear(year)}</span>
-                </button>
+                    <h4 class="text-xl">{impact.entry.title}</h4>
+                    <p class="impact-story-summary">{impact.entry.summary}</p>
+                    {linkedPeople(impact.entry.teamMembers).length > 0 && (
+                      <div class="content-people-links">
+                        <span>Team</span>
+                        <div>
+                          {linkedPeople(impact.entry.teamMembers).map((person) => (
+                            <a href={`/people/${person.slug}`}>{person.name}</a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {impact.entry.evidence && (
+                      <div class="impact-evidence">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="m5 12 4 4L19 6" />
+                        </svg>
+                        <p><strong>Evidence:</strong> {impact.entry.evidence}</p>
+                      </div>
+                    )}
+                    {impact.entry.link && (
+                      <a href={impact.entry.link} class="impact-supporting-link" target="_blank" rel="noopener noreferrer">
+                        View supporting evidence <span aria-hidden="true">↗</span>
+                      </a>
+                    )}
+                  </div>
+                </article>
               ))}
             </div>
-
-            <p class="mt-4 text-sm text-muted" aria-live="polite" data-output-count>
-              Showing all {items.length} outputs
-            </p>
-          </aside>
+          </div>
         )}
-      </div>
+
+        {deepEndCommendation && (
+          <div class="mt-8">
+            <article class="mt-5 grid items-center gap-6 rounded-xl border border-line bg-navy-50 p-6 sm:grid-cols-[10rem_minmax(0,1fr)] sm:p-8">
+              {deepEndCommendation.image && (
+                <img src={deepEndCommendation.image} alt="The Deep End Research Team’s 2026 NIHR Impact Prize commendation trophy" class="w-full max-w-40 rounded-lg" loading="lazy" />
+              )}
+              <div>
+                <p class="eyebrow">{deepEndCommendation.recipient}</p>
+                <h3 class="mt-2 text-2xl">{deepEndCommendation.title}</h3>
+                {deepEndCommendation.description && <p class="mt-3 max-w-2xl leading-7 text-muted">{deepEndCommendation.description}</p>}
+                {deepEndCommendation.link && (
+                  <a class="impact-supporting-link mt-4 inline-block" href={deepEndCommendation.link}>Read the NIHR announcement <span aria-hidden="true">→</span></a>
+                )}
+              </div>
+            </article>
+          </div>
+        )}
+      </section>
     </div>
   </section>
 
   <ResearchPublications />
 
-  <script>
-    const outputFilters = document.querySelector<HTMLElement>("[data-output-filters]");
-
-    if (outputFilters) {
-      const cards = [...outputFilters.querySelectorAll<HTMLElement>("[data-output-card]")];
-      const sections = [...outputFilters.querySelectorAll<HTMLElement>("[data-output-section]")];
-      const buttons = [...outputFilters.querySelectorAll<HTMLButtonElement>("[data-year-filter]")];
-      const count = outputFilters.querySelector<HTMLElement>("[data-output-count]");
-
-      buttons.forEach((button) => {
-        button.addEventListener("click", () => {
-          const selectedYear = button.dataset.yearFilter ?? "";
-          let visible = 0;
-
-          cards.forEach((card) => {
-            const matches = !selectedYear || card.dataset.year === selectedYear;
-            card.hidden = !matches;
-            if (matches) visible += 1;
-          });
-
-          sections.forEach((section) => {
-            section.hidden = !section.querySelector("[data-output-card]:not([hidden])");
-          });
-
-          buttons.forEach((yearButton) => {
-            const isActive = yearButton === button;
-            yearButton.classList.toggle("is-active", isActive);
-            yearButton.setAttribute("aria-pressed", String(isActive));
-          });
-
-          if (count) {
-            count.textContent = selectedYear
-              ? `Showing ${visible} output${visible === 1 ? "" : "s"}`
-              : `Showing all ${visible} outputs`;
-          }
-        });
-      });
-    }
-  </script>
 </Layout>

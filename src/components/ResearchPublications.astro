@@ -23,10 +23,6 @@ const publicationSources = team
 
 const teamBySlug = new Map(team.map((person) => [person.slug, person.entry.name]));
 const themeBySlug = new Map(themeEntries.map((theme) => [theme.slug, theme.entry.name]));
-const teamOptions = [...team]
-  .sort((a, b) => a.entry.name.localeCompare(b.entry.name))
-  .map((person) => ({ slug: person.slug, name: person.entry.name }));
-
 const manual: Pub[] = manualEntries.map((m) => ({
   title: m.entry.title,
   year: m.entry.year ?? null,
@@ -140,9 +136,6 @@ for (const p of pubs) {
 }
 const years = [...byYear.keys()].sort((a, b) => b - a);
 
-const journals = [...new Set(pubs.map((p) => p.venue.trim()).filter(Boolean))]
-  .sort((a, b) => a.localeCompare(b));
-
 const publicationPageSize = 40;
 const publicationPageCount = Math.ceil(pubs.length / publicationPageSize);
 const firstPublicationPage = new Set(pubs.slice(0, publicationPageSize));
@@ -164,7 +157,7 @@ export const prerender = true;
     <div class="page-intro max-w-2xl">
       <p class="eyebrow">Research outputs</p>
       <h2 id="publications-heading" class="mt-3">Publications</h2>
-      <p class="mt-4 leading-7 text-muted">Browse the team’s publications or filter by year, author, research theme or journal.</p>
+      <p class="mt-4 leading-7 text-muted">Browse the team’s publications, listed by year.</p>
     </div>
 
     {spotlightPublication && (
@@ -263,43 +256,7 @@ export const prerender = true;
           <code>/keystatic</code>, then rebuild.
         </p>
       ) : (
-        <div class="mt-10" data-publication-filters>
-          <form class="publication-filters" aria-label="Filter publications" onsubmit="return false">
-            <div>
-              <label for="publication-year">Publication year</label>
-              <select id="publication-year" data-filter="year">
-                <option value="">All years</option>
-                {years.map((year) => <option value={String(year)}>{year || "Undated"}</option>)}
-              </select>
-            </div>
-
-            <div>
-              <label for="team-member">HIT team member</label>
-              <select id="team-member" data-filter="person">
-                <option value="">All team members</option>
-                {teamOptions.map((person) => <option value={person.slug}>{person.name}</option>)}
-              </select>
-            </div>
-
-            <div>
-              <label for="publication-theme">Research theme</label>
-              <select id="publication-theme" data-filter="theme">
-                <option value="">All themes</option>
-                {themeEntries.map((theme) => <option value={theme.slug}>{theme.entry.name}</option>)}
-              </select>
-            </div>
-
-            <div>
-              <label for="publication-journal">Journal</label>
-              <select id="publication-journal" data-filter="journal">
-                <option value="">All journals</option>
-                {journals.map((journal) => <option value={journal}>{journal}</option>)}
-              </select>
-            </div>
-
-            <button type="button" class="filter-reset" data-filter-reset>Clear filters</button>
-          </form>
-
+        <div class="mt-10" data-publication-browser>
           <p class="mt-5 text-sm text-muted" aria-live="polite" data-publication-count>
             Showing 1–{Math.min(publicationPageSize, pubs.length)} of {pubs.length} publications
           </p>
@@ -360,10 +317,6 @@ export const prerender = true;
                   class="flex items-start justify-between gap-4 border-t border-line py-4"
                   data-publication
                   hidden={!firstPublicationPage.has(p)}
-                  data-year={String(p.year ?? 0)}
-                  data-team-members={JSON.stringify(p.teamMembers ?? [])}
-                  data-themes={JSON.stringify(p.researchThemes ?? [])}
-                  data-journal={p.venue.trim().toLowerCase()}
                 >
                   <div>
                     <p class="leading-6 text-ink">{p.title}</p>
@@ -438,9 +391,6 @@ export const prerender = true;
             </button>
           </nav>
 
-          <p class="filter-empty" data-filter-empty hidden>
-            No publications match those filters. Try clearing one or more selections.
-          </p>
         </div>
       )
     }
@@ -448,21 +398,18 @@ export const prerender = true;
 </section>
 
 <script>
-  const filterPanel = document.querySelector<HTMLElement>("[data-publication-filters]");
+  const publicationBrowser = document.querySelector<HTMLElement>("[data-publication-browser]");
 
-  if (filterPanel) {
-    const controls = [...filterPanel.querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-filter]")];
-    const publications = [...filterPanel.querySelectorAll<HTMLElement>("[data-publication]")];
-    const yearGroups = [...filterPanel.querySelectorAll<HTMLElement>("[data-year-group]")];
-    const count = filterPanel.querySelector<HTMLElement>("[data-publication-count]");
-    const empty = filterPanel.querySelector<HTMLElement>("[data-filter-empty]");
-    const reset = filterPanel.querySelector<HTMLButtonElement>("[data-filter-reset]");
-    const paginations = [...filterPanel.querySelectorAll<HTMLElement>("[data-publication-pagination]")];
-    const pageButtons = [...filterPanel.querySelectorAll<HTMLButtonElement>("[data-page-number]")];
-    const pageRangeButtons = [...filterPanel.querySelectorAll<HTMLButtonElement>("[data-page-group]")];
-    const previousButtons = [...filterPanel.querySelectorAll<HTMLButtonElement>("[data-page-previous]")];
-    const nextButtons = [...filterPanel.querySelectorAll<HTMLButtonElement>("[data-page-next]")];
-    const publicationList = filterPanel.querySelector<HTMLElement>(".publication-list");
+  if (publicationBrowser) {
+    const publications = [...publicationBrowser.querySelectorAll<HTMLElement>("[data-publication]")];
+    const yearGroups = [...publicationBrowser.querySelectorAll<HTMLElement>("[data-year-group]")];
+    const count = publicationBrowser.querySelector<HTMLElement>("[data-publication-count]");
+    const paginations = [...publicationBrowser.querySelectorAll<HTMLElement>("[data-publication-pagination]")];
+    const pageButtons = [...publicationBrowser.querySelectorAll<HTMLButtonElement>("[data-page-number]")];
+    const pageRangeButtons = [...publicationBrowser.querySelectorAll<HTMLButtonElement>("[data-page-group]")];
+    const previousButtons = [...publicationBrowser.querySelectorAll<HTMLButtonElement>("[data-page-previous]")];
+    const nextButtons = [...publicationBrowser.querySelectorAll<HTMLButtonElement>("[data-page-next]")];
+    const publicationList = publicationBrowser.querySelector<HTMLElement>(".publication-list");
     const pageSize = 40;
     let currentPage = 1;
     let expandedGroupStart = 1;
@@ -470,33 +417,14 @@ export const prerender = true;
     const groupStartForPage = (page: number) =>
       page <= 5 ? 1 : 6 + Math.floor((page - 6) / 6) * 6;
 
-    const applyFilters = (resetPage = false, moveFocus = false) => {
-      if (resetPage) {
-        currentPage = 1;
-        expandedGroupStart = 1;
-      }
-      const year = filterPanel.querySelector<HTMLSelectElement>("[data-filter='year']")?.value ?? "";
-      const person = filterPanel.querySelector<HTMLSelectElement>("[data-filter='person']")?.value ?? "";
-      const theme = filterPanel.querySelector<HTMLSelectElement>("[data-filter='theme']")?.value ?? "";
-      const journal = filterPanel.querySelector<HTMLInputElement>("[data-filter='journal']")?.value.trim().toLowerCase() ?? "";
-      const matches = publications.filter((publication) => {
-        const teamMembers = JSON.parse(publication.dataset.teamMembers ?? "[]") as string[];
-        const themes = JSON.parse(publication.dataset.themes ?? "[]") as string[];
-        return (
-          (!year || publication.dataset.year === year) &&
-          (!person || teamMembers.includes(person)) &&
-          (!theme || themes.includes(theme)) &&
-          (!journal || publication.dataset.journal?.includes(journal))
-        );
-      });
-
-      const pageCount = Math.max(1, Math.ceil(matches.length / pageSize));
+    const showPage = () => {
+      const pageCount = Math.max(1, Math.ceil(publications.length / pageSize));
       currentPage = Math.min(currentPage, pageCount);
       if (expandedGroupStart > pageCount) {
         expandedGroupStart = groupStartForPage(currentPage);
       }
       const firstIndex = (currentPage - 1) * pageSize;
-      const visiblePublications = new Set(matches.slice(firstIndex, firstIndex + pageSize));
+      const visiblePublications = new Set(publications.slice(firstIndex, firstIndex + pageSize));
       publications.forEach((publication) => {
         publication.hidden = !visiblePublications.has(publication);
       });
@@ -506,15 +434,14 @@ export const prerender = true;
       });
 
       if (count) {
-        const firstShown = matches.length === 0 ? 0 : firstIndex + 1;
-        const lastShown = Math.min(firstIndex + pageSize, matches.length);
-        count.textContent = matches.length === 0
+        const firstShown = publications.length === 0 ? 0 : firstIndex + 1;
+        const lastShown = Math.min(firstIndex + pageSize, publications.length);
+        count.textContent = publications.length === 0
           ? "Showing 0 publications"
-          : `Showing ${firstShown}–${lastShown} of ${matches.length} publications`;
+          : `Showing ${firstShown}–${lastShown} of ${publications.length} publications`;
       }
-      if (empty) empty.hidden = matches.length !== 0;
       paginations.forEach((pagination) => {
-        pagination.hidden = matches.length <= pageSize;
+        pagination.hidden = publications.length <= pageSize;
       });
       previousButtons.forEach((button) => {
         button.disabled = currentPage === 1;
@@ -544,35 +471,28 @@ export const prerender = true;
         button.setAttribute("aria-label", `Show pages ${groupStart} to ${groupEnd}`);
       });
 
-      if (moveFocus) publicationList?.scrollIntoView({ behavior: "smooth", block: "start" });
+      publicationList?.scrollIntoView({ behavior: "smooth", block: "start" });
     };
-
-    controls.forEach((control) => control.addEventListener("input", () => applyFilters(true)));
-    reset?.addEventListener("click", () => {
-      controls.forEach((control) => (control.value = ""));
-      applyFilters(true);
-      controls[0]?.focus();
-    });
 
     pageButtons.forEach((button) => button.addEventListener("click", () => {
       currentPage = Number(button.dataset.pageNumber);
       expandedGroupStart = groupStartForPage(currentPage);
-      applyFilters(false, true);
+      showPage();
     }));
     pageRangeButtons.forEach((button) => button.addEventListener("click", () => {
       expandedGroupStart = Number(button.dataset.pageGroup);
       currentPage = expandedGroupStart;
-      applyFilters(false, true);
+      showPage();
     }));
     previousButtons.forEach((button) => button.addEventListener("click", () => {
       currentPage = Math.max(1, currentPage - 1);
       expandedGroupStart = groupStartForPage(currentPage);
-      applyFilters(false, true);
+      showPage();
     }));
     nextButtons.forEach((button) => button.addEventListener("click", () => {
       currentPage += 1;
       expandedGroupStart = groupStartForPage(currentPage);
-      applyFilters(false, true);
+      showPage();
     }));
   }
 </script>
