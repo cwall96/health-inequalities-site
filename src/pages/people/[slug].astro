@@ -214,6 +214,14 @@ const orcid = /^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/i.test(orcidCandidate)
   ? orcidCandidate.toUpperCase()
   : null;
 
+const keyLinks = [
+  { label: orcid ? `ORCID iD · ${orcid}` : "ORCID iD", href: orcid && `https://orcid.org/${orcid}` },
+  { label: "University profile", href: person.universityProfileUrl },
+  { label: "Google Scholar", href: person.googleScholarUrl },
+].filter((link): link is { label: string; href: string } =>
+  typeof link.href === "string" && /^https?:\/\//i.test(link.href)
+);
+
 const paragraphs = (copy: string) =>
   copy
     .split(/\n\s*\n/)
@@ -267,25 +275,29 @@ export const prerender = true;
             <p class="person-summary-credentials">{summaryCredentials}</p>
           )}
 
-          {(email || orcid) && <dl class="person-summary-details">
-            {email && (
+          {email && (
+            <dl class="person-summary-details">
               <div>
                 <dt>Email</dt>
                 <dd><a class="person-summary-email" href={`mailto:${email}`}>{email}</a></dd>
               </div>
-            )}
+            </dl>
+          )}
 
-            {orcid && (
-              <div>
-                <dt>ORCID iD</dt>
-                <dd>
-                  <a href={`https://orcid.org/${orcid}`} target="_blank" rel="noopener noreferrer">
-                    {orcid}<span class="sr-only"> (opens in a new tab)</span>
-                  </a>
-                </dd>
-              </div>
-            )}
-          </dl>}
+          {keyLinks.length > 0 && (
+            <section class="person-summary-details" aria-labelledby="person-key-links-heading">
+              <h3 id="person-key-links-heading" class="text-xs font-semibold uppercase tracking-widest text-lavender">Key links</h3>
+              <ul class="grid gap-2 text-sm">
+                {keyLinks.map(({ label, href }) => (
+                  <li>
+                    <a class="underline" href={href} target="_blank" rel="noopener noreferrer">
+                      {label}<span class="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           {researchInterests.length > 0 && (
             <div class="person-summary-interests">

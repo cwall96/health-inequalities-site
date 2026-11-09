@@ -687,6 +687,16 @@ export default config({
           },
         }),
 
+        universityProfileUrl: fields.url({
+          label: "University profile URL",
+          description: "Optional. Paste the full address of the person's university profile.",
+        }),
+
+        googleScholarUrl: fields.url({
+          label: "Google Scholar profile URL",
+          description: "Optional. Paste the full address of the person's Google Scholar author profile.",
+        }),
+
         identifier: fields.text({
           label: "Publication data identifier (advanced)",
           description:
