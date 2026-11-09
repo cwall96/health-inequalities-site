@@ -8,6 +8,13 @@ import {
   type Pub,
 } from "../lib/publications";
 
+const researchThemes = [
+  { title: "Criminal Justice and Health", lead: "Dr Stephanie Scott" },
+  { title: "Healthcare Inequalities", lead: "Dr Sarah Sowden" },
+  { title: "Regional Health Inequalities", lead: "Professor Clare Bambra" },
+  { title: "Politics of Health", lead: "Dr Courtney McNamara" },
+];
+
 const reader = createReader(process.cwd(), keystaticConfig);
 
 const home = await reader.singletons.home.read();
@@ -311,17 +318,24 @@ export const prerender = true;
           >
             Meet the team
           </a>
-
-          <a
-            href="/research"
-            class="btn-secondary"
-          >
-            Our research
-          </a>
         </div>
 
       </div>
 
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="research-themes-heading">
+    <div class="container-page">
+      <h2 id="research-themes-heading">Our research themes</h2>
+      <ul class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {researchThemes.map(({ title, lead }) => (
+          <li class="rounded-lg border border-line bg-white p-5">
+            <h3>{title}</h3>
+            <p class="mt-2 text-muted">Lead · {lead}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 
