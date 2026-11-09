@@ -960,8 +960,19 @@
 }
 
 @layer components {
-  .container-page {
-    @apply mx-auto w-full max-w-6xl px-6;
+  .container-page,
+  .container-page-wide {
+    @apply mx-auto w-full px-6;
+    --page-width: var(--container-6xl);
+    max-width: clamp(
+      var(--page-width),
+      calc(var(--page-width) + (100vw - 96rem) * 0.625),
+      100rem
+    );
+  }
+
+  .container-page-wide {
+    --page-width: var(--container-7xl);
   }
 
   .section {
@@ -1934,7 +1945,6 @@
     display: grid;
     align-items: center;
     gap: 3rem;
-    max-width: 72rem;
   }
 
   .study-page-hero-with-image {
