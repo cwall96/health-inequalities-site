@@ -1,26 +1,69 @@
 {
   "name": "Donna Wakefield",
-  "role": "PhD Student",
-  "category": "staff",
-  "email": "Donna.Wakefield@newcastle.ac.uk",
-  "researchKeywords": "palliative care access, advanced lung disease, mesothelioma, socioeconomic inequalities",
+  "displayName": "Dr Donna Wakefield, MBChB, FRCP, MClinRes",
+  "role": "NIHR Doctoral Fellow",
+  "profileSubtitle": "Palliative Medicine Consultant",
+  "category": "phd",
+  "photo": "/images/team/donna-wakefield/photo.jpeg",
+  "email": "donna.wakefield1@nhs.net",
+  "researchKeywords": "Palliative care access; Advanced lung disease; Mesothelioma; Socioeconomic inequalities",
   "bio": "Donna Wakefield has worked as an NHS doctor since 2008 and has been a Consultant in Palliative Medicine since 2019. She is a Fellow of the Royal College of Physicians of Edinburgh and an NIHR Doctoral Fellow.",
   "researchFocus": "Donna's PhD examines inequalities in access to palliative care for people with advanced lung disease, including lung cancer, mesothelioma, COPD and interstitial lung disease. She is particularly interested in improving care for people with mesothelioma in socioeconomically deprived areas.",
-  "methodsExpertise": [
-    "Clinical research",
-    "Principal investigator experience",
-    "Chief investigator experience",
-    "Palliative medicine"
-  ],
-  "teaching": [
-    { "course": "Mesothelioma and inequalities in care", "level": "other" }
+  "researchActivity": [
+    {
+      "projectTitle": "Lung-Pal Equity Study",
+      "teamCollaborators": [],
+      "otherCollaborators": [],
+      "year": 2024,
+      "status": "ongoing",
+      "funder": "NIHR",
+      "outputs": []
+    }
   ],
   "professionalRoles": [
-    { "title": "Honorary Research Fellow and Consultant in Palliative Medicine", "type": "clinical" },
-    { "title": "Member", "organisation": "National mesothelioma expert group", "type": "clinical" },
-    { "title": "Vice-Chair", "organisation": "Palliative Care Research Society", "type": "leadership" },
-    { "title": "Elected member, Research and Ethics Committee", "organisation": "Association of Palliative Medicine", "type": "committee" }
+    {
+      "title": "Honorary Research Fellow and Consultant in Palliative Medicine",
+      "type": "clinical"
+    },
+    {
+      "title": "Member",
+      "organisation": "National mesothelioma expert group",
+      "type": "clinical"
+    },
+    {
+      "title": "Vice-Chair",
+      "organisation": "Palliative Care Research Society",
+      "type": "leadership"
+    },
+    {
+      "title": "Elected member, Research and Ethics Committee",
+      "organisation": "Association of Palliative Medicine",
+      "type": "committee"
+    }
   ],
+  "teaching": [
+    {
+      "course": "NIHR Internships & Associate-PI scheme",
+      "level": "other",
+      "fromYear": "2026",
+      "toYear": "present"
+    }
+  ],
+  "supervision": [
+    {
+      "studentName": "Various",
+      "fromYear": "2026",
+      "toYear": "present",
+      "qualification": "msc",
+      "projectTitle": "MSc Student Research"
+    }
+  ],
+  "methodsExpertise": [
+    "Clinical research",
+    "Palliative medicine"
+  ],
+  "orcid": "0000-0002-6811-1255",
+  "googleScholarUrl": "https://scholar.google.com/citations?hl=en&user=cbzSb4MAAAAJ&view_op=list_works",
   "identifier": "0000-0002-6811-1255",
   "order": 0
 }
