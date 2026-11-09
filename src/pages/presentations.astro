@@ -2,6 +2,7 @@
 import { createReader } from "@keystatic/core/reader";
 import keystaticConfig from "../../keystatic.config";
 import Layout from "../layouts/Layout.astro";
+import ResearchPublications from "../components/ResearchPublications.astro";
 import PresentationCard from "../components/PresentationCard.astro";
 
 const reader = createReader(process.cwd(), keystaticConfig);
@@ -66,6 +67,9 @@ export const prerender = true;
             Media coverage
           </span>
         </div>
+        <a href="#publications" class="btn-secondary mt-6 inline-flex">
+          Browse publications <span aria-hidden="true">↓</span>
+        </a>
       </div>
 
       {impacts.length > 0 && (
@@ -226,6 +230,8 @@ export const prerender = true;
       </div>
     </div>
   </section>
+
+  <ResearchPublications />
 
   <script>
     const outputFilters = document.querySelector<HTMLElement>("[data-output-filters]");
