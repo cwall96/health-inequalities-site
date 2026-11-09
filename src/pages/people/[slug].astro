@@ -61,9 +61,9 @@ const relatedPresentations = presentationEntries.filter((presentation) =>
 const relatedImpacts = impactEntries.filter((impact) =>
   impact.entry.teamMembers?.includes(person.slug)
 );
-const relatedAwards = recognitionEntries.filter((award) =>
-  award.entry.teamMembers?.includes(person.slug)
-);
+const relatedAwards = recognitionEntries
+  .filter((award) => award.entry.teamMembers?.includes(person.slug))
+  .sort((a, b) => b.entry.year - a.entry.year || a.entry.order - b.entry.order);
 
 const byYear = new Map<number, Pub[]>();
 for (const p of pubs) {
@@ -491,7 +491,7 @@ export const prerender = true;
                     {relatedAwards.map((award) => (
                       <li>
                         <a href={`/presentations#award-${award.slug}`}><strong>{award.entry.title}</strong></a>
-                        <span>{[award.entry.awardingBody, award.entry.year].filter(Boolean).join(" · ")}</span>
+                        <span>{[award.entry.awardingBody, [award.entry.month, award.entry.year].filter(Boolean).join(" ")].filter(Boolean).join(" · ")}</span>
                       </li>
                     ))}
                   </ul>

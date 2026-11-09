@@ -1070,6 +1070,11 @@ export default config({
           defaultValue: new Date().getFullYear(),
         }),
 
+        month: fields.text({
+          label: "Month",
+          description: "Optional. Enter the month name, for example October.",
+        }),
+
         recipient: fields.text({
           label: "Other recipient",
           description:
