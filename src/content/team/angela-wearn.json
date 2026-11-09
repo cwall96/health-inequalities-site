@@ -1,0 +1,57 @@
+{
+  "name": "Angela Wearn",
+  "category": "ecr",
+  "displayName": "Dr Angela Wearn CPsychol AFBPsS FHEA",
+  "role": "NIHR ARC Research Fellow",
+  "googleScholarUrl": "https://scholar.google.co.uk/citations?user=Wf68tiUAAAAJ&hl=en&oi=ao",
+  "email": "angela.wearn@newcastle.ac.uk",
+  "orcid": "0000-0003-1349-6087",
+  "identifier": "0000-0003-1349-6087",
+  "methodsExpertise": [
+    "Qualitative Research",
+    "Evaluation",
+    "Intervention Development",
+    "Peer Research",
+    "Co-production",
+    "Participatory Research",
+    "Knowledge Mobilisation"
+  ],
+  "bio": "Angela Wearn is a Research Fellow for the NIHR Applied Research Collaboration North East and North Cumbria, leading on the development of meaningful, equitable community involvement and engagement within health and social care research and service design. She is also a Chartered Academic Psychologist specialising in Health Psychology, with a focus on the health and wellbeing of underserved women and girls across the life course. \n\nAngela's work prioritises community-centred, peer-led approaches to reducing persistent inequalities and improving equitable access to healthcare, research and support services. She is currently developing a programme of research to improve women's mental health care, particularly in under-recognised and underserved areas where lived experience-informed approaches have the potential to drive meaningful change.",
+  "researchKeywords": "Women's Health and Wellbeing, Deep End Primary Care, Co-production, Peer-led approaches, Neurodivergence, Community Engagement",
+  "professionalRoles": [
+    {
+      "title": "Advocacy and Engagement Lead",
+      "organisation": "Deep End Network North East and North Cumbria",
+      "type": "leadership"
+    },
+    {
+      "title": "NIHR Partner",
+      "organisation": "North East and North Cumbria NHS Integrated Care Board Research Engagement Network",
+      "type": "leadership"
+    },
+    {
+      "title": "Chartered Member and Associate Fellow",
+      "organisation": "British Psychological Society",
+      "type": "membership"
+    },
+    {
+      "title": "Fellow",
+      "organisation": "Higher Education Academy",
+      "type": "membership"
+    },
+    {
+      "title": "Associate Member",
+      "organisation": "Fuse, the Centre for Translational Research in Public Health",
+      "type": "research"
+    }
+  ],
+  "supervision": [
+    {
+      "studentName": "Caroline Charlton",
+      "qualification": "phd",
+      "projectTitle": "Increasing timely cervical screening participation in areas of high socioeconomic disadvantage",
+      "fromYear": "2022",
+      "toYear": "present"
+    }
+  ]
+}

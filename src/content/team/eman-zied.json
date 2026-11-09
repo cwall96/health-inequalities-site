@@ -4,18 +4,19 @@
   "category": "staff",
   "email": "eman.zied-abozied@ncl.ac.uk",
   "researchKeywords": "spatial health inequalities, climate and health, built environment, heatwaves",
-  "bio": "Dr Eman Zied, PhD is a Research Fellow and geospatial data scientist affiliated with the Addressing Inequity in Health and Care Systems theme at NIHR ARC North East and North Cumbria.",
-  "researchFocus": "Eman studies the interplay between social, spatial and health inequalities, including the spatial determinants of health and climate. Her work examines vulnerability and hospitalisation during heatwaves, the effects of built and natural environments on health, cognitive health, high-street health amenities and community pharmacy distribution in deprived areas.",
+  "bio": "Dr Eman Zied, PhD is a Research Fellow and geospatial data scientist affiliated with the Addressing Inequity in Health and Care Systems theme at NIHR ARC North East and North Cumbria.\n\nEman studies the interplay between social, spatial and health inequalities, including the spatial determinants of health and the effect of climate change on health outcomes. Her work examines the effects of built, natural and ambient environments on health. Her current programme of work examines spatial vulnerabilities to heatwaves through a health inequalities lens, with a view to developing interventions for local authorities and healthcare practitioners. She has previously worked on research projects focusing on the relationship between the environment and cognitive health, inequalities in health-related amenities on the high street and community pharmacy distribution in deprived areas.",
   "methodsExpertise": [
     "Geospatial data science",
     "Geographical information systems",
     "Spatial analysis",
-    "Public health research"
+    "Public health research",
+    "Quantitative analysis",
+    "Statistical modelling"
   ],
   "teaching": [
     {
       "course": "Master of Public Health",
-      "module": "Social Determinants of Health (MPH8004)",
+      "module": "Social Determinants of Health (MPH8004) — lecture on spatial determinants of health",
       "level": "mph"
     },
     {
@@ -44,8 +45,45 @@
       "title": "Member",
       "organisation": "Society for Social Medicine and Population Health",
       "type": "membership"
+    },
+    {
+      "title": "ECR Subcommittee Officer",
+      "organisation": "Society for Social Medicine and Population Health",
+      "type": "committee"
     }
   ],
   "identifier": "0000-0002-7984-3793",
-  "order": 0
+  "order": 0,
+  "googleScholarUrl": "https://scholar.google.com/citations?user=de1PfXkAAAAJ&hl=en",
+  "supervision": [
+    {
+      "studentName": "Elizabeth Nugent",
+      "qualification": "phd",
+      "projectTitle": "Climate and health"
+    }
+  ],
+  "researchActivity": [
+    {
+      "projectTitle": "Prevention of hospital admission during heatwaves",
+      "year": 2026,
+      "status": "ongoing",
+      "funder": "NIHR Three Research Schools Prevention Research Programme Career Development Award (£32,731)",
+      "summary": "July 2026 to June 2027.",
+      "moreInformationUrl": "https://sphr.nihr.ac.uk/prevention/trainee/eman-zied/"
+    },
+    {
+      "projectTitle": "Defining the Challenge Workshop with Gateshead Council",
+      "year": 2026,
+      "status": "completed",
+      "funder": "Insights North East QR Policy Fund (£5,000)",
+      "summary": "January to July 2026. The workshop explored adaptive strategies during heatwaves."
+    },
+    {
+      "projectTitle": "Climate change funding application: Pre-application Support Award",
+      "year": 2025,
+      "status": "completed",
+      "funder": "NIHR Patient Safety Research Collaboration (£16,895)",
+      "summary": "September 2025 to September 2026."
+    }
+  ]
 }

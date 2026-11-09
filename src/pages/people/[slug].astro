@@ -317,6 +317,7 @@ export const prerender = true;
           </p>
           <h1>{person.name}</h1>
           <p class="person-profile-role">{person.role}</p>
+          {person.secondaryRole?.trim() && <p class="text-muted">{person.secondaryRole.trim()}</p>}
 
           {overviewParagraphs.length > 0 && (
             <section id="overview" class="person-profile-introduction person-anchor-section" aria-labelledby="overview-heading">

@@ -5,9 +5,8 @@
   "category": "senior",
   "photo": "/images/team/viviana-albani/photo.jpg",
   "email": "viviana.albani@newcastle.ac.uk",
-  "researchKeywords": "quantitative health inequalities, vulnerable populations, children and older people, diet and health",
-  "bio": "Viviana is a Senior Research Associate who applies quantitative methods in describing, understanding, and identifying mechanisms to reduce regional and social health inequalities. She conducts work on the impact of social and economic policies on health inequalities. Her other research interest lies in the food environment, diet and health.",
-  "researchFocus": "Research themes: Political economy of health, health and place, public health nutrition",
+  "researchKeywords": "Political economy of health, health and place, public health nutrition",
+  "bio": "Viviana applies quantitative methods in describing, understanding, and identifying mechanisms to reduce regional and social health inequalities. She conducts work on the impact of social and economic policies on health inequalities. Her other research interest lies in the food environment, diet and health.",
   "researchActivity": [
     {
       "projectTitle": "Investigating the health inequalities impact of national policies aiming to promote local economic growth in disadvantaged places.",
@@ -16,13 +15,18 @@
         "clare-bambra"
       ],
       "otherCollaborators": [
-        "Katie Fahy (co-lead), John Wildman, Dan Holman, Ben Barr, Jennie Popay"
+        "Katie Fahy (co-lead)",
+        "John Wildman",
+        "Dan Holman",
+        "Ben Barr",
+        "Jennie Popay"
       ],
       "year": 2024,
       "status": "ongoing",
       "funder": "NIHR SPHR-HIP-GROWTH (£325,675.86)",
       "moreInformationUrl": "https://sphr.nihr.ac.uk/research/investigating-the-health-inequalities-impact-of-national-policies-aiming-to-promote-local-economic-growth-in-disadvantaged-places/",
-      "outputs": []
+      "outputs": [],
+      "summary": "Study period: May 2024 to March 2027."
     }
   ],
   "professionalRoles": [
@@ -45,12 +49,9 @@
   "teaching": [],
   "supervision": [],
   "methodsExpertise": [
-    "Quantitative methods",
-    "Large dataset analysis",
-    "Biomarkers in social research",
-    "Food economics",
-    "Observational studies",
-    "Causal inference"
+    "observational studies",
+    "causal inference",
+    "policy impact"
   ],
   "orcid": "0000-0001-9584-7631",
   "universityProfileUrl": "https://www.ncl.ac.uk/medical-sciences/people/profile/vivianaalbani.html",

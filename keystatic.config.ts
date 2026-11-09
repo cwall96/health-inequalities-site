@@ -360,6 +360,11 @@ export default config({
           label: "Role / title",
         }),
 
+        secondaryRole: fields.text({
+          label: "Secondary role (optional)",
+          description: "Shown beneath the primary role on the profile page.",
+        }),
+
         profileSubtitle: fields.text({
           label: "Profile subtitle (optional)",
           description:

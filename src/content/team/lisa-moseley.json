@@ -3,5 +3,14 @@
   "role": "PhD Student",
   "category": "phd",
   "email": "L.Moseley3@newcastle.ac.uk",
-  "order": 0
+  "order": 0,
+  "orcid": "0009-0007-8119-4626",
+  "identifier": "0009-0007-8119-4626",
+  "methodsExpertise": [
+    "health inequalities",
+    "qualitative interviewing",
+    "justice involved people"
+  ],
+  "bio": "Lisa is currently a postgraduate research student and is completing her PhD exploring unmet health and social needs across the life course in the justice-involved population. Lisa is a qualitative researcher who draws on over ten years’ experience working in social care and with justice-involved people. Lisa has also worked as a research assistant at Northumbria University for two years before beginning her PhD in 2024 at Newcastle University.",
+  "researchKeywords": "Health inequalities, social inequalities, justice involvement"
 }

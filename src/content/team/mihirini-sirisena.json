@@ -3,17 +3,30 @@
   "role": "Research Associate",
   "category": "staff",
   "email": "Mihirini.Sirisena@newcastle.ac.uk",
-  "researchKeywords": "mental health and wellbeing, wider determinants of health, social prescribing, disadvantaged communities",
-  "bio": "Dr Mihirini Sirisena, PhD is a Research Associate and member of Fuse and the NIHR School for Public Health Research. Her work focuses on mental health, wellbeing and the wider determinants of health.",
-  "researchFocus": "Mihirini studies non-clinical interventions intended to improve mental health and wellbeing in socioeconomically disadvantaged communities. Her work includes the Caredeep social determinants of health pilot for Deep End NENC general practices, social prescribing link workers, Reading for Wellbeing and the Well Newcastle Gateshead model.",
+  "researchKeywords": "Wider determinants of health, Equity and social justice, Mental health and wellbeing, Community-focused public health",
+  "bio": "Dr Mihirini Sirisena, PhD, is a Research Associate and member of Fuse, the Centre for Translational Research in Public Health, and the NIHR School for Public Health Research. Her work focuses on mental health and wellbeing, health inequalities, and the wider determinants of health.\n\nHer research spans social prescribing, primary care, and community-based public health initiatives, including the CareDEEP social determinants of health pilot in Deep End North East and North Cumbria (NENC) general practices, the multi-region evaluation of social prescribing link workers, Reading for Wellbeing, and the Well Newcastle Gateshead model. Her work seeks to inform more equitable and accessible approaches to improving population health and wellbeing.",
   "methodsExpertise": [
-    "Evaluation research",
-    "Multi-region evaluation",
-    "Public health research"
+    "Qualitative research",
+    "ethnography",
+    "realist methodology",
+    "process evaluation"
   ],
   "professionalRoles": [
-    { "title": "Member", "organisation": "Fuse, the Centre for Translational Research in Public Health", "type": "research" },
-    { "title": "Member", "organisation": "NIHR School for Public Health Research", "type": "research" }
+    {
+      "title": "Member",
+      "organisation": "Fuse, the Centre for Translational Research in Public Health",
+      "type": "research"
+    },
+    {
+      "title": "Member",
+      "organisation": "NIHR School for Public Health Research",
+      "type": "research"
+    },
+    {
+      "title": "Associate Fellow",
+      "organisation": "Higher Education Academy",
+      "type": "membership"
+    }
   ],
   "identifier": "0000-0002-0717-2636",
   "order": 0
