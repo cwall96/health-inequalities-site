@@ -28,6 +28,8 @@ const impacts = (await reader.collections.impacts.all()).sort(
     (b.entry.year ?? 0) - (a.entry.year ?? 0)
 );
 
+const deepEndCommendation = await reader.collections.recognition.read("deep-end-nihr-impact-award-commendation");
+
 const itemYear = (date?: string | null) => date?.slice(0, 4) || "undated";
 const years = [...new Set(items.map((item) => itemYear(item.entry.date)))].sort(
   (a, b) => {
@@ -143,6 +145,25 @@ export const prerender = true;
               </article>
             ))}
           </div>
+        </section>
+      )}
+
+      {deepEndCommendation && (
+        <section id="impact-highlights" class="mt-12 scroll-mt-24" aria-labelledby="impact-highlights-heading">
+          <h2 id="impact-highlights-heading">Impact highlights</h2>
+          <article class="mt-5 grid items-center gap-6 rounded-xl border border-line bg-navy-50 p-6 sm:grid-cols-[10rem_minmax(0,1fr)] sm:p-8">
+            {deepEndCommendation.image && (
+              <img src={deepEndCommendation.image} alt="The Deep End Research Team’s 2026 NIHR Impact Prize commendation trophy" class="w-full max-w-40 rounded-lg" loading="lazy" />
+            )}
+            <div>
+              <p class="eyebrow">{deepEndCommendation.recipient}</p>
+              <h3 class="mt-2 text-2xl">{deepEndCommendation.title}</h3>
+              {deepEndCommendation.description && <p class="mt-3 max-w-2xl leading-7 text-muted">{deepEndCommendation.description}</p>}
+              {deepEndCommendation.link && (
+                <a class="impact-supporting-link mt-4 inline-block" href={deepEndCommendation.link}>Read the NIHR announcement <span aria-hidden="true">→</span></a>
+              )}
+            </div>
+          </article>
         </section>
       )}
 
