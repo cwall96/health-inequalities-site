@@ -1364,6 +1364,27 @@
   max-width: 12ch;
 }
 
+.inequalities-illustration {
+  grid-column: 1;
+  grid-row: 2;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-xl);
+}
+
+.inequalities-intro > .inequalities-definition {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
+@media (max-width: 767px) {
+  .inequalities-illustration,
+  .inequalities-intro > .inequalities-definition {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
+
 .inequalities-definition {
   padding: clamp(1.5rem, 4vw, 2.5rem);
   border-radius: var(--radius-xl);
