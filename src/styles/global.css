@@ -1360,28 +1360,48 @@
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
 }
 
+.inequalities-intro > div:first-child {
+  grid-column: 1 / -1;
+}
+
 .inequalities-intro h2 {
-  max-width: 12ch;
+  max-width: none;
+}
+
+.inequalities-illustration-frame {
+  position: relative;
+  grid-column: 1;
+  grid-row: 2;
+  align-self: stretch;
+  min-height: 0;
 }
 
 .inequalities-illustration {
-  grid-column: 1;
-  grid-row: 2;
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain;
   border-radius: var(--radius-xl);
 }
 
 .inequalities-intro > .inequalities-definition {
   grid-column: 2;
-  grid-row: 1 / span 2;
+  grid-row: 2;
 }
 
 @media (max-width: 767px) {
-  .inequalities-illustration,
+  .inequalities-illustration-frame,
   .inequalities-intro > .inequalities-definition {
     grid-column: auto;
     grid-row: auto;
+  }
+
+  .inequalities-illustration {
+    position: static;
+    width: min(100%, 18rem);
+    height: auto;
+    margin-inline: auto;
   }
 }
 
