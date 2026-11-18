@@ -12,17 +12,23 @@
   "researchActivity": [],
   "professionalRoles": [
     {
-      "title": "Deputy Director",
-      "organisation": "NIHR Research Support Service Specialist Centre for Public Health, Newcastle University",
-      "type": "leadership"
+      "title": "Registered Public Health Consultant",
+      "organisation": "UK Public Health Register",
+      "type": "leadership",
+      "startYear": "2019"
     },
     {
-      "title": "Deputy Director for Clinical Academic Development",
+      "title": "Deputy Director NIHR Research Support Service Specialist Centre for Public Health",
       "organisation": "Newcastle University",
       "type": "leadership"
     },
     {
-      "title": "Deputy Director and Co-lead, Public Health Pillar",
+      "title": "Deputy Dean for Clinical Academic Development",
+      "organisation": "Newcastle University",
+      "type": "leadership"
+    },
+    {
+      "title": "Deputy Dean and Co-lead, Public Health Pillar",
       "organisation": "Newcastle Health Research Partnership Academy",
       "type": "leadership"
     },
@@ -99,11 +105,6 @@
       "type": "membership",
       "startYear": "2020",
       "endYear": "Present"
-    },
-    {
-      "title": "Consultant in Public Health",
-      "organisation": "Office for Health Improvement and Disparities North East",
-      "type": "clinical"
     }
   ],
   "teaching": [
